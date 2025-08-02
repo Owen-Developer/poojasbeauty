@@ -220,7 +220,7 @@ app.post("/api/get-bookings", (req, res) => {
     const getBookingsQuery = "select * from bookings where booking_date like ?";
     db.query(getBookingsQuery, [likeStr], (err, result) => {
         if(err){
-            console.error("Error getting all bookings");
+            console.error("Error getting all bookings: " + err);
         }
 
         return res.json({ bookings: result });
