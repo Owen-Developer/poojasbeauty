@@ -221,6 +221,7 @@ app.post("/api/get-bookings", (req, res) => {
     db.query(getBookingsQuery, [likeStr], (err, result) => {
         if(err){
             console.error("Error getting all bookings: " + err);
+            return res.json({ bookings: [] });
         }
 
         return res.json({ bookings: result });
