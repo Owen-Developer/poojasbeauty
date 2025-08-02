@@ -1103,6 +1103,9 @@ if(document.querySelector(".book-container")){
         document.querySelectorAll(".admin-element").forEach(element => {
             element.style.display = "block";
         });
+        document.querySelectorAll(".book-time-wrapper").forEach(wrapper => {
+            wrapper.style.pointerEvents = "none";
+        });
 
         function closeAccessModal(){
             document.querySelector(".book-access-modal").style.pointerEvents = "none";
@@ -1343,6 +1346,3 @@ if(document.querySelector(".book-container")){
         }
     }
 }
-
-// EXISTING BOOKINGS: delete, show
-// Booking slots: delete
