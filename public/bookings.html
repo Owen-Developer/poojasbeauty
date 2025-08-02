@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en" style="overflow-x: visible;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="images/FullLogo_Transparent.png" type="image/x-icon">
+    <script src="https://kit.fontawesome.com/515deb5b82.js" crossorigin="anonymous"></script>
+    <title>Pooja's Beauty Salon | Homepage</title>
+</head>
+<body style="overflow-x: visible;">
+    <div class="banner-container">
+        <div class="banner-shadow"></div>
+        <div class="banner-img-container">
+            <img src="images/hero/hero1.jpg" class="banner-img" />
+        </div>
+
+        <div class="banner-title">Make a Booking</div>
+        <div class="banner-trail">
+            <a href="index.html" class="banner-link">Home</a>
+            <div class="banner-link">/</div>
+            <div class="banner-link s">Bookings</div>
+        </div>
+    </div>
+
+    <div class="book-container">
+        <div class="book-flex">
+            <div class="book-left book-treatments">
+                <div class="book-title">Treatments</div>
+
+                <div class="book-nav">
+                    <div class="book-option-flex">
+                        <div class="book-option">Threading</div>
+                        <div class="book-option">Waxing</div>
+                        <div class="book-option">Lashes</div>
+                        <div class="book-option">Tinting</div>
+                        <div class="book-option">Facials</div>
+                        <div class="book-option">Massage</div>
+                        <div class="book-option">Manicure</div>
+                        <div class="book-option">Nails</div>
+                        <div class="book-option">Hair Colour & Highlights</div>
+                        <div class="book-option">Other Treatments</div>
+                        <div class="book-option">Ladies Haircut</div>
+                        <div class="book-option">Makeup & Hair Style</div>
+                        <div class="book-option">Mens Services</div>
+                    </div>
+                    <div class="book-chev-flex">
+                        <i class="fa-solid fa-chevron-left book-nav-chevron book-flow-inactive" onclick="scrollBookNav('left')"></i>
+                        <i class="fa-solid fa-chevron-right book-nav-chevron" onclick="scrollBookNav('right')"></i>
+                    </div>
+                </div>
+
+                <div class="book-serv-col">
+                    <div class="book-ul">
+                        <div class="book-ul-head">Threading</div>
+                        <div class="book-li-flex">
+                            <div class="book-li">Eyebrows <span>-</span> £4</div>
+                            <div class="book-li">Upper Lips <span>-</span> £3</div>
+                            <div class="book-li">Lower Lip <span>-</span> £3</div>
+                            <div class="book-li">Chin <span>-</span> £3</div>
+                            <div class="book-li">Forehead <span>-</span> £3</div>
+                            <div class="book-li">Chin extended to neck <span>-</span> £5</div>
+                            <div class="book-li">Sides of face <span>-</span> £7</div>
+                            <div class="book-li">Full Face inc. eyebrows <span>-</span> £15</div>
+                            <div class="book-li">Full Face inc. eyebrows & neck <span>-</span> £18</div>
+                        </div>
+                    </div>
+                    <div class="book-ul">
+                        <div class="book-ul-head">Waxing</div>
+                        <div class="book-li-flex">
+                            <div class="book-li">Eyebrows <span>-</span> £5</div>
+                            <div class="book-li">Upper Lips <span>-</span> £4</div>
+                            <div class="book-li">Lower Lip <span>-</span> £3</div>
+                            <div class="book-li">Chin <span>-</span> £4</div>
+                            <div class="book-li">Forehead <span>-</span> £4</div>
+                            <div class="book-li">Chin extended to neck <span>-</span> £6</div>
+                            <div class="book-li">Sides of face <span>-</span> £8</div>
+                            <div class="book-li">Full Face inc. eyebrows <span>-</span> £20</div>
+                            <div class="book-li">Full Face inc. eyebrows & neck <span>-</span> £23</div>
+                            <div class="book-li">Half arms <span>-</span> £6</div>
+                            <div class="book-li">Full arms <span>-</span> £10</div>
+                            <div class="book-li">Under arms <span>-</span> £5</div>
+                            <div class="book-li">Full arms & under arms <span>-</span> £14</div>
+                            <div class="book-li">Half legs <span>-</span> £10</div>
+                            <div class="book-li">Full legs <span>-</span> £15</div>
+                            <div class="book-li">Buttocks <span>-</span> £8</div>
+                            <div class="book-li">Hollywood Wax <span>-</span> £12</div>
+                            <div class="book-li">Bikini Line <span>-</span> £5</div>
+                            <div class="book-li">Stomach <span>-</span> £10</div>
+                            <div class="book-li">Full Body <span>-</span> £45</div>
+                        </div>
+                    </div>
+                    <div class="book-ul">
+                        <div class="book-ul-head">Lashes</div>
+                        <div class="book-li-flex">
+                            <div class="book-li">Strip lashes <span>-</span> £8</div>
+                            <div class="book-li">Individual lashes <span>-</span> £25</div>
+                            <div class="book-li">Removal of lashes <span>-</span> £8</div>
+                        </div>
+                    </div>
+                    <div class="book-ul">
+                        <div class="book-ul-head">Tinting</div>
+                        <div class="book-li-flex">
+                            <div class="book-li">Eyebrows <span>-</span> £8</div>
+                            <div class="book-li">Eyelash <span>-</span> £10</div>
+                            <div class="book-li">Lash & Brows <span>-</span> £16</div>
+                        </div>
+                    </div>
+                    <div class="book-ul">
+                        <div class="book-ul-head">Facials</div>
+                        <div class="book-li-flex">
+                            <div class="book-li">Deep Cleansing <span>-</span> £30</div>
+                            <div class="book-li">Shahnaz <span>-</span> £30</div>
+                            <div class="book-li">Lotus <span>-</span> £20</div>
+                            <div class="book-li">Hydrating <span>-</span> £30</div>
+                            <div class="book-li">D–Tan Pack <span>-</span> £10</div>
+                        </div>
+                    </div>
+                    <div class="book-ul">
+                        <div class="book-ul-head">Massage</div>
+                        <div class="book-li-flex">
+                            <div class="book-li">Head Massage <span>-</span> £20</div>
+                            <div class="book-li">Full Body Massage <span>-</span> £40</div>
+                            <div class="book-li">Hair SPA <span>-</span> £25</div>
+                        </div>
+                    </div>
+                    <div class="book-ul">
+                        <div class="book-ul-head">Manicure</div>
+                        <div class="book-li-flex">
+                            <div class="book-li">Manicure <span>-</span> £20</div>
+                            <div class="book-li">Pedicure <span>-</span> £25</div>
+                            <div class="book-li">Mani & Pedi <span>-</span> £45</div>
+                        </div>
+                    </div>
+                    <div class="book-ul">
+                        <div class="book-ul-head">Nails</div>
+                        <div class="book-li-flex">
+                            <div class="book-li">Gel Polish <span>-</span> £18</div>
+                            <div class="book-li">Full Set with acrylic <span>-</span> £25</div>
+                            <div class="book-li">Gel polish removal <span>-</span> £10</div>
+                        </div>
+                    </div>
+                    <div class="book-ul">
+                        <div class="book-ul-head">Hair Colour & Highlights</div>
+                        <div class="book-li-flex">
+                            <div class="book-li">Roots Touch Up <span>-</span> £25</div>
+                            <div class="book-li">Full Head From <span>-</span> £35</div>
+                            <div class="book-li">Highlights Half Head From <span>-</span> £75</div>
+                            <div class="book-li">Highlights Full Head From <span>-</span> £95</div>
+                            <div class="book-li">Keratin Hair From <span>-</span> £95</div>
+                            <div class="book-li">Smoothing From <span>-</span> £95</div>
+                        </div>
+                    </div>
+                    <div class="book-ul">
+                        <div class="book-ul-head">Other Treatments</div>
+                        <div class="book-li-flex">
+                            <div class="book-li">Tooth Gems <span>-</span> £15</div>
+                            <div class="book-li">Brow Lamination <span>-</span> £30</div>
+                            <div class="book-li">LVL <span>-</span> £35</div>
+                            <div class="book-li">Brow Lamination & LVL <span>-</span> £60</div>
+                            <div class="book-li">Henna Brows <span>-</span> £30</div>
+                        </div>
+                    </div>
+                    <div class="book-ul">
+                        <div class="book-ul-head">Ladies Haircut</div>
+                        <div class="book-li-flex">
+                            <div class="book-li">Wash, Cut & Style <span>-</span> £30</div>
+                            <div class="book-li">Cut Only <span>-</span> £20</div>
+                            <div class="book-li">Cut & Blow Dry <span>-</span> £25</div>
+                            <div class="book-li">Wash & Style <span>-</span> £30</div>
+                            <div class="book-li">Wash Simple Blow Dry <span>-</span> £20</div>
+                            <div class="book-li">Wash Only <span>-</span> £5</div>
+                            <div class="book-li">Bang Trim <span>-</span> £5</div>
+                            <div class="book-li">Style (Curls, Straighten) <span>-</span> £20</div>
+                            <div class="book-li">Girls Cut <span>-</span> £18</div>
+                        </div>
+                    </div>
+                    <div class="book-ul">
+                        <div class="book-ul-head">Makeup & Hair Style</div>
+                        <div class="book-li-flex">
+                            <div class="book-li">Party Makeup From <span>-</span> £65</div>
+                            <div class="book-li">Party Hair Style From <span>-</span> £35</div>
+                            <div class="book-li">Bridal Makeup & Hair From <span>-</span> £300</div>
+                            <div class="book-li">Full Bridal Package <span>-</span> £400</div>
+                        </div>
+                    </div>
+                    <div class="book-ul">
+                        <div class="book-ul-head">Mens Services</div>
+                        <div class="book-li-flex">
+                            <div class="book-li">Eyebrows Threading <span>-</span> £5</div>
+                            <div class="book-li">Eyebrows Waxing <span>-</span> £6</div>
+                            <div class="book-li">Cheeks <span>-</span> £6</div>
+                            <div class="book-li">Cheeks wax <span>-</span> £7</div>
+                            <div class="book-li">Mono–brow <span>-</span> £3.50</div>
+                            <div class="book-li">Mono–brow wax <span>-</span> £4.50</div>
+                            <div class="book-li">Beard shape <span>-</span> £7</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="book-left book-time">
+                <div class="book-title">Select time</div>
+
+                <div class="book-cal">
+                    <div class="book-cal-nav">
+                        <i class="fa-solid fa-chevron-left book-cal-chevron" onclick="changeMonth('left')"></i>
+                        <div class="book-cal-head"></div>
+                        <i class="fa-solid fa-chevron-right book-cal-chevron" onclick="changeMonth('right')"></i>
+                    </div>
+
+                    <div class="book-cal-top">
+                        <div class="book-cal-month">Mo</div>
+                        <div class="book-cal-month">Tu</div>
+                        <div class="book-cal-month">We</div>
+                        <div class="book-cal-month">Th</div>
+                        <div class="book-cal-month">Fr</div>
+                        <div class="book-cal-month">Sa</div>
+                        <div class="book-cal-month">Su</div>
+                    </div>
+
+                    <div class="book-cal-flex">
+                        <div class="book-cal-box book-cal-inactive"></div>
+                        <div class="book-cal-box book-cal-inactive"></div>
+                        <div class="book-cal-box">1</div>
+                        <div class="book-cal-box">2</div>
+                        <div class="book-cal-box">3</div>
+                        <div class="book-cal-box">4</div>
+                        <div class="book-cal-box">5</div>
+                    </div>
+                    <div class="book-cal-flex">
+                        <div class="book-cal-box">6</div>
+                        <div class="book-cal-box">7</div>
+                        <div class="book-cal-box">8</div>
+                        <div class="book-cal-box">9</div>
+                        <div class="book-cal-box">10</div>
+                        <div class="book-cal-box">11</div>
+                        <div class="book-cal-box">12</div>
+                    </div>
+                    <div class="book-cal-flex">
+                        <div class="book-cal-box">13</div>
+                        <div class="book-cal-box">14</div>
+                        <div class="book-cal-box">15</div>
+                        <div class="book-cal-box">16</div>
+                        <div class="book-cal-box">17</div>
+                        <div class="book-cal-box book-cal-disabled">18</div>
+                        <div class="book-cal-box book-cal-disabled">19</div>
+                    </div>
+                    <div class="book-cal-flex">
+                        <div class="book-cal-box">20</div>
+                        <div class="book-cal-box">21</div>
+                        <div class="book-cal-box">22</div>
+                        <div class="book-cal-box">23</div>
+                        <div class="book-cal-box">24</div>
+                        <div class="book-cal-box book-cal-disabled">25</div>
+                        <div class="book-cal-box book-cal-disabled">26</div>
+                    </div>
+                    <div class="book-cal-flex">
+                        <div class="book-cal-box">27</div>
+                        <div class="book-cal-box">28</div>
+                        <div class="book-cal-box">29</div>
+                        <div class="book-cal-box">30</div>
+                        <div class="book-cal-box">31</div>
+                        <div class="book-cal-box book-cal-inactive"></div>
+                        <div class="book-cal-box book-cal-inactive"></div>
+                    </div>
+                    <div class="book-cal-flex last-cal">
+                        <div class="book-cal-box book-cal-inactive"></div>
+                        <div class="book-cal-box book-cal-inactive"></div>
+                        <div class="book-cal-box book-cal-inactive"></div>
+                        <div class="book-cal-box book-cal-inactive"></div>
+                        <div class="book-cal-box book-cal-inactive"></div>
+                        <div class="book-cal-box book-cal-inactive"></div>
+                        <div class="book-cal-box book-cal-inactive"></div>
+                    </div>
+                </div>
+
+                <div class="book-time-ul">
+                    <div class="btn-book-delete admin-element" onclick="closeAllBookings()">Close This Day</div>
+                    <div class="btn-book-show admin-element" onclick="showBookings()">Show Bookings</div>
+
+                    <div class="book-time-wrapper">10:00</div>
+                    <div class="book-time-wrapper">10:30</div>
+                    <div class="book-time-wrapper">11:00</div>
+                    <div class="book-time-wrapper">11:30</div>
+                    <div class="book-time-wrapper">12:00</div>
+                    <div class="book-time-wrapper">12:30</div>
+                    <div class="book-time-wrapper">13:00</div>
+                    <div class="book-time-wrapper">13:30</div>
+                    <div class="book-time-wrapper">14:00</div>
+                    <div class="book-time-wrapper">14:30</div>
+                    <div class="book-time-wrapper">15:00</div>
+                    <div class="book-time-wrapper">15:30</div>
+                    <div class="book-time-wrapper">16:00</div>
+                    <div class="book-time-wrapper">16:30</div>
+                    <div class="book-time-wrapper">17:00</div>
+                    <div class="book-time-wrapper">17:30</div>
+                    <div class="book-time-wrapper">18:00</div>
+
+                    <div class="book-time-empty">
+                        <div class="book-empty-title">No Bookings Available</div>
+                        <div class="book-empty-para">No bookings found for this date.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="book-right">
+                <div class="book-sum">
+                    <div class="book-sum-title">Booking Summary</div>
+
+                    <div class="book-sum-ul">
+                        <div class="book-sum-default">No services have been selected yet.</div>
+                        <!--
+                            <div class="book-sum-flex">
+                                <div class="book-sum-label">Eyebrows</div>
+                                <div class="book-sum-price">£4</div>
+                            </div>
+                        -->
+                    </div>
+
+                    <div class="book-sum-bottom">
+                        <div class="book-sum-head">Total</div>
+                        <div class="book-sum-total">free</div>
+                    </div>
+                    <div class="btn-book-sum book-btn-inactive" onclick="nextBookingStage()">Continue</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="book-modal">
+        <div class="book-wrapper">
+            <i class="fa-solid fa-check book-modal-check"></i>
+            <div class="book-modal-title">Thank You!</div>
+            <div class="book-modal-para">Your booking has been successfully<br> created. Thanks!</div>
+            <a href="index.html" class="btn-book-modal">Okay</a>
+        </div>
+    </div>
+
+    <div class="book-code-modal">
+        <div class="book-code-wrapper">
+            <div class="book-code-title">Booking Summary</div>
+            <form class="book-code-form">
+                <div class="book-code-input-container">
+                    <input type="text" name="email" placeholder="Email" class="book-code-input book-code-email" required>
+                </div>
+                <textarea name="message" placeholder="Add a message (optional)" class="book-code-area"></textarea>
+                <div class="book-code-input-container">
+                    <input type="text" name="code" maxlength="6" placeholder="Coupon code" class="book-code-input book-code-code">
+                    <div class="book-code-apply" onclick="applyCode()">Apply</div>
+                </div>
+                <div class="book-code-error">Please enter a valid code.</div>
+                <div class="book-email-error">Please enter a valid email.</div>
+            </form>
+            <div class="book-code-bottom">
+                <div class="book-code-head">Total</div>
+                <div class="book-code-total">free</div>
+            </div>
+            <div class="btn-book-code" onclick="createBooking()">Create Booking</div>
+        </div>
+    </div>
+
+    <div class="book-mobile">
+        <div class="book-mobile-col">
+            <div class="book-mobile-head">Total £18</div>
+            <div class="book-mobile-txt">2 Services</div>
+        </div>
+        <div class="btn-book-mobile" onclick="nextBookingStage()">Continue</div>
+    </div>
+
+    <div class="book-access-modal">
+        <div class="book-access-wrapper">
+            <div class="book-access-title">Enter Your Code</div>
+            <div class="book-access-para">Enter your 6-digit code to access admin control.</div>
+            <input type="password" maxlength="6" placeholder="••••••" class="book-access-input" />
+            <div class="book-access-error">Please enter the correct passcode.</div>
+            <div class="book-access-flex">
+                <a href="bookings.html" class="btn-book-access btn-access-cancel">Cancel</a>
+                <div class="btn-book-access btn-access-confirm" onclick="enterAccessCode()">Confirm</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="book-delete-modal">
+        <div class="book-delete-wrapper">
+            <i class="fa-solid fa-triangle-exclamation book-delete-icon"></i>
+            <div class="book-delete-title">Delete Booking</div>
+            <div class="book-delete-para">Are you sure you want to delete your booking?</div>
+            <div class="book-delete-flex">
+                <a href="bookings.html" class="btn-book-nodelete">No, keep it.</a>
+                <div onclick="deleteBooking()" class="btn-book-delete-booking">Yes, delete!</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="book-show-modal">
+        <div class="book-show-wrapper">
+            <i class="fa-solid fa-xmark book-show-x" onclick="closeShowModal()"></i>
+
+            <div class="book-show-empty">
+                <div class="book-show-title">No Bookings Made</div>
+                <div class="book-show-para">No bookings have been made for this day so far.</div>
+                <div class="btn-book-show-empty" onclick="closeShowModal()">Go Back</div>
+            </div>
+            <!-- 
+                <div class="book-show-section">
+                    <div class="book-show-time">12:30am</div>
+                    <div class="book-show-price">Total price: £15</div>
+                    <div class="book-show-message">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Natus consectetur quasi tenetur laudantium perspiciatis tempore aut cum, ea minima quam culpa, explicabo vitae, quod perferendis!</div>
+                    <div class="book-show-services">Brow threading, lumi eye, other treatments</div>
+                    <div class="btn-show-delete">Delete Booking</div>
+                </div>
+            -->
+        </div>
+    </div>
+
+
+    <script src="script.js"></script>
+</body>
+</html>
