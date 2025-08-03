@@ -1999,6 +1999,7 @@ i.book-cal-chevron {
     transition: 0.2s ease;
 }
 .book-time-wrapper {
+    position: relative;
     cursor: pointer;
     padding: 20px 24px;
     font-size: 18px;
@@ -2007,6 +2008,27 @@ i.book-cal-chevron {
     width: 100%;
     transition: 0.2s ease;
 }
+i.time-trash {
+    cursor: pointer;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    background-color: hsl(0, 0%, 9%);
+    border: 1px solid hsl(0, 0%, 15%);
+    font-size: 18px;
+    color: rgb(204, 39, 39);
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    transition: 0.2s ease;
+}
+i.time-trash:hover {
+    background-color: hsl(0, 0%, 5%);
+}
 .book-time-wrapper:hover {
     border: 1px solid hsl(0, 0%, 15%);
     background-color: hsl(0, 0%, 6%);
@@ -2014,7 +2036,8 @@ i.book-cal-chevron {
 .book-time-active {
     border: 1px solid var(--purple-bright) !important;
 }
-.book-time-empty {
+.book-time-empty, .book-time-closed {
+    margin-top: 10px;
     display: none;
     width: 100%;
     text-align: center;
@@ -2134,7 +2157,7 @@ i.book-modal-check {
 }
 .book-sum-price {
     font-size: 15px;
-    color: hsl(0, 0%, 40%);
+    color: white;
 }
 .book-sum-default {
     padding: 7px 0;
@@ -2158,7 +2181,7 @@ i.book-modal-check {
 .book-sum-total {
     font-size: 18px;
     font-weight: 500;
-    color: hsl(0, 0%, 40%);
+    color: white;
 }
 .btn-book-sum {
     margin-top: auto;
@@ -2201,6 +2224,23 @@ i.book-modal-check {
     color: var(--purple-bright);
 }
 
+i.modal-exit {
+    cursor: pointer;
+    position: absolute;
+    top: -42px;
+    right: 0px;
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
+    background-color: hsl(0, 0%, 80%);
+    color: hsl(0, 0%, 10%);
+    background-color: hsl(0, 0%, 15%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100px;
+}
 .book-code-modal {
     pointer-events: none;
     opacity: 0;
@@ -2269,7 +2309,7 @@ i.book-modal-check {
     margin-left: auto;
     font-size: 18px;
     font-weight: 500;
-    color: hsl(0, 0%, 40%);
+    color: white;
 }
 .btn-book-code {
     margin-top: 20px;
@@ -2490,7 +2530,10 @@ i.book-show-x {
 }
 
 .admin-element {
-    visibility: visible;
+    display: none !important;
+}
+.admin-none {
+    display: none;
 }
 .btn-book-delete {
     text-align: center;
@@ -2522,6 +2565,18 @@ i.book-show-x {
 }
 .btn-book-show:hover {
     background-color: var(--purple-bright);
+}
+.btn-book-open {
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 17px;
+    font-weight: 500;
+    padding: 12px 0;
+    border-radius: 8px;
+    transition: 0.2s ease;
+    background-color: hsl(0, 0%, 9%);
+    border: 1px solid hsl(0, 0%, 15%);
 }
 
 .book-access-modal {

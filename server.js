@@ -53,12 +53,12 @@ const transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_PASS
     }
 });
-function sendClientEmail(userEmail, date, time, message, code, services, price) {  
+function sendClientEmail(userEmail, date, time, email, message, code, services, price) {  
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
         subject: 'New Booking', // Subject line
-        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nMessage: ${message}\n\nCoupon code: ${code}\n\nServices: ${services.replace(",,", ", ")}\n\nPrice: ${price}`,
+        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nCoupon code: ${code}\n\nServices: ${services.replace(",,", ", ")}\n\nPrice: ${price}`,
     };
   
     // Send mail
@@ -115,7 +115,7 @@ function generateNumber(){
 }
 function requireAdmin(req, res, next){
     if(!req.session.admin){
-        return res.redirect("/bookings.html");
+        return res.json({ message: 'Unauth' });
     }
     next();
 }
@@ -148,7 +148,7 @@ app.post("/api/book-appointment", (req, res) => {
             return res.json({ message: 'Failure' });
         }
     });
-    sendClientEmail("jackbaileywoods@gmail.com", date, time, message, code, services, price);
+    sendClientEmail("jackbaileywoods@gmail.com", date, time, email, message, code, services, price);
     sendUserEmail(email, date, time, cancelLink);
     return res.json({ message: 'Success' });
 });
@@ -180,6 +180,7 @@ app.post("/api/check-slots", (req, res) => {
         }
 
         let timesTaken = "";
+        let daysClosed = 0;
         if(result.length > 0){
             result.forEach((row, idx) => {
                 if(idx > 0){
@@ -187,10 +188,13 @@ app.post("/api/check-slots", (req, res) => {
                 } else {
                     timesTaken = row.booking_time.slice(0, 5);
                 }
+                if(row.booking_type == "admin"){
+                    daysClosed++;
+                }
             }); 
-            return res.json({ message: 'success', times: timesTaken });
+            return res.json({ message: 'success', times: timesTaken, closed: daysClosed });
         } else {
-            return res.json({ message: 'failure', times: timesTaken });
+            return res.json({ message: 'failure', times: timesTaken});
         }
     });
 });
@@ -247,7 +251,7 @@ app.post("/api/verify-cancel", (req, res) => {
 
 app.post("/api/delete-booking", (req, res, next) => {
     if(!req.session.admin || !req.body.user){
-        res.redirect("/bookings.html");
+        return res.json({ message: 'Unauth' });
     }
     next();
 }, (req, res) => {
@@ -287,7 +291,7 @@ app.post("/api/close-all", requireAdmin, (req, res) => {
             let values = [];
             let times = ["10:00:00", "10:30:00", "11:00:00", "11:30:00", "12:00:00", "12:30:00", "13:00:00", "13:30:00", "14:00:00", "14:30:00", "15:00:00", "15:30:00", "16:00:00", "16:30:00", "17:00:00", "17:30:00", "18:00:00"];
             for(let i = 0; i < 17; i++){
-                values.push([times[i], date, "jackbaileywoods@gmail.com", "Not entered", "Not entered", "No Services", "admin", "£0", "n/a"]);
+                values.push([times[i], date, "marceauowen@gmail.com", "Not entered", "Not entered", "No Services", "admin", "£0", "n/a"]);
             }
             const closeQuery = "insert into bookings (booking_time, booking_date, email, message, coupon_code, services, booking_type, price, cancel_code) values ?";
             db.query(closeQuery, [values], (err, result) => {
@@ -310,7 +314,35 @@ app.post("/api/show-bookings", requireAdmin, (req, res) => {
             console.error("Error getting bookings: " + err);
         }
 
-        return res.json({ arrayObjs: result });
+        return res.json({ message: 'Success', arrayObjs: result });
+    });
+});
+
+app.post("/api/open-day", requireAdmin, (req, res) => {
+    const date = req.body.date;
+
+    const openQuery = "delete from bookings where booking_date = ?";
+    db.query(openQuery, [date], (err, result) => {
+        if(err){
+            console.error("Error opening day: " + err);
+        }
+
+        return res.json({ message: 'Success' });
+    });
+});
+
+app.post("/api/remove-slot", requireAdmin, (req, res) => {
+    const date = req.body.date; 
+    const time = req.body.time; 
+
+    const values = [time, date, "marceauowen@gmail.com", "Not entered", "Not entered", "No Services", "admin", "£0", "n/a"];
+    const closeQuery = "insert into bookings (booking_time, booking_date, email, message, coupon_code, services, booking_type, price, cancel_code) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    db.query(closeQuery, values, (err, result) => {
+        if(err){
+            console.error("Error removing slot: " + err);
+        }
+
+        return res.json({ message: 'Success' });
     });
 });
 /////////////////////////////////////////////////////////////////

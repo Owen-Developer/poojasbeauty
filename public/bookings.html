@@ -276,29 +276,34 @@
 
                 <div class="book-time-ul">
                     <div class="btn-book-delete admin-element" onclick="closeAllBookings()">Close This Day</div>
+                    <div class="btn-book-open admin-element" onclick="openDay()">Open This Day</div>
                     <div class="btn-book-show admin-element" onclick="showBookings()">Show Bookings</div>
 
-                    <div class="book-time-wrapper">10:00</div>
-                    <div class="book-time-wrapper">10:30</div>
-                    <div class="book-time-wrapper">11:00</div>
-                    <div class="book-time-wrapper">11:30</div>
-                    <div class="book-time-wrapper">12:00</div>
-                    <div class="book-time-wrapper">12:30</div>
-                    <div class="book-time-wrapper">13:00</div>
-                    <div class="book-time-wrapper">13:30</div>
-                    <div class="book-time-wrapper">14:00</div>
-                    <div class="book-time-wrapper">14:30</div>
-                    <div class="book-time-wrapper">15:00</div>
-                    <div class="book-time-wrapper">15:30</div>
-                    <div class="book-time-wrapper">16:00</div>
-                    <div class="book-time-wrapper">16:30</div>
-                    <div class="book-time-wrapper">17:00</div>
-                    <div class="book-time-wrapper">17:30</div>
-                    <div class="book-time-wrapper">18:00</div>
+                    <div class="book-time-wrapper">10:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper">10:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper">11:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper">11:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper">12:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper">12:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper">13:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper">13:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper">14:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper">14:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper">15:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper">15:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper">16:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper">16:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper">17:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper">17:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper">18:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
 
                     <div class="book-time-empty">
                         <div class="book-empty-title">No Bookings Available</div>
                         <div class="book-empty-para">No bookings found for this date.</div>
+                    </div>
+                    <div class="book-time-closed">
+                        <div class="book-empty-title">This Day is Closed</div>
+                        <div class="book-empty-para">Bookings have been closed for this day.</div>
                     </div>
                 </div>
             </div>
@@ -327,7 +332,7 @@
         </div>
     </div>
 
-    <div class="book-modal">
+    <div class="book-modal ">
         <div class="book-wrapper">
             <i class="fa-solid fa-check book-modal-check"></i>
             <div class="book-modal-title">Thank You!</div>
@@ -336,8 +341,10 @@
         </div>
     </div>
 
-    <div class="book-code-modal">
+    <div class="book-code-modal book-all-modal">
         <div class="book-code-wrapper">
+            <i class="fa-solid fa-xmark modal-exit"></i>
+
             <div class="book-code-title">Booking Summary</div>
             <form class="book-code-form">
                 <div class="book-code-input-container">
@@ -380,8 +387,9 @@
         </div>
     </div>
 
-    <div class="book-delete-modal">
+    <div class="book-delete-modal book-all-modal">
         <div class="book-delete-wrapper">
+            <i class="fa-solid fa-xmark modal-exit"></i>
             <i class="fa-solid fa-triangle-exclamation book-delete-icon"></i>
             <div class="book-delete-title">Delete Booking</div>
             <div class="book-delete-para">Are you sure you want to delete your booking?</div>
@@ -392,10 +400,9 @@
         </div>
     </div>
 
-    <div class="book-show-modal">
+    <div class="book-show-modal book-all-modal">
         <div class="book-show-wrapper">
-            <i class="fa-solid fa-xmark book-show-x" onclick="closeShowModal()"></i>
-
+            <i class="fa-solid fa-xmark modal-exit"></i>
             <div class="book-show-empty">
                 <div class="book-show-title">No Bookings Made</div>
                 <div class="book-show-para">No bookings have been made for this day so far.</div>

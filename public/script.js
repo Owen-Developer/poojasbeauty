@@ -11,6 +11,7 @@ let couponCode = "Not entered";
 let codeApplied = false;
 let price = 0;
 let todayBox;
+let isAdmin = false;
 
 const months = [
   "January", "February", "March", "April", "May", "June",
@@ -438,7 +439,7 @@ function createHtml(){
                     </div>
                 </div>
             </div>
-            <div class="foot-copy">Copyright © 2025 Poojasbeautysalon.</div>
+            <div class="foot-copy">© 2025 Poojasbeautysalon — Site by <a href="https://nextdesignwebsite.com" target="_blank" class="foot-copy" style="text-decoration: underline;">Next Design</a>.</div>
 
         </div>
     `
@@ -724,17 +725,68 @@ function scrollBookNav(direction){
         }
     }
 }
+document.querySelectorAll(".book-all-modal").forEach(modal => {
+    modal.querySelector("i.modal-exit").addEventListener("click", () => {
+        modal.style.opacity = "0";
+        modal.style.pointerEvents = "none";
+    });
+
+    modal.addEventListener("click", (e) => {
+        if(!modal.querySelector("div").contains(e.target)){
+        modal.style.opacity = "0";
+        modal.style.pointerEvents = "none";   
+        }
+    });
+});
 
 // choose time
 document.querySelectorAll(".book-time-wrapper").forEach(box => {
     box.addEventListener("click", () => {
-        document.querySelectorAll(".book-time-wrapper").forEach(other => {
-            other.classList.remove("book-time-active");
-        });
-        box.classList.add("book-time-active");
-        document.querySelector(".btn-book-sum").classList.remove("book-btn-inactive");
-        document.querySelector(".book-mobile").style.opacity = "1";
-        document.querySelector(".book-mobile").style.pointerEvents = "auto";
+        if(!isAdmin){
+            document.querySelectorAll(".book-time-wrapper").forEach(other => {
+                other.classList.remove("book-time-active");
+            });
+            box.classList.add("book-time-active");
+            document.querySelector(".btn-book-sum").classList.remove("book-btn-inactive");
+            document.querySelector(".book-mobile").style.opacity = "1";
+            document.querySelector(".book-mobile").style.pointerEvents = "auto";
+        }
+    });
+    box.querySelector("i.time-trash").addEventListener("click", () => {
+        async function removeSlot() {
+            console.log("w");
+            let monStr = String(currentMonth + 1);
+            if(monStr.length == 1){
+                monStr = "0" + monStr;
+            }
+            let dateStr = document.querySelector(".book-cal-active").textContent;
+            if(dateStr.length == 1){
+                dateStr = "0" + dateStr;
+            }
+            let fullDate = currentYear + "-" + monStr + "-" + dateStr;
+            const dataToSend = { date: fullDate, time: box.textContent };
+            try {
+                const response = await fetch('/api/remove-slot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json', 
+                    },
+                    body: JSON.stringify(dataToSend), 
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Error:', errorData.message);
+                    return;
+                }
+
+                const responseData = await response.json();
+                window.location.href = "/bookings.html?admin=true";
+            } catch (error) {
+                console.error('Error posting data:', error);
+            }
+        }
+        removeSlot();
     });
 });
 function nextBookingStage(){
@@ -762,6 +814,8 @@ function nextBookingStage(){
         price = document.querySelector(".book-code-total").textContent;
         document.querySelector(".book-code-modal").style.opacity = "1";
         document.querySelector(".book-code-modal").style.pointerEvents = "auto";
+        document.querySelector(".book-mobile").style.opacity = "0";
+        document.querySelector(".book-mobile").style.pointerEvents = "none";
     }
 }
 
@@ -886,6 +940,10 @@ if(document.querySelector(".book-container")){
                         });
                         if(todayBookings == 17){
                             box.classList.add("book-cal-disabled");
+
+                            if(Number(box.textContent) >= todayDate){
+                                box.style.pointerEvents = "auto";
+                            }
                         }
                     }
                 });
@@ -1041,6 +1099,9 @@ if(document.querySelector(".book-container")){
                     hour12: false
                 });
                 document.querySelector(".book-time-empty").style.display = "none";
+                document.querySelector(".book-time-closed").style.display = "none";
+                document.querySelector(".btn-book-delete").classList.remove("admin-none");
+                document.querySelector(".btn-book-open").classList.add("admin-none");
                 document.querySelectorAll(".book-time-wrapper").forEach(wrapper => {
                     wrapper.style.display = "block";
                     if(todayBox.classList.contains("book-cal-active") && (Number(ukTime.slice(0, 2)) > wrapper.textContent.slice(0, 2) || (Number(ukTime.slice(0, 2)) == wrapper.textContent.slice(0, 2) && Number(ukTime.slice(3, 5)) > wrapper.textContent.slice(3, 5)))){
@@ -1068,8 +1129,12 @@ if(document.querySelector(".book-container")){
                         bookingFound = true;
                     }
                 });
-                if(!bookingFound){
+                if(!bookingFound && responseData.closed < 17){
                     document.querySelector(".book-time-empty").style.display = "block";
+                } else if(responseData.closed == 17){
+                    document.querySelector(".btn-book-delete").classList.add("admin-none");
+                    document.querySelector(".btn-book-open").classList.remove("admin-none");
+                    document.querySelector(".book-time-closed").style.display = "block";
                 }
             }
         } catch (error) {
@@ -1078,9 +1143,6 @@ if(document.querySelector(".book-container")){
     }
 
     // admin
-    document.querySelectorAll(".admin-element").forEach(element => {
-        element.style.display = "none";
-    });
     if(params.get("admin") == "true"){
         async function checkAdmin() {
             try {
@@ -1096,15 +1158,13 @@ if(document.querySelector(".book-container")){
         }
         checkAdmin();
 
+        isAdmin = true;
         document.querySelector(".book-time").style.display = "block";
         document.querySelector(".book-time").style.opacity = "1";
         document.querySelector(".book-treatments").style.display = "none";
         document.querySelector(".book-treatments").style.opacity = "0";
         document.querySelectorAll(".admin-element").forEach(element => {
-            element.style.display = "block";
-        });
-        document.querySelectorAll(".book-time-wrapper").forEach(wrapper => {
-            wrapper.style.pointerEvents = "none";
+            element.classList.remove("admin-element");
         });
 
         function closeAccessModal(){
@@ -1175,9 +1235,7 @@ if(document.querySelector(".book-container")){
                     }
 
                     const responseData = await response.json();
-                    if(responseData.message == "Success"){
-                        window.location.href = "/bookings.html?admin=true";
-                    };
+                    window.location.href = "/bookings.html?admin=true";
                 } catch (error) {
                     console.error('Error posting data:', error);
                 }
@@ -1213,6 +1271,9 @@ if(document.querySelector(".book-container")){
                     }
 
                     const responseData = await response.json();
+                    if(responseData.message == "Unauth"){
+                        window.location.href = "/bookings.html";
+                    }
                     let bookings = responseData.arrayObjs;
                     bookings.forEach(obj => {
                         let newCard = document.createElement("div");
@@ -1248,6 +1309,8 @@ if(document.querySelector(".book-container")){
                                         if(document.querySelectorAll(".book-show-section").length == 0){
                                             closeShowModal();
                                         }
+                                    } else {
+                                        window.location.href = "/bookings.html";
                                     }
                                 } catch (error) {
                                     console.error('Error posting data:', error);
@@ -1280,6 +1343,42 @@ if(document.querySelector(".book-container")){
                     <div class="btn-book-show-empty" onclick="closeShowModal()">Go Back</div>
                 </div>
             `
+        }
+
+        function openDay(){
+            async function requestOpen() {
+                let monStr = String(currentMonth + 1);
+                if(monStr.length == 1){
+                    monStr = "0" + monStr;
+                }
+                let dateStr = document.querySelector(".book-cal-active").textContent;
+                if(dateStr.length == 1){
+                    dateStr = "0" + dateStr;
+                }
+                let fullDate = currentYear + "-" + monStr + "-" + dateStr;
+                const dataToSend = { date: fullDate };
+                try {
+                    const response = await fetch('/api/open-day', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json', 
+                        },
+                        body: JSON.stringify(dataToSend), 
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        console.error('Error:', errorData.message);
+                        return;
+                    }
+
+                    const responseData = await response.json();
+                    window.location.href = "/bookings.html?admin=true";
+                } catch (error) {
+                    console.error('Error posting data:', error);
+                }
+            }
+            requestOpen();
         }
     }
 
@@ -1346,3 +1445,6 @@ if(document.querySelector(".book-container")){
         }
     }
 }
+
+// voucher button?
+// close specific hours
