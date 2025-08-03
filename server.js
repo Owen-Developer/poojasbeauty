@@ -139,7 +139,7 @@ app.post("/api/book-appointment", (req, res) => {
     }
 
     const cancelCode = generateNumber();
-    const cancelLink = "http://localhost:3000/bookings.html?cancel=" + cancelCode;
+    const cancelLink = "https://poojasbeauty.onrender.com//bookings.html?cancel=" + cancelCode;
 
     const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     db.query(insertQuery, [date, time, email, message, code, services, type, price, cancelCode], (err, result) => {
