@@ -726,7 +726,7 @@ function scrollBookNav(direction){
     }
 }
 document.querySelectorAll(".book-all-modal").forEach(modal => {
-    modal.querySelector("i.modal-exit").addEventListener("click", () => {
+    modal.querySelector("i.modal-exit, i.book-show-x").addEventListener("click", () => {
         modal.style.opacity = "0";
         modal.style.pointerEvents = "none";
     });

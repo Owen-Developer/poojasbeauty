@@ -2,7 +2,7 @@
 <html lang="en" style="overflow-x: visible;">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="images/FullLogo_Transparent.png" type="image/x-icon">
     <script src="https://kit.fontawesome.com/515deb5b82.js" crossorigin="anonymous"></script>
@@ -400,9 +400,9 @@
         </div>
     </div>
 
-    <div class="book-show-modal book-all-modal">
+    <div class="book-show-modal">
         <div class="book-show-wrapper">
-            <i class="fa-solid fa-xmark modal-exit"></i>
+                        <i class="fa-solid fa-xmark book-show-x" onclick="closeShowModal()"></i>
             <div class="book-show-empty">
                 <div class="book-show-title">No Bookings Made</div>
                 <div class="book-show-para">No bookings have been made for this day so far.</div>
