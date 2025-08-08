@@ -1192,6 +1192,7 @@ if(document.querySelector(".book-container")){
 
                     const responseData = await response.json();
                     if(responseData.message == "Success"){
+                        console.log("true");
                         closeAccessModal();
                     } else {
                         document.querySelector(".book-access-error").style.display = "block";
