@@ -780,7 +780,7 @@ document.querySelectorAll(".book-time-wrapper").forEach(box => {
                 }
 
                 const responseData = await response.json();
-                window.location.href = "/bookings.html?admin=true";
+                window.location.href = "./bookings.html?admin=true";
             } catch (error) {
                 console.error('Error posting data:', error);
             }
@@ -1234,7 +1234,7 @@ if(document.querySelector(".book-container")){
                     }
 
                     const responseData = await response.json();
-                    window.location.href = "/bookings.html?admin=true";
+                    window.location.href = "./bookings.html?admin=true";
                 } catch (error) {
                     console.error('Error posting data:', error);
                 }
@@ -1271,7 +1271,9 @@ if(document.querySelector(".book-container")){
 
                     const responseData = await response.json();
                     if(responseData.message == "Unauth"){
-                        window.location.href = "./bookings.html";
+                        setTimeout(() => {
+                            window.location.href = "./bookings.html";
+                        }, 100000);
                     }
                     let bookings = responseData.arrayObjs;
                     bookings.forEach(obj => {
@@ -1372,7 +1374,7 @@ if(document.querySelector(".book-container")){
                     }
 
                     const responseData = await response.json();
-                    window.location.href = "/bookings.html?admin=true";
+                    window.location.href = "./bookings.html?admin=true";
                 } catch (error) {
                     console.error('Error posting data:', error);
                 }
@@ -1403,7 +1405,7 @@ if(document.querySelector(".book-container")){
 
                 const responseData = await response.json()
                 if(responseData.message == "Failure"){
-                    window.location.href = "/bookings.html";
+                    window.location.href = "./bookings.html";
                 } else {
                     document.querySelector(".book-delete-modal").style.opacity = "1";
                     document.querySelector(".book-delete-modal").style.pointerEvents = "auto";
@@ -1434,7 +1436,7 @@ if(document.querySelector(".book-container")){
 
                     const responseData = await response.json();
                     if(responseData.message == "Success"){
-                        window.location.href = "/bookings.html";
+                        window.location.href = "./bookings.html";
                     }
                 } catch (error) {
                     console.error('Error posting data:', error);
