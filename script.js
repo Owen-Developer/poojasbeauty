@@ -1271,7 +1271,7 @@ if(document.querySelector(".book-container")){
 
                     const responseData = await response.json();
                     if(responseData.message == "Unauth"){
-                        window.location.href = "/bookings.html";
+                        window.location.href = "./bookings.html";
                     }
                     let bookings = responseData.arrayObjs;
                     bookings.forEach(obj => {
@@ -1309,7 +1309,7 @@ if(document.querySelector(".book-container")){
                                             closeShowModal();
                                         }
                                     } else {
-                                        window.location.href = "/bookings.html";
+                                        window.location.href = "./bookings.html";
                                     }
                                 } catch (error) {
                                     console.error('Error posting data:', error);
