@@ -13,6 +13,8 @@ let price = 0;
 let todayBox;
 let isAdmin = false;
 
+let url = "https://poojasbeauty.onrender.com";
+
 const months = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
@@ -763,7 +765,7 @@ document.querySelectorAll(".book-time-wrapper").forEach(box => {
             let fullDate = currentYear + "-" + monStr + "-" + dateStr;
             const dataToSend = { date: fullDate, time: box.textContent };
             try {
-                const response = await fetch('/api/remove-slot', {
+                const response = await fetch(url + '/api/remove-slot', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json', 
@@ -838,7 +840,7 @@ if(document.querySelector(".book-container")){
             async function checkCode(){
                 const dataToSend = { code: document.querySelector(".book-code-code").value };
                 try {
-                    const response = await fetch('/api/check-code', {
+                    const response = await fetch(url + '/api/check-code', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json', 
@@ -886,7 +888,7 @@ if(document.querySelector(".book-container")){
         async function getBookings(){
             const dataToSend = { month: monthIdx + 1, year: yearStr };
             try {
-                const response = await fetch('/api/get-bookings', {
+                const response = await fetch(url + '/api/get-bookings', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json', 
@@ -1026,7 +1028,7 @@ if(document.querySelector(".book-container")){
         }); 
         const dataToSend = { date: fullDate, time: fullTime, email: emailTxt, message: bookingMessage, code: couponCode, services: fullServices, price: price, type: 'user' };
         try {
-            const response = await fetch('/api/book-appointment', {
+            const response = await fetch(url + '/api/book-appointment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json', 
@@ -1070,7 +1072,7 @@ if(document.querySelector(".book-container")){
         let fullDate = currentYear + "-" + monStr + "-" + dateStr;
         const dataToSend = { date: fullDate };
         try {
-            const response = await fetch('/api/check-slots', {
+            const response = await fetch(url + '/api/check-slots', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json', 
@@ -1143,7 +1145,7 @@ if(document.querySelector(".book-container")){
     if(params.get("admin") == "true"){
         async function checkAdmin() {
             try {
-                const response = await fetch('/api/check-admin');
+                const response = await fetch(url + '/api/check-admin');
                 const data = await response.json(); 
                 if(data.message == "Failure"){
                     document.querySelector(".book-access-modal").style.pointerEvents = "auto";
@@ -1174,7 +1176,7 @@ if(document.querySelector(".book-container")){
             async function getAccessCode() {
                 const dataToSend = { code: document.querySelector(".book-access-input").value };
                 try {
-                    const response = await fetch('/api/admin-access', {
+                    const response = await fetch(url + '/api/admin-access', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json', 
@@ -1217,7 +1219,7 @@ if(document.querySelector(".book-container")){
                 let fullDate = currentYear + "-" + monStr + "-" + dateStr;
                 const dataToSend = { date: fullDate };
                 try {
-                    const response = await fetch('/api/close-all', {
+                    const response = await fetch(url + '/api/close-all', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json', 
@@ -1253,7 +1255,7 @@ if(document.querySelector(".book-container")){
                     }
                     let fullDate = currentYear + "-" + monStr + "-" + dateStr;
                     const dataToSend = { date: fullDate };
-                    const response = await fetch('/api/show-bookings', {
+                    const response = await fetch(url + '/api/show-bookings', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json', 
@@ -1286,7 +1288,7 @@ if(document.querySelector(".book-container")){
                             async function deleteCard() {
                                 const dataToSend = { code: obj.cancel_code };
                                 try {
-                                    const response = await fetch('/api/delete-booking', {
+                                    const response = await fetch(url + '/api/delete-booking', {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json', 
@@ -1355,7 +1357,7 @@ if(document.querySelector(".book-container")){
                 let fullDate = currentYear + "-" + monStr + "-" + dateStr;
                 const dataToSend = { date: fullDate };
                 try {
-                    const response = await fetch('/api/open-day', {
+                    const response = await fetch(url + '/api/open-day', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json', 
@@ -1385,7 +1387,7 @@ if(document.querySelector(".book-container")){
         async function verifyCode() {
             const dataToSend = { code: params.get("cancel") };
             try {
-                const response = await fetch('/api/verify-cancel', {
+                const response = await fetch(url + '/api/verify-cancel', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json', 
@@ -1416,7 +1418,7 @@ if(document.querySelector(".book-container")){
             async function requestDelete() {
                 const dataToSend = { code: params.get("cancel"), user: true };
                 try {
-                    const response = await fetch('/api/delete-booking', {
+                    const response = await fetch(url + '/api/delete-booking', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json', 
