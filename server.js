@@ -47,7 +47,14 @@ app.use(session({
     store,
     secret: 'your-secret-key',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24, // 1 day
+    secure: true,                // TRUE because Render serves HTTPS
+    httpOnly: true,
+    sameSite: 'none'             // 'none' needed for cross-origin cookies with HTTPS
+  }
 }));
 
 app.use(express.static('public')); 
