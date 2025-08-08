@@ -2,62 +2,73 @@ const express = require('express');
 const path = require('path');
 const bcrypt = require('bcryptjs');
 const mysql = require('mysql2');
-const app = express();
-const PORT = process.env.PORT || 3000;
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-require('dotenv').config();
+const cors = require('cors');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
-const cors = require('cors');
+require('dotenv').config();
 
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ---- IMPORTANT: Trust proxy for Render or any proxy HTTPS termination ----
+app.set('trust proxy', 1);  // <===== THIS fixes secure cookies behind proxies
+
+// CORS setup to allow frontend at github.io to send credentials (cookies)
 app.use(cors({
-  origin: 'https://owen-developer.github.io',  // allow your frontend domain
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // allowed methods
-  credentials: true // if you need cookies/auth, otherwise can omit
+  origin: 'https://owen-developer.github.io',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-const accessKey = "237410";
+app.options('*', cors());  // preflight
 
+// MySQL DB connection
 const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.PORT // 24642 or 3306
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT || 3306  // Make sure this matches your DB port env var
 });
-db.connect((err) => {
-    if (err) {
-        console.error('Database connection failed:', err.stack);
-        return;
-    }
-    console.log('Connected to MySQL database.');
+db.connect(err => {
+  if (err) {
+    console.error('DB connection error:', err);
+    process.exit(1);
+  }
+  console.log('Connected to MySQL.');
 });
 
-const store = new MySQLStore({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.PORT // 24642 or 3306
+// Session store setup
+const sessionStore = new MySQLStore({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT || 3306
 });
+
+// Session middleware with correct cookie options for cross-origin on HTTPS
 app.use(session({
-    store,
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: false,
-
+  store: sessionStore,
+  secret: process.env.SESSION_SECRET || 'your-secret-key',
+  resave: false,
+  saveUninitialized: false,
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24, // 1 day
-    secure: true,                // TRUE because Render serves HTTPS
+    maxAge: 1000 * 60 * 60 * 24,  // 1 day
+    secure: true,                 // MUST be true for HTTPS on Render
     httpOnly: true,
-    sameSite: 'none'             // 'none' needed for cross-origin cookies with HTTPS
+    sameSite: 'none'              // 'none' for cross-origin cookies over HTTPS
   }
 }));
 
-app.use(express.static('public')); 
+// Your other middleware and routes go here, e.g.:
+app.use(express.static('public'));
 
 ////////////////////////// REUSABLE FUNCTIONS LOGIC ///////////////////////////
 const transporter = nodemailer.createTransport({
