@@ -440,7 +440,6 @@ function createHtml(){
                 </div>
             </div>
             <div class="foot-copy">© 2025 Poojasbeautysalon — Site by <a href="https://nextdesignwebsite.com" target="_blank" class="foot-copy" style="text-decoration: underline;">Next Design</a>.</div>
-
         </div>
     `
 
@@ -544,8 +543,6 @@ function closeOffer(){
     document.querySelector(".offer-modal").style.pointerEvents = "none";
     document.querySelector(".offer-modal").style.opacity = "0";
 }
-
-// fix mobile home menu, make bookings continue scroll to top, make borders more clear for mobile maybe, fix base footer
 
 function openMenu(){
     document.querySelector(".menu-container").style.opacity = "1";
@@ -1447,4 +1444,3 @@ if(document.querySelector(".book-container")){
 }
 
 // voucher button?
-// close specific hours

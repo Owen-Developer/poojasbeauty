@@ -88,7 +88,7 @@ function sendUserEmail(userEmail, date, time, link) {
         }
     });
 }
-function sendApologyEmail(userEmail, date) {  
+function sendApologyEmail(userEmail, date){  
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
@@ -219,7 +219,12 @@ app.get("/api/check-admin", (req, res) => {
 });
 
 app.post("/api/get-bookings", (req, res) => {
-    const likeStr = "%" + req.body.year + "-0" + String(req.body.month) + "%";
+    let likeStr;
+    if(req.body.month < 10){
+        likeStr = "%" + req.body.year + "-0" + String(req.body.month) + "%";
+    } else {
+        likeStr = "%" + req.body.year + "-" + String(req.body.month) + "%";
+    }
 
     const getBookingsQuery = "select * from bookings where booking_date like ?";
     db.query(getBookingsQuery, [likeStr], (err, result) => {
