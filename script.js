@@ -1178,6 +1178,7 @@ if(document.querySelector(".book-container")){
                 try {
                     const response = await fetch(url + '/api/admin-access', {
                         method: 'POST',
+                        credentials: 'include',
                         headers: {
                             'Content-Type': 'application/json', 
                         },
@@ -1258,6 +1259,7 @@ if(document.querySelector(".book-container")){
                     const dataToSend = { date: fullDate };
                     const response = await fetch(url + '/api/show-bookings', {
                         method: 'POST',
+                        credentials: 'include',
                         headers: {
                             'Content-Type': 'application/json', 
                         },

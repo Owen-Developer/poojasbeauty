@@ -6,18 +6,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const cors = require('cors');
-
-app.use(cors({
-  origin: 'https://owen-developer.github.io',  // allow your frontend domain
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // allowed methods
-  credentials: true // if you need cookies/auth, otherwise can omit
-}));
 
 const accessKey = "237410";
 
@@ -36,6 +29,21 @@ db.connect((err) => {
     console.log('Connected to MySQL database.');
 });
 
+const corsOptions = {
+  origin: 'https://owen-developer.github.io', // Your frontend domain
+  credentials: true,                          // Allow cookies
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'] // Adjust headers if needed
+};
+
+// --- Use CORS middleware ---
+app.use(cors(corsOptions));
+
+// --- Handle preflight OPTIONS requests ---
+app.options('*', cors(corsOptions));
+
+app.use(express.json());
+
 const store = new MySQLStore({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -44,11 +52,20 @@ const store = new MySQLStore({
     port: process.env.PORT // 24642 or 3306
 });
 app.use(session({
-    store,
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: false
+  store,
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24, // 1 day
+    secure: false,               // false if testing on HTTP, true on HTTPS
+    httpOnly: true,
+    sameSite: 'lax'              // or 'none' if using cross-site cookies with HTTPS
+  }
 }));
+store.on('error', (error) => {
+    console.error('Session store error:', error);
+});
 
 app.use(express.static('public')); 
 
