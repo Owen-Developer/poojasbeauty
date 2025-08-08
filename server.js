@@ -11,6 +11,13 @@ app.use(express.urlencoded({ extended: true }));
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+const cors = require('cors');
+
+app.use(cors({
+  origin: 'https://owen-developer.github.io',  // allow your frontend domain
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // allowed methods
+  credentials: true // if you need cookies/auth, otherwise can omit
+}));
 
 const accessKey = "237410";
 
