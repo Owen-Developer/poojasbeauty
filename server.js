@@ -213,6 +213,7 @@ app.post("/api/admin-access", (req, res) => {
     if(code == accessKey){
         console.log("TRUE");
         req.session.admin = true;
+        console.log(req.session.admin);
         return res.json({ message: 'Success' });
     } else {
         return res.json({ message: 'Failure' });
