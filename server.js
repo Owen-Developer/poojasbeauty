@@ -122,6 +122,7 @@ function generateNumber(){
 }
 function requireAdmin(req, res, next){
     if(!req.session.admin){
+        console.log("UNAUTH");
         return res.json({ message: 'Unauth' });
     }
     next();
