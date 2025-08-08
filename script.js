@@ -1178,7 +1178,6 @@ if(document.querySelector(".book-container")){
                 try {
                     const response = await fetch(url + '/api/admin-access', {
                         method: 'POST',
-                        credentials: 'include',
                         headers: {
                             'Content-Type': 'application/json', 
                         },
@@ -1193,7 +1192,6 @@ if(document.querySelector(".book-container")){
 
                     const responseData = await response.json();
                     if(responseData.message == "Success"){
-                        console.log("true");
                         closeAccessModal();
                     } else {
                         document.querySelector(".book-access-error").style.display = "block";
@@ -1259,7 +1257,6 @@ if(document.querySelector(".book-container")){
                     const dataToSend = { date: fullDate };
                     const response = await fetch(url + '/api/show-bookings', {
                         method: 'POST',
-                        credentials: 'include',
                         headers: {
                             'Content-Type': 'application/json', 
                         },
