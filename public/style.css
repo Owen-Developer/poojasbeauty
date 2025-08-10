@@ -358,6 +358,7 @@ body {
     justify-content: center;
 }
 .hero-img {
+    transition: 0.8s ease;
     opacity: 0;
     position: absolute;
     top: 0;
@@ -366,7 +367,6 @@ body {
     height: 100%;
     object-fit: cover;
     object-position: 50% 50%;
-    transition: 0.8s ease;
 }
 .hero-top {
     object-position: 50% 0%;
@@ -520,6 +520,8 @@ body {
     font-size: 18px;
 }
 a.banner-link {
+    text-decoration: underline;
+    text-underline-offset: 2px;
     color: white;
     opacity: 1;
 }
@@ -1344,7 +1346,7 @@ a.foot-txt:hover {
     transform: rotate(-150deg);
 }
 .aboutp-container {
-    margin: 100px auto;
+    margin: 100px auto 0;
     width: 1500px;
     max-width: calc(100% - 80px);
     display: flex;
@@ -1406,6 +1408,44 @@ a.foot-txt:hover {
 }
 .btn-aboutp:hover {
     background-color: var(--purple-bright);
+}
+
+.aboutp-bottom {
+    margin: 50px auto 100px;
+    width: 1500px;
+    max-width: calc(100% - 80px);
+    display: flex;
+    gap: 35px;
+}
+.aboutp-wrapper {
+    box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2);
+    padding: 32px 22px;
+    border-radius: 30px;
+    background-color: hsl(0, 0%, 9%);
+    border: 1px solid hsl(0, 0%, 15%);
+    width: 100%;
+}
+i.aboutp-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--purple);
+    color: white;
+    font-size: 22px;
+    border-radius: 200px;
+}
+.aboutp-head {
+    font-size: 26px;
+    font-weight: 500;
+    color: white;
+    margin: 25px 0 12px;
+}
+.aboutp-txt {
+    font-size: 16px;
+    line-height: 1.75;
+    color: hsl(0, 0%, 75%);
 }
 /*//////////////////////////////////////////////////////////////////////*/
 
@@ -2952,6 +2992,11 @@ i.book-show-x {
     .foot-arrow {
         width: 14px;
     }
+
+    .aboutp-bottom {
+        flex-direction: column;
+        gap: 20px;
+    }
 }
 @media only screen and (max-width: 950px){
     .about-plant1 {
@@ -3098,7 +3143,7 @@ i.book-show-x {
     }
 }
 @media only screen and (max-width: 700px){
-    .header-flex, .hero-content, .about-container, .services-container, .test-container, .gallery-container, .contact-container, .foot-container, .aboutp-container, .detail-container, .price-container, .gallp-container, .book-container {
+    .header-flex, .hero-content, .about-container, .services-container, .test-container, .gallery-container, .contact-container, .foot-container, .aboutp-container, .detail-container, .price-container, .gallp-container, .book-container, .aboutp-bottom {
         max-width: calc(100% - 30px);
     }
     .header-logo {

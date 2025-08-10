@@ -366,6 +366,15 @@ function createHtml(){
         </div>
     `
 
+    let btnText;
+    let btnHref;
+    if(document.querySelector(".hero-container")){
+        btnText = "Book Now";
+        btnHref = "bookings.html";
+    } else {
+        btnText = "Back Home";
+        btnHref = "index.html";
+    }
     let header = document.createElement("div");
     header.classList.add("header");
     header.innerHTML = `
@@ -400,7 +409,7 @@ function createHtml(){
                 <a href="gallery.html" class="header-link header-line">Photo Gallery</a>
             </div>
 
-            <a href="bookings.html" class="btn-header">Book Now <img src="images/arrow.png" class="foot-arrow" /></a>
+            <a href="${btnHref}" class="btn-header">${btnText} <img src="images/arrow.png" class="foot-arrow" /></a>
             <div class="header-burger" onclick="openMenu()">
                 <div class="burger-line"></div>
                 <div class="burger-line"></div>
