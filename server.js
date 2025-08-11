@@ -14,15 +14,6 @@ const crypto = require('crypto');
 
 const accessKey = "237410";
 
-const cors = require('cors');
-
-// Allowed origin(s) — replace with your actual frontend URL
-const allowedOrigin = 'https://owen-developer.github.io';
-
-app.use(cors({
-  origin: allowedOrigin,
-  credentials: true,  // Allow cookies to be sent cross-origin
-}));
 
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -52,9 +43,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: true,
-    sameSite: 'none',
-    maxAge: 86400000,
+    secure: true,          // HTTPS only - keep this true in prod
+    sameSite: 'lax',       // 'lax' works well for same-origin and mild cross-origin
+    maxAge: 86400000,      // 1 day in ms
+    httpOnly: true         // prevents client-side JS access to the cookie (good for security)
   }
 }));
 

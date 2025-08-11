@@ -289,7 +289,7 @@ const services = [
     },
 ];
 
-let url = "https://poojasbeauty.onrender.com";
+let url = "";
 
 function createHtml(){
     let menu = document.createElement("div");
