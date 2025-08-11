@@ -38,16 +38,10 @@ const store = new MySQLStore({
     port: process.env.PORT // 24642 or 3306
 });
 app.use(session({
-  store,
-  secret: 'your-secret-key',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: true,          // HTTPS only - keep this true in prod
-    sameSite: 'lax',       // 'lax' works well for same-origin and mild cross-origin
-    maxAge: 86400000,      // 1 day in ms
-    httpOnly: true         // prevents client-side JS access to the cookie (good for security)
-  }
+    store,
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: false
 }));
 
 app.use(express.static('public')); 
