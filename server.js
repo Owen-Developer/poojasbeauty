@@ -17,7 +17,7 @@ const accessKey = "237410";
 const cors = require('cors');
 
 // Allowed origin(s) — replace with your actual frontend URL
-const allowedOrigin = 'https://Owen-Developer.github.io';
+const allowedOrigin = 'https://owen-developer.github.io';
 
 app.use(cors({
   origin: allowedOrigin,
