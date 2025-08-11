@@ -128,6 +128,10 @@ function requireAdmin(req, res, next){
 
 
 ////////////////////////// APIS ROUTES //////////////////////////
+app.get('/', (req, res) => {
+  res.status(200).send('Server is alive');
+});
+
 app.post("/api/book-appointment", (req, res) => {
     const date = req.body.date;
     const time = req.body.time;
