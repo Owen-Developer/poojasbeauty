@@ -777,6 +777,7 @@ document.querySelectorAll(".book-time-wrapper").forEach(box => {
             try {
                 const response = await fetch(url + '/api/remove-slot', {
                     method: 'POST',
+                    credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json', 
                     },
@@ -852,6 +853,7 @@ if(document.querySelector(".book-container")){
                 try {
                     const response = await fetch(url + '/api/check-code', {
                         method: 'POST',
+                        credentials: 'include',
                         headers: {
                             'Content-Type': 'application/json', 
                         },
@@ -900,6 +902,7 @@ if(document.querySelector(".book-container")){
             try {
                 const response = await fetch(url + '/api/get-bookings', {
                     method: 'POST',
+                    credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json', 
                     },
@@ -1040,6 +1043,7 @@ if(document.querySelector(".book-container")){
         try {
             const response = await fetch(url + '/api/book-appointment', {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json', 
                 },
@@ -1084,6 +1088,7 @@ if(document.querySelector(".book-container")){
         try {
             const response = await fetch(url + '/api/check-slots', {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json', 
                 },
@@ -1188,9 +1193,11 @@ if(document.querySelector(".book-container")){
                 try {
                     const response = await fetch(url + '/api/admin-access', {
                         method: 'POST',
+                        credentials: 'include',
                         headers: {
                             'Content-Type': 'application/json', 
                         },
+                        credentials: 'include',
                         body: JSON.stringify(dataToSend), 
                     });
 
@@ -1231,6 +1238,7 @@ if(document.querySelector(".book-container")){
                 try {
                     const response = await fetch(url + '/api/close-all', {
                         method: 'POST',
+                        credentials: 'include',
                         headers: {
                             'Content-Type': 'application/json', 
                         },
@@ -1267,6 +1275,7 @@ if(document.querySelector(".book-container")){
                     const dataToSend = { date: fullDate };
                     const response = await fetch(url + '/api/show-bookings', {
                         method: 'POST',
+                        credentials: 'include',
                         headers: {
                             'Content-Type': 'application/json', 
                         },
@@ -1300,6 +1309,7 @@ if(document.querySelector(".book-container")){
                                 try {
                                     const response = await fetch(url + '/api/delete-booking', {
                                         method: 'POST',
+                                        credentials: 'include',
                                         headers: {
                                             'Content-Type': 'application/json', 
                                         },
@@ -1369,6 +1379,7 @@ if(document.querySelector(".book-container")){
                 try {
                     const response = await fetch(url + '/api/open-day', {
                         method: 'POST',
+                        credentials: 'include',
                         headers: {
                             'Content-Type': 'application/json', 
                         },
@@ -1399,6 +1410,7 @@ if(document.querySelector(".book-container")){
             try {
                 const response = await fetch(url + '/api/verify-cancel', {
                     method: 'POST',
+                    credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json', 
                     },
@@ -1430,6 +1442,7 @@ if(document.querySelector(".book-container")){
                 try {
                     const response = await fetch(url + '/api/delete-booking', {
                         method: 'POST',
+                        credentials: 'include',
                         headers: {
                             'Content-Type': 'application/json', 
                         },
