@@ -41,7 +41,10 @@ app.use(session({
     store,
     secret: 'your-secret-key',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+  maxAge: 86400000
+}
 }));
 
 app.use(express.static('public')); 
