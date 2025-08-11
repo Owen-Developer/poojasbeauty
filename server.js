@@ -14,6 +14,16 @@ const crypto = require('crypto');
 
 const accessKey = "237410";
 
+const cors = require('cors');
+
+// Allowed origin(s) — replace with your actual frontend URL
+const allowedOrigin = 'https://Owen-Developer.github.io';
+
+app.use(cors({
+  origin: allowedOrigin,
+  credentials: true,  // Allow cookies to be sent cross-origin
+}));
+
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -37,10 +47,15 @@ const store = new MySQLStore({
     port: process.env.PORT // 24642 or 3306
 });
 app.use(session({
-    store,
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: false
+  store,
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: true,
+    sameSite: 'none',
+    maxAge: 86400000,
+  }
 }));
 
 app.use(express.static('public')); 
