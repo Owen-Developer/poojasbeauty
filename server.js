@@ -14,28 +14,24 @@ const crypto = require('crypto');
 
 const accessKey = "237410";
 
-const db = mysql.createConnection({
+const pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    port: process.env.PORT // 24642 or 3306
-});
-db.connect((err) => {
-    if (err) {
-        console.error('Database connection failed:', err.stack);
-        return;
-    }
-    console.log('Connected to MySQL database.');
+    port: process.env.DB_PORT, // not process.env.PORT, this should be DB port (e.g., 3306)
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
-const store = new MySQLStore({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.PORT // 24642 or 3306
-});
+// Use promises for async/await queries
+const db = pool.promise();
+
+// Pass the pool to MySQLStore
+const store = new MySQLStore({}, pool.promise());
+
+// Use it in express-session
 app.use(session({
     store,
     secret: 'your-secret-key',
@@ -142,7 +138,7 @@ app.post("/api/book-appointment", (req, res) => {
     const cancelLink = "https://poojasbeauty.onrender.com//bookings.html?cancel=" + cancelCode;
 
     const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    db.query(insertQuery, [date, time, email, message, code, services, type, price, cancelCode], (err, result) => {
+    pool.query(insertQuery, [date, time, email, message, code, services, type, price, cancelCode], (err, result) => {
         if(err){
             console.error("Error updating booking: ", err);
             return res.json({ message: 'Failure' });
@@ -157,7 +153,7 @@ app.post("/api/check-code", (req, res) => {
     const code = req.body.code;
 
     const checkQuery = "select * from codes where coupon_code = ?";
-    db.query(checkQuery, [code], (err, result) => {
+    pool.query(checkQuery, [code], (err, result) => {
         if(err){
             console.error("Error checking code: " + err);
         }
@@ -174,7 +170,7 @@ app.post("/api/check-slots", (req, res) => {
     const date = req.body.date;
 
     const checkQuery = "select * from bookings where booking_date = ?";
-    db.query(checkQuery, [date], (err, result) => {
+    pool.query(checkQuery, [date], (err, result) => {
         if(err){
             console.error("Error checking bookings: " + err);
         }
@@ -227,7 +223,7 @@ app.post("/api/get-bookings", (req, res) => {
     }
 
     const getBookingsQuery = "select * from bookings where booking_date like ?";
-    db.query(getBookingsQuery, [likeStr], (err, result) => {
+    pool.query(getBookingsQuery, [likeStr], (err, result) => {
         if(err){
             console.error("Error getting bookings: " + err);
             return res.json({ bookings: [] });
@@ -241,7 +237,7 @@ app.post("/api/verify-cancel", (req, res) => {
     const code = req.body.code;
 
     const checkQuery = "select * from bookings where cancel_code = ?";
-    db.query(checkQuery, [code], (err, result) => {
+    pool.query(checkQuery, [code], (err, result) => {
         if(err){
             console.error("Error getting cancel code: " + err);
         }
@@ -263,7 +259,7 @@ app.post("/api/delete-booking", (req, res, next) => {
     const code = req.body.code;
 
     const deleteQuery = "delete from bookings where cancel_code = ?";
-    db.query(deleteQuery, [code], (err, result) => {
+    pool.query(deleteQuery, [code], (err, result) => {
         if(err){
             console.error("Error deleting bookings: " + err);
         }
@@ -276,7 +272,7 @@ app.post("/api/close-all", requireAdmin, (req, res) => {
     const date = req.body.date;
 
     const getEmailsQuery = "select * from bookings where booking_date = ?";
-    db.query(getEmailsQuery, [date], (err, result) => {
+    pool.query(getEmailsQuery, [date], (err, result) => {
         if(err){
             console.error("Error fetching bookings: " + err);
         }
@@ -288,7 +284,7 @@ app.post("/api/close-all", requireAdmin, (req, res) => {
         }
 
         const deleteAllQuery = "delete from bookings where booking_date = ?";
-        db.query(deleteAllQuery, [date], (err, result) => {
+        pool.query(deleteAllQuery, [date], (err, result) => {
             if(err){
                 console.error("Error deleting existing bookings: " + err);
             }
@@ -299,7 +295,7 @@ app.post("/api/close-all", requireAdmin, (req, res) => {
                 values.push([times[i], date, "marceauowen@gmail.com", "Not entered", "Not entered", "No Services", "admin", "£0", "n/a"]);
             }
             const closeQuery = "insert into bookings (booking_time, booking_date, email, message, coupon_code, services, booking_type, price, cancel_code) values ?";
-            db.query(closeQuery, [values], (err, result) => {
+            pool.query(closeQuery, [values], (err, result) => {
                 if(err){
                     console.error("Error inserting fake bookings: " + err);
                 }
@@ -314,7 +310,7 @@ app.post("/api/show-bookings", requireAdmin, (req, res) => {
     const date = req.body.date;
 
     const getBookingsQuery = "select * from bookings where booking_date = ? and booking_type = ?";
-    db.query(getBookingsQuery, [date, "user"], (err, result) => {
+    pool.query(getBookingsQuery, [date, "user"], (err, result) => {
         if(err){
             console.error("Error getting bookings: " + err);
         }
@@ -327,7 +323,7 @@ app.post("/api/open-day", requireAdmin, (req, res) => {
     const date = req.body.date;
 
     const openQuery = "delete from bookings where booking_date = ?";
-    db.query(openQuery, [date], (err, result) => {
+    pool.query(openQuery, [date], (err, result) => {
         if(err){
             console.error("Error opening day: " + err);
         }
@@ -342,7 +338,7 @@ app.post("/api/remove-slot", requireAdmin, (req, res) => {
 
     const values = [time, date, "marceauowen@gmail.com", "Not entered", "Not entered", "No Services", "admin", "£0", "n/a"];
     const closeQuery = "insert into bookings (booking_time, booking_date, email, message, coupon_code, services, booking_type, price, cancel_code) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    db.query(closeQuery, values, (err, result) => {
+    pool.query(closeQuery, values, (err, result) => {
         if(err){
             console.error("Error removing slot: " + err);
         }

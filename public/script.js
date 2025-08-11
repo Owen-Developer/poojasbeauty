@@ -289,6 +289,8 @@ const services = [
     },
 ];
 
+let url = "";
+
 function createHtml(){
     let menu = document.createElement("div");
     menu.classList.add("menu-container");
@@ -368,7 +370,7 @@ function createHtml(){
 
     let btnText;
     let btnHref;
-    if(document.querySelector(".hero-container")){
+    if(!document.querySelector(".book-container")){
         btnText = "Book Now";
         btnHref = "bookings.html";
     } else {
@@ -402,6 +404,7 @@ function createHtml(){
                     <div class="serv-link">Mens Services</div>
                 </div>
 
+                <a href="index.html" class="header-link header-line">Home</a>
                 <div class="header-link">Treatments <i class="fa-solid fa-chevron-down header-chevron"></i></div>
                 <a href="about.html#price-list" class="header-link header-line">Price list</a>
                 <a href="about.html" class="header-link header-line">About us</a>
