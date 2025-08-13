@@ -372,6 +372,7 @@ app.post("/api/remove-slot", requireAdmin, (req, res) => {
 
 app.get("/api/verify-booking", requireAdmin, (req, res) => {
     const changeStatusQuery = "update bookings set payment_status = ? where reference_code = ?";
+    console.log(req.query.verify);
     db.query(changeStatusQuery, ["verified", req.query.verify], (err, result) => {
         if(err){
             console.error("Error changing payment status: " + err);
