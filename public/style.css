@@ -2378,6 +2378,76 @@ i.modal-exit {
     display: none;
 }
 
+.book-pay-modal {
+    pointer-events: none;
+    opacity: 0;
+    z-index: 101;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: hsla(0, 0%, 0%, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s ease;
+}
+.book-pay-wrapper {
+    z-index: 102;
+    background-color: hsl(0, 0%, 9%);
+    border: 1px solid hsl(0, 0%, 15%);
+    border-radius: 8px;
+    padding: 28px 24px;
+    max-width: calc(100% - 30px);
+    width: 480px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+}
+.book-pay-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: white;
+    margin-bottom: 14px;
+}
+.book-pay-para {
+    font-size: 15px;
+    color: hsl(0, 0%, 75%);
+}
+.book-pay-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 34px 0;
+}
+.book-pay-txt {
+    color: hsl(0, 0%, 75%);
+    font-size: 15px;
+}
+.book-pay-txt span {
+    color: white;
+    font-weight: 500;
+    font-size: 15px;
+}
+.btn-book-pay {
+    margin-top: 20px;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 17px;
+    font-weight: 500;
+    background-color: var(--purple);
+    color: white;
+    padding: 12px 0;
+    border-radius: 8px;
+    transition: 0.2s ease;
+}
+.btn-book-pay:hover {
+    background-color: var(--purple-bright);
+}
+
 .book-delete-modal {
     pointer-events: none;
     opacity: 0;
@@ -3344,11 +3414,11 @@ i.book-show-x {
     .book-show-wrapper {
         max-height: calc(100% - 200px);
     }
-    .book-code-modal, .book-delete-modal, .book-show-modal {
+    .book-code-modal, .book-delete-modal, .book-show-modal, .book-pay-modal {
         align-items: flex-end;
         padding-bottom: 15px;
     }
-    .book-code-wrapper {
+    .book-code-wrapper, .book-pay-wrapper {
         padding: 20px 14px;
     }
     .btn-book-code {

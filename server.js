@@ -20,7 +20,7 @@ const db = mysql.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    port: process.env.PORT, // not process.env.PORT
+    port: process.env.PORT,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
@@ -66,12 +66,12 @@ const transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_PASS
     }
 });
-function sendClientEmail(userEmail, date, time, email, message, code, services, price) {  
+function sendClientEmail(userEmail, date, time, email, message, code, services, price, refCode, link) {  
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
         subject: 'New Booking', // Subject line
-        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nCoupon code: ${code}\n\nServices: ${services.replace(",,", ", ")}\n\nPrice: ${price}`,
+        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nCoupon code: ${code}\n\nServices: ${services.replace(",,", ", ")}\n\nPrice: ${price}\n\nMake sure that you were sent ${price} with the reference code attached in the payment: ${refCode}, then verify the booking simply by visiting this link: ${link}`,
     };
   
     // Send mail
@@ -83,13 +83,12 @@ function sendClientEmail(userEmail, date, time, email, message, code, services, 
         }
     });
 }
-function sendUserEmail(userEmail, date, time, link) {  
+function sendUserEmail(userEmail, date, time, link, price, code) {  
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
         subject: 'New Booking', // Subject line
-        html: `<p>Hello, you made a booking for poojasbeautysalon: ${date}, ${time}\n\nCancel anytime with this link: <a href="${link}">${link}</a></p>`,
-        text: `Hello, you made a booking for poojasbeautysalon: ${date}, ${time}\n\nCancel anytime with this link: ${link}`,
+        text: `Hello, you made a booking for poojasbeautysalon: ${date}, ${time}\n\nCancel anytime with this link: ${link}\n\n Make sure that you have sent ${price} to the iban: ABCDEFGHIJKLMNOPQRST. Include this reference code in the message of your payment: ${code}`,
     };
   
     // Send mail
@@ -106,8 +105,8 @@ function sendApologyEmail(userEmail, date){
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
         subject: 'New Booking', // Subject line
-        html: `<p>Sorry, your booking for poojasbeautysalon on ${date} has been cancelled due to a schedule change. Please rebook at your convenience.</p>`,
-        text: `Sorry, your booking for poojasbeautysalon on ${date} has been cancelled due to a schedule change. Please rebook at your convenience.`,
+        html: `<p>Sorry, your booking for poojasbeautysalon on ${date} has been cancelled due to a schedule change. Please refund and rebook at your convenience.</p>`,
+        text: `Sorry, your booking for poojasbeautysalon on ${date} has been cancelled due to a schedule change. Please refund and rebook at your convenience.`,
     };
   
     // Send mail
@@ -157,16 +156,18 @@ app.post("/api/book-appointment", (req, res) => {
 
     const cancelCode = generateNumber();
     const cancelLink = "https://poojasbeauty.onrender.com//bookings.html?cancel=" + cancelCode;
+    const refCode = "REF" + generateNumber();
+    const refLink = "https://poojasbeauty.onrender.com//bookings.html?verify=" + refCode;
 
-    const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    db.query(insertQuery, [date, time, email, message, code, services, type, price, cancelCode], (err, result) => {
+    const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status, reference_code) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    db.query(insertQuery, [date, time, email, message, code, services, type, price, cancelCode, "pending", refCode], (err, result) => {
         if(err){
             console.error("Error updating booking: ", err);
             return res.json({ message: 'Failure' });
         }
     });
-    sendClientEmail("jackbaileywoods@gmail.com", date, time, email, message, code, services, price);
-    sendUserEmail(email, date, time, cancelLink);
+    sendClientEmail("jackbaileywoods@gmail.com", date, time, email, message, code, services, price, refCode, refLink);
+    sendUserEmail(email, date, time, cancelLink, price, refCode);
     return res.json({ message: 'Success' });
 });
 
@@ -312,7 +313,7 @@ app.post("/api/close-all", requireAdmin, (req, res) => {
             }
 
             let values = [];
-            let times = ["09:00:00", "10:00:00", "10:30:00", "11:00:00", "11:30:00", "12:00:00", "12:30:00", "13:00:00", "13:30:00", "14:00:00", "14:30:00", "15:00:00", "15:30:00", "16:00:00", "16:30:00", "17:00:00", "17:30:00", "18:00:00"];
+            let times = ["09:30:00", "10:00:00", "10:30:00", "11:00:00", "11:30:00", "12:00:00", "12:30:00", "13:00:00", "13:30:00", "14:00:00", "14:30:00", "15:00:00", "15:30:00", "16:00:00", "16:30:00", "17:00:00", "17:30:00", "18:00:00"];
             for(let i = 0; i < 18; i++){
                 values.push([times[i], date, "marceauowen@gmail.com", "Not entered", "Not entered", "No Services", "admin", "£0", "n/a"]);
             }
@@ -366,6 +367,17 @@ app.post("/api/remove-slot", requireAdmin, (req, res) => {
         }
 
         return res.json({ message: 'Success' });
+    });
+});
+
+app.get("/api/verify-booking", requireAdmin, (req, res) => {
+    const changeStatusQuery = "update bookings set payment_status = ? where reference_code = ?";
+    db.query(changeStatusQuery, ["verified", req.body.verify], (err, result) => {
+        if(err){
+            console.error("Error changing payment status: " + err);
+        }
+
+        return res.json({ message: 'success' });
     });
 });
 /////////////////////////////////////////////////////////////////

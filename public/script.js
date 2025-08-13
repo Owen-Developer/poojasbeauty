@@ -697,10 +697,13 @@ document.querySelectorAll(".book-li").forEach(li => {
             document.querySelectorAll(".book-sum-price").forEach(price => {
                 totalPrice = totalPrice + Number(price.textContent.slice(1));
             });
-            document.querySelector(".book-sum-total").textContent = "£" + totalPrice;
+            document.querySelector(".book-sum-total").textContent = "£" + totalPrice.toFixed(2);
             document.querySelector(".btn-book-sum").classList.remove("book-btn-inactive");
 
-            document.querySelector(".book-code-total").textContent = "£" + totalPrice;
+            document.querySelector(".book-code-total").innerHTML = "£" + totalPrice;
+            let newNum = (Number(document.querySelector(".book-code-total").textContent.slice(1)) * 0.90).toFixed(2);
+            price = "£" + newNum;
+            document.querySelector(".book-code-total").innerHTML = `<span class="book-code-total" style="text-decoration: line-through; margin-right: 10px;">${document.querySelector(".book-sum-total").textContent}</span> £${newNum}`;
             document.querySelector(".book-mobile-head").textContent = "Total £" + totalPrice;
             if(document.querySelectorAll(".book-sum-flex").length == 1){
                 document.querySelector(".book-mobile-txt").textContent = "1 Service";
@@ -824,7 +827,6 @@ function nextBookingStage(){
     } 
     
     else {
-        price = document.querySelector(".book-code-total").textContent;
         document.querySelector(".book-code-modal").style.opacity = "1";
         document.querySelector(".book-code-modal").style.pointerEvents = "auto";
         document.querySelector(".book-mobile").style.opacity = "0";
@@ -879,9 +881,9 @@ if(document.querySelector(".book-container")){
                         codeApplied = true;
                         couponCode = document.querySelector(".book-code-code").value;
                         let discountMulti = Number(responseData.discount) / 100;
-                        let newNum = Number(document.querySelector(".book-code-total").textContent.slice(1)) * discountMulti;
+                        let newNum = (Number(price.slice(1)) * discountMulti).toFixed(2);
+                        document.querySelector(".book-code-total").innerHTML = `<span class="book-code-total" style="text-decoration: line-through; margin-right: 10px;">${price}</span> £${newNum}`;
                         price = "£" + newNum;
-                        document.querySelector(".book-code-total").innerHTML = `<span class="book-code-total" style="text-decoration: line-through; margin-right: 10px;">${document.querySelector(".book-code-total").textContent}</span> £${newNum}`;
                     }
                     document.querySelector(".book-code-code").value = "";
                 } catch (error) {
@@ -890,6 +892,12 @@ if(document.querySelector(".book-container")){
             }
             checkCode();
         }
+    }
+    function confirmBooking(){
+        document.querySelector(".book-pay-modal").style.opacity = "0";
+        document.querySelector(".book-pay-modal").style.pointerEvents = "none";
+        document.querySelector(".book-modal").style.opacity = "1";
+        document.querySelector(".book-modal").style.pointerEvents = "auto";
     }
 
     // calendar
@@ -1064,8 +1072,8 @@ if(document.querySelector(".book-container")){
                 document.querySelector(".book-code-modal").style.opacity = "0";
                 document.querySelector(".book-code-modal").style.pointerEvents = "none";
                 setTimeout(() => {
-                    document.querySelector(".book-modal").style.opacity = "1";
-                    document.querySelector(".book-modal").style.pointerEvents = "auto";
+                    document.querySelector(".book-pay-modal").style.opacity = "1";
+                    document.querySelector(".book-pay-modal").style.pointerEvents = "auto";
                 }, 200);
             } else {
                 document.querySelector(".book-email-error").style.display = "block";
@@ -1184,6 +1192,23 @@ if(document.querySelector(".book-container")){
             element.classList.remove("admin-element");
         });
 
+        async function verifyBooking(){
+            try {
+                const response = await fetch('/api/verify-booking');
+                const data = await response.json(); 
+
+                if(data.message == "success"){
+                    console.log("verified");
+                } 
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        if(params.get("verify")){
+            verifyBooking();
+        }
+
         function closeAccessModal(){
             document.querySelector(".book-access-modal").style.pointerEvents = "none";
             document.querySelector(".book-access-modal").style.opacity = "0";
@@ -1204,7 +1229,7 @@ if(document.querySelector(".book-container")){
                         body: JSON.stringify(dataToSend), 
                     });
 
-                    if (!response.ok) {
+                    if(!response.ok) {
                         const errorData = await response.json();
                         console.error('Error:', errorData.message);
                         return;
@@ -1213,6 +1238,9 @@ if(document.querySelector(".book-container")){
                     const responseData = await response.json();
                     if(responseData.message == "Success"){
                         closeAccessModal();
+                        if(params.get("verify")){
+                            verifyBooking();
+                        }
                     } else {
                         document.querySelector(".book-access-error").style.display = "block";
                         setTimeout(() => {
@@ -1473,4 +1501,14 @@ if(document.querySelector(".book-container")){
     }
 }
 
-// voucher button?
+// add booking status to DB: pending/verified
+// notify kumar when they click confirm/I have paid. He will verify like below
+// update booking status + ref code to show booking UI in admin controls. Make an option to verify booking.
+
+// make ui for buying gift cards
+/* flow: 
+1. request gift card on site
+2. they will see payment instructions: amount, iban, ref code.
+3. they will see modal: "thank you, we will email you your gift card code as soon as we verify..."
+3. Kumar gets notified by email: "someone just requested a gift card, verify that you were sent £X with the following reference code attached: REFXXXXXX with this link: "
+*/
