@@ -15,13 +15,21 @@ const crypto = require('crypto');
 const accessKey = "237410";
 
 
-const db = mysql.createConnection({
+const db = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    port: process.env.PORT // 24642 or 3306
+    port: process.env.DB_PORT, // not process.env.PORT
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
+db.query('SELECT 1', (err, results) => {
+    if (err) console.error('Error running query:', err);
+    else console.log('Database is working');
+});
+/*
 db.connect((err) => {
     if (err) {
         console.error('Database connection failed:', err.stack);
@@ -29,13 +37,14 @@ db.connect((err) => {
     }
     console.log('Connected to MySQL database.');
 });
+*/
 
 const store = new MySQLStore({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    port: process.env.PORT // 24642 or 3306
+    port: process.env.DB_PORT // 24642 or 3306
 });
 app.use(session({
     store,
@@ -234,7 +243,9 @@ app.post("/api/get-bookings", (req, res) => {
         likeStr = "%" + req.body.year + "-" + String(req.body.month) + "%";
     }
 
+
     const getBookingsQuery = "select * from bookings where booking_date like ?";
+    db.connect();
     db.query(getBookingsQuery, [likeStr], (err, result) => {
         if(err){
             console.error("Error getting bookings: " + err);
@@ -243,6 +254,7 @@ app.post("/api/get-bookings", (req, res) => {
 
         return res.json({ bookings: result });
     });
+    db.end();
 });
 
 app.post("/api/verify-cancel", (req, res) => {
