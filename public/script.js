@@ -976,6 +976,7 @@ if(document.querySelector(".book-container")){
                 } else {
                     document.querySelector(".book-time-ul").style.marginTop = "-20px";
                 }
+                
 
                 checkSlots();
             } catch (error) {
