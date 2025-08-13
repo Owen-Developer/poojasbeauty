@@ -157,7 +157,7 @@ app.post("/api/book-appointment", (req, res) => {
     const cancelCode = generateNumber();
     const cancelLink = "https://poojasbeauty.onrender.com//bookings.html?cancel=" + cancelCode;
     const refCode = "REF" + generateNumber();
-    const refLink = "https://poojasbeauty.onrender.com//bookings.html?verify=" + refCode;
+    const refLink = "https://poojasbeauty.onrender.com//bookings.html?admin=true&verify=" + refCode;
 
     const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status, reference_code) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     db.query(insertQuery, [date, time, email, message, code, services, type, price, cancelCode, "pending", refCode], (err, result) => {
@@ -168,7 +168,7 @@ app.post("/api/book-appointment", (req, res) => {
     });
     sendClientEmail("jackbaileywoods@gmail.com", date, time, email, message, code, services, price, refCode, refLink);
     sendUserEmail(email, date, time, cancelLink, price, refCode);
-    return res.json({ message: 'Success' });
+    return res.json({ message: 'Success', code: refCode });
 });
 
 app.post("/api/check-code", (req, res) => {
@@ -372,7 +372,7 @@ app.post("/api/remove-slot", requireAdmin, (req, res) => {
 
 app.get("/api/verify-booking", requireAdmin, (req, res) => {
     const changeStatusQuery = "update bookings set payment_status = ? where reference_code = ?";
-    db.query(changeStatusQuery, ["verified", req.body.verify], (err, result) => {
+    db.query(changeStatusQuery, ["verified", req.query.verify], (err, result) => {
         if(err){
             console.error("Error changing payment status: " + err);
         }
