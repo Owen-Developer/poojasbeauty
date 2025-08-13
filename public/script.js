@@ -1195,7 +1195,7 @@ if(document.querySelector(".book-container")){
 
         async function verifyBooking(){
             try {
-                const response = await fetch('/api/verify-booking');
+                const response = await fetch(`/api/verify-booking?verify=${params.get("verify")}`);
                 const data = await response.json(); 
 
                 if(data.message == "success"){

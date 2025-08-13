@@ -155,9 +155,9 @@ app.post("/api/book-appointment", (req, res) => {
     }
 
     const cancelCode = generateNumber();
-    const cancelLink = "https://poojasbeauty.onrender.com//bookings.html?cancel=" + cancelCode;
+    const cancelLink = "https://poojasbeauty.onrender.com/bookings.html?cancel=" + cancelCode;
     const refCode = "REF" + generateNumber();
-    const refLink = "https://poojasbeauty.onrender.com//bookings.html?admin=true&verify=" + refCode;
+    const refLink = "https://poojasbeauty.onrender.com/bookings.html?admin=true&verify=" + refCode;
 
     const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status, reference_code) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     db.query(insertQuery, [date, time, email, message, code, services, type, price, cancelCode, "pending", refCode], (err, result) => {
