@@ -1733,6 +1733,7 @@ i.detail-chevron-active {
     font-weight: 500;
     line-height: 1;
     padding: 3px 10px;
+    margin-bottom: 14px;
 }
 .gallp-title {
     color: white;

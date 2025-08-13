@@ -177,6 +177,8 @@ const services = [
             "Gel Polish <span>-</span> £18",
             "Full Set with acrylic <span>-</span> £25",
             "Gel polish removal <span>-</span> £10",
+            "Biab Nails <span>-</span> £25",
+            "Toe Gel Nails <span>-</span> £20",
         ],
         benefits: [
 "Flawless nail designs with durable finish that resists chips and everyday wear.",
@@ -253,8 +255,9 @@ const services = [
         name: "Makeup & Hair Style",
         description: "Prepare for any occasion with our professional makeup and hair styling service. We create flawless, radiant makeup looks that highlight your best features and match your personal style. Paired with expertly styled hair—whether soft waves, sleek updos, or bold statements—our service ensures you look stunning, polished, and camera-ready for weddings, events, or everyday confidence.",
         options: [
-            "Party Makeup From <span>-</span> £65",
-            "Party Hair Style From <span>-</span> £35",
+            "Party Makeup From <span>-</span> £50",
+            "Party Hair Style From <span>-</span> £40",
+            "Party Hair Style + Makeup From <span>-</span> £80",
             "Bridal Makeup & Hair From <span>-</span> £300",
             "Full Bridal Package <span>-</span> £400",
         ],
@@ -950,7 +953,7 @@ if(document.querySelector(".book-container")){
                                 todayBookings++;
                             }
                         });
-                        if(todayBookings == 17){
+                        if(todayBookings == 18){
                             box.classList.add("book-cal-disabled");
 
                             if(Number(box.textContent) >= todayDate){
@@ -1143,9 +1146,9 @@ if(document.querySelector(".book-container")){
                         bookingFound = true;
                     }
                 });
-                if(!bookingFound && responseData.closed < 17){
+                if(!bookingFound && responseData.closed < 18){
                     document.querySelector(".book-time-empty").style.display = "block";
-                } else if(responseData.closed == 17){
+                } else if(responseData.closed == 18){
                     document.querySelector(".btn-book-delete").classList.add("admin-none");
                     document.querySelector(".btn-book-open").classList.remove("admin-none");
                     document.querySelector(".book-time-closed").style.display = "block";
@@ -1353,15 +1356,17 @@ if(document.querySelector(".book-container")){
         function closeShowModal(){
             document.querySelector(".book-show-modal").style.opacity = "0";
             document.querySelector(".book-show-modal").style.pointerEvents = "none";
-            document.querySelector(".book-show-wrapper").innerHTML = `
+            setTimeout(() => {
+                document.querySelector(".book-show-wrapper").innerHTML = `
                 <i class="fa-solid fa-xmark book-show-x" onclick="closeShowModal()"></i>
-
+                
                 <div class="book-show-empty">
-                    <div class="book-show-title">No Bookings Made</div>
-                    <div class="book-show-para">No bookings have been made for this day so far.</div>
-                    <div class="btn-book-show-empty" onclick="closeShowModal()">Go Back</div>
+                <div class="book-show-title">No Bookings Made</div>
+                <div class="book-show-para">No bookings have been made for this day so far.</div>
+                <div class="btn-book-show-empty" onclick="closeShowModal()">Go Back</div>
                 </div>
-            `
+                `
+            }, 1000);
         }
 
         function openDay(){
