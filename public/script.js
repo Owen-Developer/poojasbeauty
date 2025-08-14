@@ -1584,16 +1584,20 @@ if(document.querySelector(".book-container")){
                         }
 
                         const responseData = await response.json();
+                        if(responseData.message == "success"){
+                            document.getElementById("uiVoucherValue").textContent = "£" + document.getElementById("giftValueInput").value.replace(/£/g, "");
+                            document.getElementById("uiVoucherRef").textContent = responseData.code;
+                            document.querySelector(".book-gift-modal").style.opacity = "0";
+                            document.querySelector(".book-gift-modal").style.pointerEvents = "none";
+                            document.querySelector(".book-inst-modal").style.opacity = "1";
+                            document.querySelector(".book-inst-modal").style.pointerEvents = "auto";
+                        }
                     } catch (error) {
                         console.error('Error posting data:', error);
                     }
                 }
 
                 postGift();
-                document.querySelector(".book-gift-modal").style.opacity = "0";
-                document.querySelector(".book-gift-modal").style.pointerEvents = "none";
-                document.querySelector(".book-inst-modal").style.opacity = "1";
-                document.querySelector(".book-inst-modal").style.pointerEvents = "auto";
             } else {
                 document.querySelector(".book-gift-error").style.display = "block";
                 setTimeout(() => {
