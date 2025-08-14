@@ -878,12 +878,18 @@ if(document.querySelector(".book-container")){
                             document.querySelector(".book-code-error").style.display = "none";
                         }, 2000);
                     } else {
-                        codeApplied = true;
-                        couponCode = document.querySelector(".book-code-code").value;
-                        let discountMulti = Number(responseData.discount) / 100;
-                        let newNum = (Number(price.slice(1)) * discountMulti).toFixed(2);
-                        document.querySelector(".book-code-total").innerHTML = `<span class="book-code-total" style="text-decoration: line-through; margin-right: 10px;">${price}</span> £${newNum}`;
-                        price = "£" + newNum;
+                        if(responseData.value >= Number(price.split(1))){
+                            codeApplied = true;
+                            couponCode = document.querySelector(".book-code-code").value;
+                            document.querySelector(".book-code-total").innerHTML = `<span class="book-code-total" style="text-decoration: line-through; margin-right: 10px;">${price}</span>`;
+                        } else {
+                            document.querySelector(".book-code-error").textContent = "This voucher does not have enough funds.";
+                            document.querySelector(".book-code-error").style.display = "block";
+                            setTimeout(() => {
+                                document.querySelector(".book-code-error").style.display = "none";
+                                document.querySelector(".book-code-error").textContent = "Please enter a valid code.";
+                            }, 2000);
+                        }
                     }
                     document.querySelector(".book-code-code").value = "";
                 } catch (error) {
@@ -1051,7 +1057,7 @@ if(document.querySelector(".book-container")){
                 fullServices += label.textContent + ",,";
             }
         }); 
-        const dataToSend = { date: fullDate, time: fullTime, email: emailTxt, message: bookingMessage, code: couponCode, services: fullServices, price: price, type: 'user' };
+        const dataToSend = { date: fullDate, time: fullTime, email: emailTxt, message: bookingMessage, code: couponCode, services: fullServices, price: price, type: 'user', applied: codeApplied };
         try {
             const response = await fetch(url + '/api/book-appointment', {
                 method: 'POST',
@@ -1072,12 +1078,17 @@ if(document.querySelector(".book-container")){
             if(responseData.message == "Success"){
                 document.querySelector(".book-code-modal").style.opacity = "0";
                 document.querySelector(".book-code-modal").style.pointerEvents = "none";
-                document.getElementById("uiRefCode").textContent = responseData.code;
-                document.getElementById("uiAmount").textContent = price;
-                setTimeout(() => {
-                    document.querySelector(".book-pay-modal").style.opacity = "1";
-                    document.querySelector(".book-pay-modal").style.pointerEvents = "auto";
-                }, 200);
+                if(!codeApplied){
+                    document.getElementById("uiRefCode").textContent = responseData.code;
+                    document.getElementById("uiAmount").textContent = price;
+                    setTimeout(() => {
+                        document.querySelector(".book-pay-modal").style.opacity = "1";
+                        document.querySelector(".book-pay-modal").style.pointerEvents = "auto";
+                    }, 200);
+                } else {
+                    document.querySelector(".book-modal").style.opacity = "1";
+                    document.querySelector(".book-modal").style.pointerEvents = "auto";
+                }
             } else {
                 document.querySelector(".book-email-error").style.display = "block";
                 setTimeout(() => {

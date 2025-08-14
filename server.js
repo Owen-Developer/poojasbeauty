@@ -84,6 +84,23 @@ function sendClientEmail(userEmail, date, time, email, message, code, services, 
         }
     });
 }
+function sendClientFree(userEmail, date, time, email, message, code, services) { 
+    const mailOptions = {
+        from: process.env.EMAIL_USER,  // Sender address
+        to: userEmail,                 // Receiver's email
+        subject: 'New Booking', // Subject line
+        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nVoucher code: ${code}\n\nServices: ${services.replace(",,", ", ")}\n\nThis booking was made using a voucher, so there payment has already been made.`,
+    };
+  
+    // Send mail
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log('Error sending email:', error);
+        } else {
+            console.log('Verification email sent:', info.response);
+        }
+    });
+}
 function sendClientGiftRequest(email, price, code, link) {  
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
@@ -152,6 +169,23 @@ function sendUserEmail(userEmail, date, time, link, price, code) {
         }
     });
 }
+function sendUserFree(userEmail, date, time, link){
+    const mailOptions = {
+        from: process.env.EMAIL_USER,  // Sender address
+        to: userEmail,                 // Receiver's email
+        subject: 'Booking Requested', // Subject line
+        text: `Hello, you made a booking for poojasbeautysalon: ${date}, ${time}\n\nCancel anytime with this link: ${link}`,
+    };
+  
+    // Send mail
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log('Error sending email:', error);
+        } else {
+            console.log('Verification email sent:', info.response);
+        }
+    });
+}
 function sendApologyEmail(userEmail, date){  
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
@@ -201,6 +235,7 @@ app.post("/api/book-appointment", (req, res) => {
     const services = req.body.services;
     const price = req.body.price;
     const type = req.body.type;
+    const applied = req.body.applied;
 
     if(!isValidEmail(email)){
         return res.json({ message: 'Failure' });
@@ -210,17 +245,27 @@ app.post("/api/book-appointment", (req, res) => {
     const cancelLink = "https://poojasbeauty.onrender.com/bookings.html?cancel=" + cancelCode;
     const refCode = "REF" + generateNumber();
     const refLink = "https://poojasbeauty.onrender.com/bookings.html?admin=true&verify=" + refCode;
+    let initialStatus = "pending";
+    if(applied){
+        initialStatus = "verified";
+    }
 
     const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status, reference_code) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    db.query(insertQuery, [date, time, email, message, code, services, type, price, cancelCode, "pending", refCode], (err, result) => {
+    db.query(insertQuery, [date, time, email, message, code, services, type, price, cancelCode, initialStatus, refCode], (err, result) => {
         if(err){
             console.error("Error updating booking: ", err);
             return res.json({ message: 'Failure' });
         }
+
+        if(applied){
+            sendClientFree("jackbaileywoods@gmail.com", date, time, email, message, code, services);
+            sendUserFree(email, date, time, cancelLink);         
+        } else {
+            sendClientEmail("jackbaileywoods@gmail.com", date, time, email, message, code, services, price, refCode, refLink);
+            sendUserEmail(email, date, time, cancelLink, price, refCode);
+        }
+        return res.json({ message: 'Success', code: refCode });
     });
-    sendClientEmail("jackbaileywoods@gmail.com", date, time, email, message, code, services, price, refCode, refLink);
-    sendUserEmail(email, date, time, cancelLink, price, refCode);
-    return res.json({ message: 'Success', code: refCode });
 });
 
 app.post("/api/check-code", (req, res) => {
@@ -235,7 +280,7 @@ app.post("/api/check-code", (req, res) => {
         if(result.length == 0){
             return res.json({ message: 'failure' });
         } else {
-            return res.json({ message: 'success', discount: result[0].discount });
+            return res.json({ message: 'success', value: result[0].value });
         }
     });
 });
