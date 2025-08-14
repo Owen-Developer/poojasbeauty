@@ -433,7 +433,7 @@ app.post("/api/create-gift", (req, res) => {
             return res.json({ message: 'inavlid email' });
         }
 
-        sendClientGiftRequest(email, price, refCode, verifyLink);
+        sendClientGiftRequest(email, amount, refCode, verifyLink);
         return res.json({ message: 'success', code: refCode });
     });
 });
