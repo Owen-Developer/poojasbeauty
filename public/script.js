@@ -1075,7 +1075,7 @@ if(document.querySelector(".book-container")){
             }
 
             const responseData = await response.json();
-            if(responseData.message == "Success"){
+            if(responseData.message == "success"){
                 document.querySelector(".book-code-modal").style.opacity = "0";
                 document.querySelector(".book-code-modal").style.pointerEvents = "none";
                 if(!codeApplied){
