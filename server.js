@@ -453,7 +453,7 @@ app.post("/api/create-gift", (req, res) => {
     
     const newGift = "GIFT" + generateNumber();
     const refCode = "REF" + generateNumber();
-    const verifyLink = "https://poojasbeauty.onrender.com/bookings.html?admin=true&verify-voucher=" + refCode;
+    const verifyLink = "https://poojasbeauty.onrender.com/bookings.html?admin=true&verifyvoucher=" + refCode;
 
     const createGiftQuery = "insert into codes (coupon_code, code_status, value, email, reference_code) values (?, ?, ?, ?, ?)";
     db.query(createGiftQuery, [newGift, "active", amount, email, refCode], (err, result) => {
