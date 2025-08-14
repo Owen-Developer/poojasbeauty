@@ -259,12 +259,27 @@ app.post("/api/book-appointment", (req, res) => {
 
         if(applied){
             sendClientFree("jackbaileywoods@gmail.com", date, time, email, message, code, services);
-            sendUserFree(email, date, time, cancelLink);         
+            sendUserFree(email, date, time, cancelLink);
+            db.query("select * from codes where coupon_code = ?", [code], (err, result) => {
+                if(err){
+                    console.error("Error selecting codes");
+                }
+
+                const updateValueQuery = "update codes set value = ? where coupon_code = ?";
+                let newValue = result[0].value - Number(price.slice(1));
+                db.query(updateValueQuery, [newValue, code], (err, result) => {
+                    if(err){
+                        console.error("Error updating gift value: " + err);
+                    }
+
+                    return res.json({ message: 'success' });
+                });
+            });
         } else {
             sendClientEmail("jackbaileywoods@gmail.com", date, time, email, message, code, services, price, refCode, refLink);
             sendUserEmail(email, date, time, cancelLink, price, refCode);
+            return res.json({ message: 'Success', code: refCode });
         }
-        return res.json({ message: 'Success', code: refCode });
     });
 });
 
