@@ -878,9 +878,7 @@ if(document.querySelector(".book-container")){
                             document.querySelector(".book-code-error").style.display = "none";
                         }, 2000);
                     } else {
-                        if(responseData.value >= Number(price.split(1))){
-                            console.log(responseData.value);
-                            console.log(Number(price.split(1)));
+                        if(responseData.value >= Number(price.slice(1))){
                             codeApplied = true;
                             couponCode = document.querySelector(".book-code-code").value;
                             document.querySelector(".book-code-total").innerHTML = `<span class="book-code-total" style="text-decoration: line-through; margin-right: 10px;">${price}</span>`;
