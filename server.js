@@ -11,6 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+const e = require('express');
 
 const accessKey = "237410";
 
@@ -376,6 +377,19 @@ app.get("/api/verify-booking", requireAdmin, (req, res) => {
     db.query(changeStatusQuery, ["verified", req.query.verify], (err, result) => {
         if(err){
             console.error("Error changing payment status: " + err);
+        }
+
+        return res.json({ message: 'success' });
+    });
+});
+
+app.post("/api/mark-paid", requireAdmin, (req, res) => {
+    const id = req.body.id;
+
+    const markQuery = "update bookings set payment_status = ? where id = ?";
+    db.query(markQuery, ["verified", id], (err, result) => {
+        if(err){
+            console.error("Error updating booking status: " + err);
         }
 
         return res.json({ message: 'success' });

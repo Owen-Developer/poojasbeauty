@@ -1329,11 +1329,17 @@ if(document.querySelector(".book-container")){
                     bookings.forEach(obj => {
                         let newCard = document.createElement("div");
                         newCard.classList.add("book-show-section");
+                        let btnMarkPaid = "";
+                        if(obj.payment_status == "pending"){
+                            btnMarkPaid = `<div class="btn-show-mark">Mark as Paid</div>`;
+                        }
                         newCard.innerHTML = `
                             <div class="book-show-time">${obj.booking_time}</div>
+                            <div class="book-show-status">Payment Status: ${obj.payment_status}</div>
                             <div class="book-show-price">Total price: ${obj.price}</div>
-                            <div class="book-show-message">${obj.message}</div>
+                            <div class="book-show-message">Message: ${obj.message}</div>
                             <div class="book-show-services">${obj.services.replace(",,", ", ")}</div>
+                            ${btnMarkPaid}
                             <div class="btn-show-delete">Delete Booking</div>
                         `
                         newCard.querySelector(".btn-show-delete").addEventListener("click", () => {
@@ -1370,6 +1376,37 @@ if(document.querySelector(".book-container")){
                             }
                             deleteCard();
                         });
+                        if(obj.payment_status == "pending"){
+                            newCard.querySelector(".btn-show-mark").addEventListener("click", () => {
+                                async function postData() {
+                                    const dataToSend = { id: obj.id };
+                                    try {
+                                        const response = await fetch('/api/mark-paid', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json', 
+                                            },
+                                            body: JSON.stringify(dataToSend), 
+                                        });
+
+                                        if (!response.ok) {
+                                            const errorData = await response.json();
+                                            console.error('Error:', errorData.message);
+                                            return;
+                                        }
+
+                                        const responseData = await response.json();
+                                        if(responseData.message == "success"){
+                                            newCard.querySelector(".book-show-status").textContent = "Payment Status: verified";
+                                        }
+                                    } catch (error) {
+                                        console.error('Error posting data:', error);
+                                    }
+                                }
+
+                                postData();
+                            });
+                        }
                         document.querySelector(".book-show-wrapper").appendChild(newCard);
                     });
                     if(bookings.length > 0){

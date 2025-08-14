@@ -2537,8 +2537,8 @@ i.book-delete-icon {
 }
 
 .book-show-modal {
-    pointer-events: none;
-    opacity: 0;
+    pointer-events: auto;
+    opacity: 1;
     z-index: 101;
     position: fixed;
     bottom: 0;
@@ -2579,7 +2579,7 @@ i.book-delete-icon {
     color: hsl(0, 0%, 75%);
 }
 .btn-show-delete {
-    margin-top: 14px;
+    margin-top: 18px;
     text-align: center;
     display: inline-block;
     padding: 12px 18px;
@@ -2593,6 +2593,22 @@ i.book-delete-icon {
 }
 .btn-show-delete:hover {
     background-color: hsl(0, 68%, 58%);
+}
+.btn-show-mark {
+    margin-right: 10px;
+    text-align: center;
+    display: inline-block;
+    padding: 12px 18px;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 8px;
+    background-color: var(--purple);
+    color: white;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+.btn-show-mark:hover {
+    background-color: var(--purple-bright);
 }
 .btn-book-show-empty {
     margin-top: 20px;
