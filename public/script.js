@@ -1566,7 +1566,7 @@ if(document.querySelector(".book-container")){
         document.querySelector(".book-gift-modal").style.pointerEvents = "auto";
         function requestGift(){
             if(!isNaN(document.getElementById("giftValueInput").value.replace(/£/g, "")) && document.getElementById("giftValueInput").value.replace(/£/g, "").length > 0){
-                async function postData() {
+                async function postGift() {
                     const dataToSend = { amount: Number(document.getElementById("giftValueInput").value.replace(/£/g, "")), email: document.getElementById("giftEmailInput").value };
                     try {
                         const response = await fetch('/api/create-gift', {
@@ -1584,18 +1584,12 @@ if(document.querySelector(".book-container")){
                         }
 
                         const responseData = await response.json();
-                        if(responseData.message == "success"){
-                            document.querySelector(".book-gift-modal").style.opacity = "0";
-                            document.querySelector(".book-gift-modal").style.pointerEvents = "none";
-                            document.querySelector(".book-voucherthank-modal").style.opacity = "1";
-                            document.querySelector(".book-v-modal").style.pointerEvents = "auto";
-                        }
                     } catch (error) {
                         console.error('Error posting data:', error);
                     }
                 }
 
-                postData();
+                postGift();
                 document.querySelector(".book-gift-modal").style.opacity = "0";
                 document.querySelector(".book-gift-modal").style.pointerEvents = "none";
                 document.querySelector(".book-inst-modal").style.opacity = "1";

@@ -105,8 +105,8 @@ function sendUserGiftRequest(userEmail, price, code) {
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
-        subject: 'Booking Requested', // Subject line
-        text: `Hello, you requested a voucher from poojas beauty salon.\n\nMake sure that you have sent ${price} to the iban: ABCDEFGHIJKLMNOPQRST. Include this reference code in the message of your payment: ${code}\n\nYou will recieve an email containing your voucher code as soon as we verify your payment!`,
+        subject: 'Voucher Requested', // Subject line
+        text: `Hello, you requested a voucher from poojas beauty salon.\n\nMake sure that you have sent £${price} to the iban: ABCDEFGHIJKLMNOPQRST. Include this reference code in the message of your payment: ${code}\n\nYou will recieve an email containing your voucher code as soon as we verify your payment!`,
     };
   
     // Send mail
@@ -122,7 +122,7 @@ function sendUserVoucher(userEmail, Giftcode) {
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
-        subject: 'Booking Requested', // Subject line
+        subject: 'Claim Your Voucher', // Subject line
         text: `Hello, your voucher payment has been verified. Use this code at checkout: ${Giftcode}`,
     };
   
@@ -466,8 +466,8 @@ app.post("/api/create-gift", (req, res) => {
             return res.json({ message: 'inavlid email' });
         }
 
-        sendUserGiftRequest(email, amount, refCode, verifyLink);
-        sendClientGiftRequest(email, amount, refCode);
+        sendUserGiftRequest(email, amount, refCode);
+        sendClientGiftRequest(email, amount, refCode, verifyLink);
         return res.json({ message: 'success', code: refCode });
     });
 });
