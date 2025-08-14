@@ -2094,7 +2094,7 @@ i.time-trash:hover {
     color: hsl(0, 0%, 75%);
 }
 
-.book-verify-modal, .book-voucherthank-modal {
+.book-verify-modal, .book-voucherthank-modal, .book-verifyvoucher-modal {
     z-index: 99;
     opacity: 0;
     pointer-events: none;

@@ -1208,9 +1208,25 @@ if(document.querySelector(".book-container")){
                 console.error('Error fetching data:', error);
             }
         }
-
         if(params.get("verify")){
             verifyBooking();
+        }
+
+        async function verifyGift(){
+            try {
+                const response = await fetch(`/api/verify-gift?verifyvoucher=${params.get("verifyvoucher")}`);
+                const data = await response.json(); 
+
+                if(data.message == "success"){
+                    document.querySelector(".book-verifyvoucher-modal").style.opacity = "1";
+                    document.querySelector(".book-verifyvoucher-modal").style.pointerEvents = "auto";
+                } 
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        if(params.get("verifyvoucher")){
+            verifyGift();
         }
 
         function closeAccessModal(){
@@ -1244,6 +1260,9 @@ if(document.querySelector(".book-container")){
                         closeAccessModal();
                         if(params.get("verify")){
                             verifyBooking();
+                        }
+                        if(params.get("verifyvoucher")){
+                            verifyGift();
                         }
                     } else {
                         document.querySelector(".book-access-error").style.display = "block";
@@ -1565,6 +1584,12 @@ if(document.querySelector(".book-container")){
                         }
 
                         const responseData = await response.json();
+                        if(responseData.message == "success"){
+                            document.querySelector(".book-gift-modal").style.opacity = "0";
+                            document.querySelector(".book-gift-modal").style.pointerEvents = "none";
+                            document.querySelector(".book-voucherthank-modal").style.opacity = "1";
+                            document.querySelector(".book-v-modal").style.pointerEvents = "auto";
+                        }
                     } catch (error) {
                         console.error('Error posting data:', error);
                     }
@@ -1592,10 +1617,6 @@ if(document.querySelector(".book-container")){
     }
 }
 
-// add booking status to DB: pending/verified
-// notify kumar when they click confirm/I have paid. He will verify like below
-// update booking status + ref code to show booking UI in admin controls. Make an option to verify booking.
-
 // make ui for buying gift cards
 /* flow: 
 1. request gift card on site
@@ -1603,3 +1624,7 @@ if(document.querySelector(".book-container")){
 3. they will see modal: "thank you, we will email you your gift card code as soon as we verify..."
 3. Kumar gets notified by email: "someone just requested a gift card, verify that you were sent £X with the following reference code attached: REFXXXXXX with this link: "
 */
+
+// email user about gift card request
+// add logic for admin verifying gift card -> email user the code
+// add new logic for gift cards at checkout

@@ -89,7 +89,41 @@ function sendClientGiftRequest(email, price, code, link) {
         from: process.env.EMAIL_USER,  // Sender address
         to: "jackbaileywoods@gmail.com",                 // Receiver's email
         subject: 'Gift Card Purchase Request', // Subject line
-        text: `Hello, a gift card purchase was requested for poojasbeauty salon with the email: ${email}. Verify that you were sent £${price} with the the reference code attached: ${code} simply by visiting this link: ${link}`,
+        text: `Hello, a gift card purchase was requested for poojas beauty salon with the email: ${email}. Verify that you were sent £${price} with the the reference code attached: ${code} simply by visiting this link: ${link}`,
+    };
+  
+    // Send mail
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log('Error sending email:', error);
+        } else {
+            console.log('Verification email sent:', info.response);
+        }
+    });
+}
+function sendUserGiftRequest(userEmail, price, code) {  
+    const mailOptions = {
+        from: process.env.EMAIL_USER,  // Sender address
+        to: userEmail,                 // Receiver's email
+        subject: 'Booking Requested', // Subject line
+        text: `Hello, you requested a voucher from poojas beauty salon.\n\nMake sure that you have sent ${price} to the iban: ABCDEFGHIJKLMNOPQRST. Include this reference code in the message of your payment: ${code}\n\nYou will recieve an email containing your voucher code as soon as we verify your payment!`,
+    };
+  
+    // Send mail
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log('Error sending email:', error);
+        } else {
+            console.log('Verification email sent:', info.response);
+        }
+    });
+}
+function sendUserVoucher(userEmail, Giftcode) {  
+    const mailOptions = {
+        from: process.env.EMAIL_USER,  // Sender address
+        to: userEmail,                 // Receiver's email
+        subject: 'Booking Requested', // Subject line
+        text: `Hello, your voucher payment has been verified. Use this code at checkout: ${Giftcode}`,
     };
   
     // Send mail
@@ -390,7 +424,6 @@ app.post("/api/remove-slot", requireAdmin, (req, res) => {
 
 app.get("/api/verify-booking", requireAdmin, (req, res) => {
     const changeStatusQuery = "update bookings set payment_status = ? where reference_code = ?";
-    console.log(req.query.verify);
     db.query(changeStatusQuery, ["verified", req.query.verify], (err, result) => {
         if(err){
             console.error("Error changing payment status: " + err);
@@ -420,7 +453,7 @@ app.post("/api/create-gift", (req, res) => {
     
     const newGift = "GIFT" + generateNumber();
     const refCode = "REF" + generateNumber();
-    const verifyLink = "https://poojasbeauty.onrender.com/bookings.html?verify-voucher=" + refCode;
+    const verifyLink = "https://poojasbeauty.onrender.com/bookings.html?admin=true&verify-voucher=" + refCode;
 
     const createGiftQuery = "insert into codes (coupon_code, code_status, value, email, reference_code) values (?, ?, ?, ?, ?)";
     db.query(createGiftQuery, [newGift, "active", amount, email, refCode], (err, result) => {
@@ -433,8 +466,26 @@ app.post("/api/create-gift", (req, res) => {
             return res.json({ message: 'inavlid email' });
         }
 
-        sendClientGiftRequest(email, amount, refCode, verifyLink);
+        sendUserGiftRequest(email, amount, refCode, verifyLink);
+        sendClientGiftRequest(email, amount, refCode);
         return res.json({ message: 'success', code: refCode });
+    });
+});
+
+app.get("/api/verify-gift", requireAdmin, (req, res) => {
+    const getVoucherQuery = "select * from codes where reference_code = ?";
+    db.query(getVoucherQuery, [req.query.verifyvoucher], (err, result) => {
+        if(err){
+            console.error("Error getting vouchers: " + err);
+            return res.json({ message: 'failure' });
+        }
+
+        if(result.length == 1){
+            sendUserVoucher(result[0].email, result[0].coupon_code);
+            return res.json({ message: 'success' });
+        } else {
+            return res.json({ message: 'failure' });
+        }
     });
 });
 /////////////////////////////////////////////////////////////////
