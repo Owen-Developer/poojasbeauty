@@ -67,7 +67,7 @@ const transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_PASS
     }
 });
-function sendClientEmail(userEmail, date, time, email, message, code, services, price, refCode, link) {  
+function sendClientEmail(userEmail, date, time, email, message, code, services, price, refCode, link) { 
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
@@ -84,11 +84,28 @@ function sendClientEmail(userEmail, date, time, email, message, code, services, 
         }
     });
 }
+function sendClientGiftRequest(email, price, code, link) {  
+    const mailOptions = {
+        from: process.env.EMAIL_USER,  // Sender address
+        to: "jackbaileywoods@gmail.com",                 // Receiver's email
+        subject: 'Gift Card Purchase Request', // Subject line
+        text: `Hello, a gift card purchase was requested for poojasbeauty salon with the email: ${email}. Verify that you were sent £${price} with the the reference code attached: ${code} simply by visiting this link: ${link}`,
+    };
+  
+    // Send mail
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log('Error sending email:', error);
+        } else {
+            console.log('Verification email sent:', info.response);
+        }
+    });
+}
 function sendUserEmail(userEmail, date, time, link, price, code) {  
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
-        subject: 'New Booking', // Subject line
+        subject: 'Booking Requested', // Subject line
         text: `Hello, you made a booking for poojasbeautysalon: ${date}, ${time}\n\nCancel anytime with this link: ${link}\n\n Make sure that you have sent ${price} to the iban: ABCDEFGHIJKLMNOPQRST. Include this reference code in the message of your payment: ${code}`,
     };
   
@@ -105,7 +122,7 @@ function sendApologyEmail(userEmail, date){
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
-        subject: 'New Booking', // Subject line
+        subject: 'Booking Cancelled', // Subject line
         html: `<p>Sorry, your booking for poojasbeautysalon on ${date} has been cancelled due to a schedule change. Please refund and rebook at your convenience.</p>`,
         text: `Sorry, your booking for poojasbeautysalon on ${date} has been cancelled due to a schedule change. Please refund and rebook at your convenience.`,
     };
@@ -390,9 +407,34 @@ app.post("/api/mark-paid", requireAdmin, (req, res) => {
     db.query(markQuery, ["verified", id], (err, result) => {
         if(err){
             console.error("Error updating booking status: " + err);
+            return res.json({ message: 'failure' });
         }
 
         return res.json({ message: 'success' });
+    });
+});
+
+app.post("/api/create-gift", (req, res) => {
+    const amount = req.body.amount;
+    const email = req.body.email;
+    
+    const newGift = "GIFT" + generateNumber();
+    const refCode = "REF" + generateNumber();
+    const verifyLink = "https://poojasbeauty.onrender.com/bookings.html?verify-voucher=" + refCode;
+
+    const createGiftQuery = "insert into codes (coupon_code, code_status, value, email, reference_code) values (?, ?, ?, ?, ?)";
+    db.query(createGiftQuery, [newGift, "active", amount, email, refCode], (err, result) => {
+        if(err){
+            console.error("Error creating new code: " + err);
+            return res.json({ message: 'failure' });
+        }
+
+        if(!isValidEmail(email)){
+            return res.json({ message: 'inavlid email' });
+        }
+
+        sendClientGiftRequest(email, price, refCode, verifyLink);
+        return res.json({ message: 'success', code: refCode });
     });
 });
 /////////////////////////////////////////////////////////////////

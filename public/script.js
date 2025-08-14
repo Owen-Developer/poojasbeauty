@@ -746,7 +746,7 @@ document.querySelectorAll(".book-all-modal").forEach(modal => {
         modal.style.pointerEvents = "none";
     });
 
-    modal.addEventListener("click", (e) => {
+    modal.addEventListener("mousedown", (e) => {
         if(!modal.querySelector("div").contains(e.target)){
         modal.style.opacity = "0";
         modal.style.pointerEvents = "none";   
@@ -1072,7 +1072,8 @@ if(document.querySelector(".book-container")){
             if(responseData.message == "Success"){
                 document.querySelector(".book-code-modal").style.opacity = "0";
                 document.querySelector(".book-code-modal").style.pointerEvents = "none";
-                document.getElementById("uiRefCode").textContent = responseData.code;
+                document.querySelector(".uiRefCode").textContent = responseData.code;
+                document.querySelector(".uiAmount").textContent = price;
                 setTimeout(() => {
                     document.querySelector(".book-pay-modal").style.opacity = "1";
                     document.querySelector(".book-pay-modal").style.pointerEvents = "auto";
@@ -1200,7 +1201,8 @@ if(document.querySelector(".book-container")){
                 const data = await response.json(); 
 
                 if(data.message == "success"){
-                    console.log("verified");
+                    document.querySelector(".book-verify-modal").style.opacity = "1";
+                    document.querySelector(".book-verify-modal").style.pointerEvents = "auto";
                 } 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -1536,6 +1538,56 @@ if(document.querySelector(".book-container")){
                 }
             }
             requestDelete();
+        }
+    }
+
+    // gift card
+    if(params.get("voucher")){
+        document.querySelector(".book-gift-modal").style.opacity = "1";
+        document.querySelector(".book-gift-modal").style.pointerEvents = "auto";
+        function requestGift(){
+            if(!isNaN(document.getElementById("giftValueInput").value.replace(/£/g, "")) && document.getElementById("giftValueInput").value.replace(/£/g, "").length > 0){
+                async function postData() {
+                    const dataToSend = { amount: Number(document.getElementById("giftValueInput").value.replace(/£/g, "")), email: document.getElementById("giftEmailInput").value };
+                    try {
+                        const response = await fetch('/api/create-gift', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json', 
+                            },
+                            body: JSON.stringify(dataToSend), 
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            console.error('Error:', errorData.message);
+                            return;
+                        }
+
+                        const responseData = await response.json();
+                    } catch (error) {
+                        console.error('Error posting data:', error);
+                    }
+                }
+
+                postData();
+                document.querySelector(".book-gift-modal").style.opacity = "0";
+                document.querySelector(".book-gift-modal").style.pointerEvents = "none";
+                document.querySelector(".book-inst-modal").style.opacity = "1";
+                document.querySelector(".book-inst-modal").style.pointerEvents = "auto";
+            } else {
+                document.querySelector(".book-gift-error").style.display = "block";
+                setTimeout(() => {
+                    document.querySelector(".book-gift-error").style.display = "none";
+                }, 2000);
+            }
+        }
+
+        function confirmGift(){
+            document.querySelector(".book-inst-modal").style.opacity = "0";
+            document.querySelector(".book-inst-modal").style.pointerEvents = "none";
+            document.querySelector(".book-voucherthank-modal").style.opacity = "1";
+            document.querySelector(".book-voucherthank-modal").style.pointerEvents = "auto";
         }
     }
 }

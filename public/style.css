@@ -2094,6 +2094,19 @@ i.time-trash:hover {
     color: hsl(0, 0%, 75%);
 }
 
+.book-verify-modal, .book-voucherthank-modal {
+    z-index: 99;
+    opacity: 0;
+    pointer-events: none;
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background-color: hsla(0, 0%, 0%, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s ease;
+}
 .book-modal {
     z-index: 99;
     opacity: 0;
@@ -2162,6 +2175,76 @@ i.book-modal-check {
     transition: 0.2s ease;
 }
 .btn-book-modal:hover {
+    background-color: var(--purple-bright);
+}
+
+.book-gift-modal {
+    z-index: 99;
+    opacity: 0;
+    pointer-events: none;
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background-color: hsla(0, 0%, 0%, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s ease;
+}
+.book-gift-wrapper {
+    text-align: center;
+    background-color: hsl(0, 0%, 9%);
+    border: 1px solid hsl(0, 0%, 15%);
+    border-radius: 8px;
+    padding: 28px 18px;
+    max-width: calc(100% - 30px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+}
+.book-gift-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: white;
+    margin-bottom: 14px;
+}
+.book-gift-para {
+    margin-bottom: 28px;
+    width: 350px;
+    max-width: 100%;
+    font-size: 15px;
+    color: hsl(0, 0%, 75%);
+}
+.book-gift-label {
+    color: white;
+    font-size: 15px;
+    text-align: left;
+}
+.book-gift-input {
+    margin-top: 12px;
+    width: 100%;
+    background-color: hsl(0, 0%, 9%);
+    border: 1px solid hsl(0, 0%, 15%);
+    border-radius: 5px;
+    outline: 0;
+    font-size: 15px;
+    padding: 10px 14px;
+}
+.btn-book-gift {
+    margin-top: 20px;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 17px;
+    font-weight: 500;
+    background-color: var(--purple);
+    color: white;
+    padding: 12px 0;
+    border-radius: 8px;
+    transition: 0.2s ease;
+}
+.btn-book-gift:hover {
     background-color: var(--purple-bright);
 }
 
@@ -2377,7 +2460,29 @@ i.modal-exit {
     margin-top: 0px;
     display: none;
 }
+.book-gift-error {
+    color: rgb(204, 39, 39);
+    font-size: 14px;
+    margin-top: 12px;
+    text-align: left;
+    display: none;
+}
 
+.book-inst-modal {
+    pointer-events: none;
+    opacity: 0;
+    z-index: 101;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: hsla(0, 0%, 0%, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s ease;
+}
 .book-pay-modal {
     pointer-events: none;
     opacity: 0;
@@ -2537,8 +2642,8 @@ i.book-delete-icon {
 }
 
 .book-show-modal {
-    pointer-events: auto;
-    opacity: 1;
+    pointer-events: none;
+    opacity: 0;
     z-index: 101;
     position: fixed;
     bottom: 0;
@@ -3430,7 +3535,7 @@ i.book-show-x {
     .book-show-wrapper {
         max-height: calc(100% - 200px);
     }
-    .book-code-modal, .book-delete-modal, .book-show-modal, .book-pay-modal {
+    .book-code-modal, .book-delete-modal, .book-show-modal, .book-pay-modal, .book-inst-modal, .book-gift-modal {
         align-items: flex-end;
         padding-bottom: 15px;
     }

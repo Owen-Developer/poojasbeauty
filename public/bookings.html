@@ -377,12 +377,46 @@
             <div class="book-pay-title">Payment Instructions</div>
             <div class="book-pay-para">Your booking has been created. To verify it, please send your payment using the details below.</div>
             <div class="book-pay-col">
-                <div class="book-pay-txt">Amount to Pay: <span>£50</span></div>
+                <div class="book-pay-txt">Amount to Pay: <span id="uiAmount">£50</span></div>
                 <div class="book-pay-txt">IBAN: <span>ABCDEFGHIJKLMNOPQRST</span></div>
                 <div class="book-pay-txt">Reference Code: <span id="uiRefCode">REF9083</span></div>
             </div>
             <div class="book-pay-para">Important: Type in the reference code in the payment message field when sending your transfer.</div>
             <div class="btn-book-pay" onclick="confirmBooking()">I've Paid Now</div>
+        </div>
+    </div>
+
+    <div class="book-gift-modal book-all-modal">
+        <div class="book-gift-wrapper">
+            <i class="fa-solid fa-xmark modal-exit"></i>
+
+            <div class="book-gift-title">Buy a Voucher</div>
+            <div class="book-gift-para">Treat someone special with a gift card, perfect for pampering and self-care.</div>
+
+            <div class="book-gift-label">Your email</div>
+            <input type="text" class="book-gift-input" id="giftEmailInput" placeholder="Your email" />
+
+            <div class="book-gift-label" style="margin-top: 22px;">Select Value</div>
+            <input type="text" class="book-gift-input" id="giftValueInput" placeholder="e.g. £50" />
+            <div class="book-gift-error">Please enter a valid amount.</div>
+
+            <div class="btn-book-gift" onclick="requestGift()">Purchase</div>
+        </div>
+    </div>
+
+    <div class="book-inst-modal book-all-modal">
+        <div class="book-pay-wrapper">
+            <i class="fa-solid fa-xmark modal-exit"></i>
+
+            <div class="book-pay-title">Payment Instructions</div>
+            <div class="book-pay-para">Send your payment using the details below, and you will recieve an email with your gift card code shortly.</div>
+            <div class="book-pay-col">
+                <div class="book-pay-txt">Amount to Pay: <span id="uiVoucherValue">£50</span></div>
+                <div class="book-pay-txt">IBAN: <span>ABCDEFGHIJKLMNOPQRST</span></div>
+                <div class="book-pay-txt">Reference Code: <span id="uiVoucherRef">REF9083</span></div>
+            </div>
+            <div class="book-pay-para">Important: Type in the reference code in the payment message field when sending your transfer.</div>
+            <div class="btn-book-pay" onclick="confirmGift()">I've Paid Now</div>
         </div>
     </div>
 
@@ -438,6 +472,24 @@
                 <div class="btn-show-delete">Delete Booking</div>
             </div>
             -->
+        </div>
+    </div>
+
+    <div class="book-verify-modal">
+        <div class="book-wrapper">
+            <i class="fa-solid fa-check book-modal-check"></i>
+            <div class="book-modal-title">Booking Verified!</div>
+            <div class="book-modal-para">This boking is now marked as verified.<br> Thank you!</div>
+            <a href="index.html" class="btn-book-modal">Okay</a>
+        </div>
+    </div>
+
+    <div class="book-voucherthank-modal">
+        <div class="book-wrapper">
+            <i class="fa-solid fa-check book-modal-check"></i>
+            <div class="book-modal-title">Order Complete!</div>
+            <div class="book-modal-para">You will recieve your gift card by email as soon as we verify your payment.</div>
+            <a href="index.html" class="btn-book-modal">Okay</a>
         </div>
     </div>
 
