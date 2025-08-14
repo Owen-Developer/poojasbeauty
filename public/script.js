@@ -1072,8 +1072,8 @@ if(document.querySelector(".book-container")){
             if(responseData.message == "Success"){
                 document.querySelector(".book-code-modal").style.opacity = "0";
                 document.querySelector(".book-code-modal").style.pointerEvents = "none";
-                document.querySelector(".uiRefCode").textContent = responseData.code;
-                document.querySelector(".uiAmount").textContent = price;
+                document.getElementById("uiRefCode").textContent = responseData.code;
+                document.getElementById("uiAmount").textContent = price;
                 setTimeout(() => {
                     document.querySelector(".book-pay-modal").style.opacity = "1";
                     document.querySelector(".book-pay-modal").style.pointerEvents = "auto";
