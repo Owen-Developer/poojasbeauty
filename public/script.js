@@ -409,7 +409,7 @@ function createHtml(){
 
                 <a href="index.html" class="header-link header-line">Home</a>
                 <div class="header-link">Treatments <i class="fa-solid fa-chevron-down header-chevron"></i></div>
-                <a href="about.html#price-list" class="header-link header-line">Price list</a>
+                <a href="bookings.html?voucher=true" class="header-link header-line">Vouchers</a>
                 <a href="about.html" class="header-link header-line">About us</a>
                 <a href="testimonials.html" class="header-link header-line">Testimonials</a>
                 <a href="gallery.html" class="header-link header-line">Photo Gallery</a>
