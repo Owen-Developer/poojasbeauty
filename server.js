@@ -57,8 +57,6 @@ app.use(session({
 }
 }));
 
-app.use(express.static('public')); 
-
 ////////////////////////// REUSABLE FUNCTIONS LOGIC ///////////////////////////
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -278,7 +276,7 @@ app.post("/api/book-appointment", (req, res) => {
         } else {
             sendClientEmail("jackbaileywoods@gmail.com", date, time, email, message, code, services, price, refCode, refLink);
             sendUserEmail(email, date, time, cancelLink, price, refCode);
-            return res.json({ message: 'Success', code: refCode });
+            return res.json({ message: 'success', code: refCode });
         }
     });
 });

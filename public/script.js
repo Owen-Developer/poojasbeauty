@@ -10,9 +10,9 @@ let bookingMessage = "Not entered";
 let couponCode = "Not entered";
 let codeApplied = false;
 let price = 0;
-let todayBox;
 let isAdmin = false;
 
+let todayBox;
 const months = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
