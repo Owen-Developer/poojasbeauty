@@ -294,6 +294,9 @@ const services = [
 
 let url = "";
 
+let productIds = [];
+
+
 function createHtml(){
     let menu = document.createElement("div");
     menu.classList.add("menu-container");
@@ -362,7 +365,7 @@ function createHtml(){
                     </div>
                 </div>
             </div>
-            <a href="about.html#price-list" class="menu-li"><div class="menu-li-txt">Price list</div></a>
+            <a href="bookings.html?voucher=true" class="menu-li"><div class="menu-li-txt">Vouchers</div></a>
             <a href="about.html" class="menu-li"><div class="menu-li-txt">About us</div></a>
             <a href="testimonials.html" class="menu-li"><div class="menu-li-txt">Testimonials</div></a>
             <a href="gallery.html" class="menu-li"><div class="menu-li-txt">Photo Gallery</div></a>
@@ -590,12 +593,6 @@ document.querySelectorAll(".menu-flex").forEach(li => {
     });
 });
 
-document.addEventListener("keydown", (e) => {
-    if(e.key == "y"){
-        console.log(window.innerWidth);
-    }
-});
-
 function startHeroInt(){
     heroImgInt = setInterval(() => {
         isSwitching = true;
@@ -769,7 +766,6 @@ document.querySelectorAll(".book-time-wrapper").forEach(box => {
     });
     box.querySelector("i.time-trash").addEventListener("click", () => {
         async function removeSlot() {
-            console.log("w");
             let monStr = String(currentMonth + 1);
             if(monStr.length == 1){
                 monStr = "0" + monStr;
@@ -808,6 +804,9 @@ document.querySelectorAll(".book-time-wrapper").forEach(box => {
 function nextBookingStage(){
     bookStage++;
     if(bookStage == 1){
+        document.querySelectorAll(".book-li-active").forEach(li => {
+            productIds.push(li.id);
+        });
         document.querySelector('.book-container').scrollIntoView({
             block: 'start'   
         });
@@ -899,12 +898,6 @@ if(document.querySelector(".book-container")){
             checkCode();
         }
     }
-    function confirmBooking(){
-        document.querySelector(".book-pay-modal").style.opacity = "0";
-        document.querySelector(".book-pay-modal").style.pointerEvents = "none";
-        document.querySelector(".book-modal").style.opacity = "1";
-        document.querySelector(".book-modal").style.pointerEvents = "auto";
-    }
 
     // calendar
     function setCalendar(monthIdx, yearStr, firstCall){
@@ -933,7 +926,6 @@ if(document.querySelector(".book-container")){
                 }
 
                 const responseData = await response.json();
-                console.log(responseData.bookings);
                 bookings = responseData.bookings;
 
                 document.querySelectorAll(".book-cal-box").forEach((box, idx) => {
@@ -963,7 +955,7 @@ if(document.querySelector(".book-container")){
 
                         let todayBookings = 0;
                         bookings.forEach(booking => {
-                            if(Number(booking.booking_date.slice(8, 10)) == Number(box.textContent)){
+                            if(Number(booking.booking_date.slice(8, 10)) + 1 == Number(box.textContent)){
                                 todayBookings++;
                             }
                         });
@@ -1057,7 +1049,7 @@ if(document.querySelector(".book-container")){
                 fullServices += label.textContent + ",,";
             }
         }); 
-        const dataToSend = { date: fullDate, time: fullTime, email: emailTxt, message: bookingMessage, code: couponCode, services: fullServices, price: price, type: 'user', applied: codeApplied };
+        const dataToSend = { date: fullDate, time: fullTime, email: emailTxt, message: bookingMessage, code: couponCode, services: fullServices, price: price, type: 'user', applied: codeApplied, productIds: productIds };
         try {
             const response = await fetch(url + '/api/book-appointment', {
                 method: 'POST',
@@ -1076,24 +1068,10 @@ if(document.querySelector(".book-container")){
 
             const responseData = await response.json();
             if(responseData.message == "success"){
-                document.querySelector(".book-code-modal").style.opacity = "0";
-                document.querySelector(".book-code-modal").style.pointerEvents = "none";
-                if(!codeApplied){
-                    document.getElementById("uiRefCode").textContent = responseData.code;
-                    document.getElementById("uiAmount").textContent = price;
-                    setTimeout(() => {
-                        document.querySelector(".book-pay-modal").style.opacity = "1";
-                        document.querySelector(".book-pay-modal").style.pointerEvents = "auto";
-                    }, 200);
-                } else {
-                    document.querySelector(".book-modal").style.opacity = "1";
-                    document.querySelector(".book-modal").style.pointerEvents = "auto";
-                }
-            } else {
-                document.querySelector(".book-email-error").style.display = "block";
-                setTimeout(() => {
-                    document.querySelector(".book-email-error").style.display = "none";
-                }, 2000);
+                document.querySelector(".book-modal").style.opacity = "1";
+                document.querySelector(".book-modal").style.pointerEvents = "auto";
+            } else if(responseData.message == "continue") {
+                window.location.href = responseData.url;
             }
         } catch (error) {
             console.error('Error posting data:', error);
@@ -1149,7 +1127,6 @@ if(document.querySelector(".book-container")){
                 });
                 if(responseData.times != ""){
                     const timesTaken = responseData.times.split(",,");
-                    console.log(timesTaken);
                     timesTaken.forEach(time => {
                         document.querySelectorAll(".book-time-wrapper").forEach(wrapper => {
                             if(wrapper.textContent == time){
@@ -1508,7 +1485,6 @@ if(document.querySelector(".book-container")){
 
     // cancel
     if(params.get("cancel")){
-        console.log(params.get("cancel"));
         async function verifyCode() {
             const dataToSend = { code: params.get("cancel") };
             try {
@@ -1570,70 +1546,4 @@ if(document.querySelector(".book-container")){
             requestDelete();
         }
     }
-
-    // gift card
-    if(params.get("voucher")){
-        document.querySelector(".book-gift-modal").style.opacity = "1";
-        document.querySelector(".book-gift-modal").style.pointerEvents = "auto";
-        function requestGift(){
-            if(!isNaN(document.getElementById("giftValueInput").value.replace(/£/g, "")) && document.getElementById("giftValueInput").value.replace(/£/g, "").length > 0){
-                async function postGift() {
-                    const dataToSend = { amount: Number(document.getElementById("giftValueInput").value.replace(/£/g, "")), email: document.getElementById("giftEmailInput").value };
-                    try {
-                        const response = await fetch('/api/create-gift', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json', 
-                            },
-                            body: JSON.stringify(dataToSend), 
-                        });
-
-                        if (!response.ok) {
-                            const errorData = await response.json();
-                            console.error('Error:', errorData.message);
-                            return;
-                        }
-
-                        const responseData = await response.json();
-                        if(responseData.message == "success"){
-                            document.getElementById("uiVoucherValue").textContent = "£" + document.getElementById("giftValueInput").value.replace(/£/g, "");
-                            document.getElementById("uiVoucherRef").textContent = responseData.code;
-                            document.querySelector(".book-gift-modal").style.opacity = "0";
-                            document.querySelector(".book-gift-modal").style.pointerEvents = "none";
-                            document.querySelector(".book-inst-modal").style.opacity = "1";
-                            document.querySelector(".book-inst-modal").style.pointerEvents = "auto";
-                        }
-                    } catch (error) {
-                        console.error('Error posting data:', error);
-                    }
-                }
-
-                postGift();
-            } else {
-                document.querySelector(".book-gift-error").style.display = "block";
-                setTimeout(() => {
-                    document.querySelector(".book-gift-error").style.display = "none";
-                }, 2000);
-            }
-        }
-
-        function confirmGift(){
-            document.querySelector(".book-inst-modal").style.opacity = "0";
-            document.querySelector(".book-inst-modal").style.pointerEvents = "none";
-            document.querySelector(".book-voucherthank-modal").style.opacity = "1";
-            document.querySelector(".book-voucherthank-modal").style.pointerEvents = "auto";
-        }
-    }
 }
-
-// make ui for buying gift cards
-/* flow: 
-1. request gift card on site
-2. they will see payment instructions: amount, iban, ref code.
-3. they will see modal: "thank you, we will email you your gift card code as soon as we verify..."
-3. Kumar gets notified by email: "someone just requested a gift card, verify that you were sent £X with the following reference code attached: REFXXXXXX with this link: "
-*/
-
-// email user about gift card request
-// add logic for admin verifying gift card -> email user the code
-// add new logic for gift cards at checkout

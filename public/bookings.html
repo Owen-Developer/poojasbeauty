@@ -57,8 +57,8 @@
                             <div class="book-li">Eyebrows <span>-</span> £4</div>
                             <div class="book-li">Upper Lips <span>-</span> £3</div>
                             <div class="book-li">Lower Lip <span>-</span> £3</div>
-                            <div class="book-li">Chin <span>-</span> £3</div>
-                            <div class="book-li">Forehead <span>-</span> £3</div>
+                            <div class="book-li" id="product_4">Chin <span>-</span> £3</div>
+                            <div class="book-li" id="product_5">Forehead <span>-</span> £3</div>
                             <div class="book-li">Chin extended to neck <span>-</span> £5</div>
                             <div class="book-li">Sides of face <span>-</span> £7</div>
                             <div class="book-li">Full Face inc. eyebrows <span>-</span> £15</div>
@@ -370,22 +370,6 @@
         </div>
     </div>
 
-    <div class="book-pay-modal book-all-modal">
-        <div class="book-pay-wrapper">
-            <i class="fa-solid fa-xmark modal-exit"></i>
-
-            <div class="book-pay-title">Payment Instructions</div>
-            <div class="book-pay-para">Your booking has been created. To verify it, please send your payment using the details below.</div>
-            <div class="book-pay-col">
-                <div class="book-pay-txt">Amount to Pay: <span id="uiAmount">£50</span></div>
-                <div class="book-pay-txt">IBAN: <span>ABCDEFGHIJKLMNOPQRST</span></div>
-                <div class="book-pay-txt">Reference Code: <span id="uiRefCode">REF9083</span></div>
-            </div>
-            <div class="book-pay-para">Important: Type in the reference code in the payment message field when sending your transfer.</div>
-            <div class="btn-book-pay" onclick="confirmBooking()">I've Paid Now</div>
-        </div>
-    </div>
-
     <div class="book-gift-modal book-all-modal">
         <div class="book-gift-wrapper">
             <i class="fa-solid fa-xmark modal-exit"></i>
@@ -484,20 +468,20 @@
         </div>
     </div>
 
-    <div class="book-verifyvoucher-modal">
-        <div class="book-wrapper">
-            <i class="fa-solid fa-check book-modal-check"></i>
-            <div class="book-modal-title">Voucher Verified!</div>
-            <div class="book-modal-para">This user will now recieve an email with their voucher code.<br></div>
-            <a href="index.html" class="btn-book-modal">Okay</a>
-        </div>
-    </div>
-
     <div class="book-voucherthank-modal">
         <div class="book-wrapper">
             <i class="fa-solid fa-check book-modal-check"></i>
             <div class="book-modal-title">Order Complete!</div>
-            <div class="book-modal-para">You will recieve your gift card by email as soon as we verify your payment.</div>
+            <div class="book-modal-para">You have recieved your voucher code through email. Thank you!</div>
+            <a href="index.html" class="btn-book-modal">Okay</a>
+        </div>
+    </div>
+
+    <div class="book-vouchererror-modal">
+        <div class="book-wrapper">
+            <i class="fa-solid fa-xmark book-modal-check"></i>
+            <div class="book-modal-title">Payment Error</div>
+            <div class="book-modal-para">Sorry, there was a problem processing your payment. Try again.</div>
             <a href="index.html" class="btn-book-modal">Okay</a>
         </div>
     </div>
@@ -550,6 +534,154 @@
     </div>
 
 
+    <script src="https://js.stripe.com/v3/"></script>
     <script src="script.js"></script>
+    <script>
+    const params = new URLSearchParams(window.location.search);
+    const stripe = Stripe("pk_test_51Rx2OjIO0M0lx6yNqqLnjy2beSuhsiPfJXyLK7hR2nIya0sRdGHbL5EgTUdOU1nsFypSU6LqbZbgC7R1SMtmeZpm00aeNzMAvg");
+
+    if(params.get("voucher")){
+        document.querySelector(".book-gift-modal").style.opacity = "1";
+        document.querySelector(".book-gift-modal").style.pointerEvents = "auto";
+        function requestGift(){
+            if(!isNaN(document.getElementById("giftValueInput").value.replace(/£/g, "")) && document.getElementById("giftValueInput").value.replace(/£/g, "").length > 0){
+                async function postGift() {
+                    const dataToSend = { amount: Number(document.getElementById("giftValueInput").value.replace(/£/g, "")), email: document.getElementById("giftEmailInput").value };
+                    try {
+                        const response = await fetch('/api/create-checkout-session', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json', 
+                            },
+                            body: JSON.stringify(dataToSend), 
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            console.error('Error:', errorData.message);
+                            return;
+                        }
+
+                        const responseData = await response.json();
+                        window.location.href = responseData.url;
+                    } catch (error) {
+                        console.error('Error posting data:', error);
+                    }
+                }
+
+                postGift();
+            } else {
+                document.querySelector(".book-gift-error").style.display = "block";
+                setTimeout(() => {
+                    document.querySelector(".book-gift-error").style.display = "none";
+                }, 2000);
+            }
+        }
+    }
+
+    if(params.get("success")){
+        let stripeSession;
+        if(params.get("success") == "true" && params.get("session_id") && params.get("voucher")){
+            async function verifyPayment() {
+                const sessionId = params.get("session_id");
+
+                if (!sessionId) {
+                    console.error("No session ID found in URL");
+                    return;
+                }
+
+                // Call your backend to verify this session
+                const res = await fetch(`/api/verify-session?session_id=${sessionId}`);
+                const data = await res.json();
+                stripeSessionId = data.session.id;
+
+                async function createGift() {
+                    const dataToSend = { id: stripeSessionId };
+                    try {
+                        const response = await fetch('/api/create-gift', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json', 
+                            },
+                            body: JSON.stringify(dataToSend), 
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            console.error('Error:', errorData.message);
+                            return;
+                        }
+
+                        const responseData = await response.json();
+                        if(responseData.message == "success"){
+                            displayPaid();
+                        } else {
+                            displayError();
+                        }
+                    } catch (error) {
+                        console.error('Error posting data:', error);
+                    }
+                }
+                createGift();
+            }
+
+            window.onload = verifyPayment;
+        } else if(params.get("success") == "true" && params.get("session_id") && params.get("product")){
+            async function createNewBooking() {
+                const sessionId = params.get("session_id");
+
+                if (!sessionId) {
+                    console.error("No session ID found in URL");
+                    return;
+                }
+
+                const dataToSend = { id: sessionId };
+                try {
+                    const response = await fetch('/api/verify-booking', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json', 
+                        },
+                        body: JSON.stringify(dataToSend), 
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        console.error('Error:', errorData.message);
+                        return;
+                    }
+
+                    const responseData = await response.json();
+                    if(responseData.message == "success"){
+                        displayPaid();
+                    } else {
+                        displayError();
+                    }
+                } catch (error) {
+                    console.error('Error posting data:', error);
+                }
+            }
+            createNewBooking();
+        } else {
+            displayError();
+            console.log("here2");
+        }
+
+        function displayPaid(){
+            if(params.get("product")){
+                document.querySelector(".book-voucherthank-modal").querySelector(".book-modal-para").textContent = "Your booking has been confirmed. Thank You!";
+            } else {
+                document.querySelector(".book-voucherthank-modal").querySelector(".book-modal-para").textContent = "You have recieved your voucher code through email. Thank you!";
+            }
+            document.querySelector(".book-voucherthank-modal").style.opacity = "1";
+            document.querySelector(".book-voucherthank-modal").style.pointerEvents = "auto";
+        }
+        function displayError(){
+            document.querySelector(".book-vouchererror-modal").style.opacity = "1";
+            document.querySelector(".book-vouchererror-modal").style.pointerEvents = "auto";
+        }
+    }
+
+    </script>
 </body>
 </html>

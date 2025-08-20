@@ -12,8 +12,11 @@ require('dotenv').config();
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const e = require('express');
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const accessKey = "237410";
+const url = "https://poojasbeauty.onrender.com";
+// http://localhost:3000
 
 
 const db = mysql.createPool({
@@ -67,12 +70,12 @@ const transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_PASS
     }
 });
-function sendClientEmail(userEmail, date, time, email, message, code, services, price, refCode, link) { 
+function sendClientEmail(userEmail, date, time, email, message, services, price){ 
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
         subject: 'New Booking', // Subject line
-        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nCoupon code: ${code}\n\nServices: ${services.replace(",,", ", ")}\n\nPrice: ${price}\n\nMake sure that you were sent ${price} with the reference code attached in the payment: ${refCode}, then verify the booking simply by visiting this link: ${link}`,
+        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nServices: ${services.replace(",,", ", ")}\n\nPrice: ${price}`,
     };
   
     // Send mail
@@ -89,7 +92,7 @@ function sendClientFree(userEmail, date, time, email, message, code, services) {
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
         subject: 'New Booking', // Subject line
-        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nVoucher code: ${code}\n\nServices: ${services.replace(",,", ", ")}\n\nThis booking was made using a voucher, so there payment has already been made.`,
+        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nVoucher code: ${code}\n\nServices: ${services.replace(",,", ", ")}\n\nThis booking was made using a voucher.`,
     };
   
     // Send mail
@@ -101,29 +104,12 @@ function sendClientFree(userEmail, date, time, email, message, code, services) {
         }
     });
 }
-function sendClientGiftRequest(email, price, code, link) {  
+function sendClientGiftRequest(email, price){
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
         to: "jackbaileywoods@gmail.com",                 // Receiver's email
-        subject: 'Gift Card Purchase Request', // Subject line
-        text: `Hello, a gift card purchase was requested for poojas beauty salon with the email: ${email}. Verify that you were sent £${price} with the the reference code attached: ${code} simply by visiting this link: ${link}`,
-    };
-  
-    // Send mail
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log('Error sending email:', error);
-        } else {
-            console.log('Verification email sent:', info.response);
-        }
-    });
-}
-function sendUserGiftRequest(userEmail, price, code) {  
-    const mailOptions = {
-        from: process.env.EMAIL_USER,  // Sender address
-        to: userEmail,                 // Receiver's email
-        subject: 'Voucher Requested', // Subject line
-        text: `Hello, you requested a voucher from poojas beauty salon.\n\nMake sure that you have sent £${price} to the iban: ABCDEFGHIJKLMNOPQRST. Include this reference code in the message of your payment: ${code}\n\nYou will recieve an email containing your voucher code as soon as we verify your payment!`,
+        subject: 'Gift Card Purchase', // Subject line
+        text: `Hello, a gift card purchase was made for poojas beauty salon with the email: ${email}, for £${price}.`,
     };
   
     // Send mail
@@ -140,7 +126,7 @@ function sendUserVoucher(userEmail, Giftcode) {
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
         subject: 'Claim Your Voucher', // Subject line
-        text: `Hello, your voucher payment has been verified. Use this code at checkout: ${Giftcode}`,
+        text: `Hello, thank you for purchasing a voucher at Pooja's Beauty Salon. Use this code at checkout: ${Giftcode}`,
     };
   
     // Send mail
@@ -152,12 +138,12 @@ function sendUserVoucher(userEmail, Giftcode) {
         }
     });
 }
-function sendUserEmail(userEmail, date, time, link, price, code) {  
+function sendUserEmail(userEmail, date, time, link) {  
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
-        subject: 'Booking Requested', // Subject line
-        text: `Hello, you made a booking for poojasbeautysalon: ${date}, ${time}\n\nCancel anytime with this link: ${link}\n\n Make sure that you have sent ${price} to the iban: ABCDEFGHIJKLMNOPQRST. Include this reference code in the message of your payment: ${code}`,
+        subject: 'Booking Confirmed', // Subject line
+        text: `Hello, you made a booking for poojasbeautysalon: ${date}, ${time}\n\nCancel anytime with this link: ${link}`,
     };
   
     // Send mail
@@ -171,9 +157,9 @@ function sendUserEmail(userEmail, date, time, link, price, code) {
 }
 function sendUserFree(userEmail, date, time, link){
     const mailOptions = {
-        from: process.env.EMAIL_USER,  // Sender address
-        to: userEmail,                 // Receiver's email
-        subject: 'Booking Requested', // Subject line
+        from: process.env.EMAIL_USER, 
+        to: userEmail,           
+        subject: 'Booking Confirmed',
         text: `Hello, you made a booking for poojasbeautysalon: ${date}, ${time}\n\nCancel anytime with this link: ${link}`,
     };
   
@@ -222,7 +208,7 @@ function requireAdmin(req, res, next){
 
 
 ////////////////////////// APIS ROUTES //////////////////////////
-app.post("/api/book-appointment", (req, res) => {
+app.post("/api/book-appointment", async (req, res) => {
     const date = req.body.date;
     const time = req.body.time;
     const email = req.body.email;
@@ -234,31 +220,25 @@ app.post("/api/book-appointment", (req, res) => {
     const applied = req.body.applied;
 
     if(!isValidEmail(email)){
-        return res.json({ message: 'Failure' });
+        return res.json({ message: 'failed' });
     }
 
     const cancelCode = generateNumber();
-    const cancelLink = "https://poojasbeauty.onrender.com/bookings.html?cancel=" + cancelCode;
-    const refCode = "REF" + generateNumber();
-    const refLink = "https://poojasbeauty.onrender.com/bookings.html?admin=true&verify=" + refCode;
-    let initialStatus = "pending";
+    const cancelLink = url + "/bookings.html?cancel=" + cancelCode;
+
     if(applied){
-        initialStatus = "verified";
-    }
+        sendClientFree("jackbaileywoods@gmail.com", date, time, email, message, code, services);
+        sendUserFree(email, date, time, cancelLink);
+        db.query("select * from codes where coupon_code = ?", [code], (err, result) => {
+            if(err){
+                console.error("Error selecting codes: " + err);
+            }
 
-    const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status, reference_code) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    db.query(insertQuery, [date, time, email, message, code, services, type, price, cancelCode, initialStatus, refCode], (err, result) => {
-        if(err){
-            console.error("Error updating booking: ", err);
-            return res.json({ message: 'Failure' });
-        }
-
-        if(applied){
-            sendClientFree("jackbaileywoods@gmail.com", date, time, email, message, code, services);
-            sendUserFree(email, date, time, cancelLink);
-            db.query("select * from codes where coupon_code = ?", [code], (err, result) => {
+            const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            db.query(insertQuery, [date, time, email, message, code, services, type, price, cancelCode], (err, result) => {
                 if(err){
-                    console.error("Error selecting codes");
+                    console.error("Error updating booking: ", err);
+                    return res.json({ message: 'failed' });
                 }
 
                 const updateValueQuery = "update codes set value = ? where coupon_code = ?";
@@ -271,12 +251,58 @@ app.post("/api/book-appointment", (req, res) => {
                     return res.json({ message: 'success' });
                 });
             });
-        } else {
-            sendClientEmail("jackbaileywoods@gmail.com", date, time, email, message, code, services, price, refCode, refLink);
-            sendUserEmail(email, date, time, cancelLink, price, refCode);
-            return res.json({ message: 'success', code: refCode });
+        });
+    } else {
+async function payProduct() {
+    let productPriceMap = {
+        "product_4": "price_1RxietIO0M0lx6yNP46TImTe", // chin
+        "product_5": "price_1RxietIO0M0lx6yNP46TImTe" // example
+    };
+
+    try {
+        let productIds = req.body.productIds;
+        if (!Array.isArray(productIds)) {
+            // If single product sent, wrap it in array
+            productIds = [productIds];
         }
-    });
+
+        // Build line_items dynamically
+        const lineItems = [];
+        for (const id of productIds) {
+            const priceId = productPriceMap[id];
+            if (!priceId) return res.status(400).json({ error: "Invalid product: " + id });
+            lineItems.push({ price: priceId, quantity: 1 });
+        }
+
+        // Create Stripe Checkout Session
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ["card"],
+            line_items: lineItems,
+            mode: "payment",
+            metadata: {
+                customer_date: date,
+                customer_time: time,
+                customer_email: email,
+                customer_message: message,
+                customer_services: services,
+                customer_type: type,
+                customer_price: price,
+                customer_cancelCode: cancelCode,
+                customer_cancelLink: cancelLink,
+            },
+            success_url: url + "/bookings.html?success=true&session_id={CHECKOUT_SESSION_ID}&product=true",
+            cancel_url: url + "/bookings.html?success=false",
+        });
+
+        return res.json({ message: 'continue', url: session.url });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Server error" });
+    }
+}
+
+        payProduct();
+    }
 });
 
 app.post("/api/check-code", (req, res) => {
@@ -503,31 +529,6 @@ app.post("/api/mark-paid", requireAdmin, (req, res) => {
     });
 });
 
-app.post("/api/create-gift", (req, res) => {
-    const amount = req.body.amount;
-    const email = req.body.email;
-    
-    const newGift = "GIFT" + generateNumber();
-    const refCode = "REF" + generateNumber();
-    const verifyLink = "https://poojasbeauty.onrender.com/bookings.html?admin=true&verifyvoucher=" + refCode;
-
-    const createGiftQuery = "insert into codes (coupon_code, code_status, value, email, reference_code) values (?, ?, ?, ?, ?)";
-    db.query(createGiftQuery, [newGift, "active", amount, email, refCode], (err, result) => {
-        if(err){
-            console.error("Error creating new code: " + err);
-            return res.json({ message: 'failure' });
-        }
-
-        if(!isValidEmail(email)){
-            return res.json({ message: 'inavlid email' });
-        }
-
-        sendUserGiftRequest(email, amount, refCode);
-        sendClientGiftRequest(email, amount, refCode, verifyLink);
-        return res.json({ message: 'success', code: refCode });
-    });
-});
-
 app.get("/api/verify-gift", requireAdmin, (req, res) => {
     const getVoucherQuery = "select * from codes where reference_code = ?";
     db.query(getVoucherQuery, [req.query.verifyvoucher], (err, result) => {
@@ -546,6 +547,121 @@ app.get("/api/verify-gift", requireAdmin, (req, res) => {
 });
 /////////////////////////////////////////////////////////////////
 
+
+////////////////////////// STRIPE PAYMENT ROUTES //////////////////////////
+app.post("/api/create-checkout-session", async (req, res) => {
+  try {
+    const amount = req.body.amount * 100;
+
+    // Create a Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "eur",
+            product_data: {
+              name: "Voucher Purchase",
+            },
+            unit_amount: amount, // price in cents
+          },
+          quantity: 1,
+        },
+      ],
+        mode: "payment", // one-time payment
+        customer_email: req.body.email,
+        success_url: url + `/bookings.html?success=true&session_id={CHECKOUT_SESSION_ID}&voucher=true`,
+        cancel_url: url + "/bookings.html?success=false",
+    });
+
+    res.json({ url: session.url });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/api/verify-session", async (req, res) => {
+  const sessionId = req.query.session_id;
+
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    if (session.payment_status === "paid") {
+      res.json({ paid: true, session });
+    } else {
+      res.json({ paid: false, session });
+    }
+  } catch (err) {
+    console.error("Error verifying session:", err);
+    res.status(500).json({ paid: false, error: err.message });
+  }
+});
+
+app.post("/api/create-gift", async (req, res) => {
+    const id = req.body.id;
+    const session = await stripe.checkout.sessions.retrieve(id);
+
+    if(session.payment_status != "paid"){
+        return res.json("failed");
+    }
+
+    const amount = session.amount_total / 100;
+    const email = session.customer_email;
+    
+    const newGift = "GIFT" + generateNumber();
+
+    db.query("select * from codes where session_id = ?", [id], (err, result) => {
+        if(err){
+            console.error("Error checking if session was used: " + err);
+        }
+
+        if(result.length > 0){
+            return res.json({ message: 'used' });
+        }
+
+        const createGiftQuery = "insert into codes (coupon_code, code_status, value, email, session_id) values (?, ?, ?, ?, ?)";
+        db.query(createGiftQuery, [newGift, "active", amount, email, id], (err, result) => {
+            if(err){
+                console.error("Error creating new code: " + err);
+                return res.json({ message: 'failed' });
+            }
+
+            if(!isValidEmail(email)){
+                return res.json({ message: 'inavlid email' });
+            }
+
+            sendUserVoucher(email, newGift);
+            sendClientGiftRequest(email, amount);
+            return res.json({ message: 'success' });
+        });
+    });
+});
+
+app.post("/api/verify-booking", async (req, res) => {
+    const id = req.body.id;
+    const session = await stripe.checkout.sessions.retrieve(id);
+
+    if(session.payment_status != "paid"){
+        return res.json("failed");
+    }
+    
+    const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    db.query(insertQuery, [session.metadata.customer_date, session.metadata.customer_time, session.metadata.customer_email, session.metadata.customer_message, "Not entered", session.metadata.customer_services, session.metadata.customer_type, session.metadata.customer_price, session.metadata.customer_cancelCode], (err, result) => {
+        if(err){
+            console.error("Error updating booking: ", err);
+            return res.json({ message: 'failed' });
+        }
+
+        sendClientEmail("jackbaileywoods@gmail.com", session.metadata.customer_date, session.metadata.customer_time, session.metadata.customer_email, session.metadata.customer_messages, session.metadata.customer_services, session.metadata.customer_price);
+        sendUserEmail(session.metadata.customer_email, session.metadata.customer_date, session.metadata.customer_time, session.metadata.customer_cancelLink);
+        return res.json({ message: 'success' });
+    });
+});
+/////////////////////////////////////////////////////////////////////////////
+
+
+
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`Server running at http://localhost:${PORT}`);
 });
