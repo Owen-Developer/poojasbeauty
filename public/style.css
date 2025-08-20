@@ -3537,7 +3537,10 @@ i.book-show-x {
     }
     .book-code-modal, .book-delete-modal, .book-show-modal, .book-pay-modal, .book-inst-modal, .book-gift-modal {
         align-items: flex-end;
-        padding-bottom: 15px;
+        padding-bottom: 25px;
+    }
+    .book-modal, .book-verify-modal, .book-voucherthank-modal, .book-verifyvoucher-modal, .book-vouchererror-modal, .book-gift-modal {
+        bottom: 0;
     }
     .book-code-wrapper, .book-pay-wrapper {
         padding: 20px 14px;

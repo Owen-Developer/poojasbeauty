@@ -1068,6 +1068,8 @@ if(document.querySelector(".book-container")){
 
             const responseData = await response.json();
             if(responseData.message == "success"){
+                document.querySelector(".book-gift-modal").style.opacity = "0";
+                document.querySelector(".book-gift-modal").style.pointerEvents = "none";
                 document.querySelector(".book-modal").style.opacity = "1";
                 document.querySelector(".book-modal").style.pointerEvents = "auto";
             } else if(responseData.message == "continue") {
