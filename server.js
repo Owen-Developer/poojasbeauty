@@ -234,6 +234,7 @@ app.post("/api/book-appointment", async (req, res) => {
                 console.error("Error selecting codes: " + err);
             }
 
+            let newValue = result[0].value - Number(price.slice(1));
             const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             db.query(insertQuery, [date, time, email, message, code, services, type, price, cancelCode], (err, result) => {
                 if(err){
@@ -242,7 +243,6 @@ app.post("/api/book-appointment", async (req, res) => {
                 }
 
                 const updateValueQuery = "update codes set value = ? where coupon_code = ?";
-                let newValue = result[0].value - Number(price.slice(1));
                 db.query(updateValueQuery, [newValue, code], (err, result) => {
                     if(err){
                         console.error("Error updating gift value: " + err);
