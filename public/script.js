@@ -955,7 +955,7 @@ if(document.querySelector(".book-container")){
 
                         let todayBookings = 0;
                         bookings.forEach(booking => {
-                            if(Number(booking.booking_date.slice(8, 10)) + 1 == Number(box.textContent)){
+                            if(Number(booking.booking_date.slice(8, 10)) == Number(box.textContent)){
                                 todayBookings++;
                             }
                         });
