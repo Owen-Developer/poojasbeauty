@@ -434,7 +434,7 @@
 
     if(params.get("success")){
         let stripeSession;
-        if(params.get("success") == "true" && params.get("session_id") && params.get("voucher")){
+        if(params.get("success") == "true" && params.get("session_id") && params.get("voucherp")){
             async function verifyPayment() {
                 const sessionId = params.get("session_id");
 

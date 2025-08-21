@@ -652,7 +652,7 @@ app.post("/api/create-checkout-session", async (req, res) => {
       ],
         mode: "payment", // one-time payment
         customer_email: req.body.email,
-        success_url: url + `/bookings.html?success=true&session_id={CHECKOUT_SESSION_ID}&voucher=true`,
+        success_url: url + `/bookings.html?success=true&session_id={CHECKOUT_SESSION_ID}&voucherp=true`,
         cancel_url: url + "/bookings.html?success=false",
     });
 
