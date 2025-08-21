@@ -360,6 +360,7 @@ app.post("/api/book-appointment", async (req, res) => {
                     payment_method_types: ["card"],
                     line_items: lineItems,
                     mode: "payment",
+                    discounts: [{coupon: "Buo5SLwA"}],
                     metadata: {
                         customer_date: date,
                         customer_time: time,

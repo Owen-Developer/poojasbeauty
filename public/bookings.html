@@ -414,6 +414,8 @@
                         }
 
                         const responseData = await response.json();
+                        document.querySelector(".book-gift-modal").style.opacity = "0";
+                        document.querySelector(".book-gift-modal").style.pointerEvents = "none";
                         window.location.href = responseData.url;
                     } catch (error) {
                         console.error('Error posting data:', error);
