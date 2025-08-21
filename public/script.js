@@ -671,6 +671,7 @@ document.querySelectorAll(".book-li").forEach(li => {
                 if(cont.querySelector(".book-sum-label").textContent == li.textContent.slice(0, (li.textContent.indexOf("-") - 1))){
                     document.querySelector(".book-sum-ul").removeChild(cont);
                     document.querySelector(".book-sum-total").textContent = "free";
+                    document.querySelector(".btn-book-sum").classList.add("book-btn-inactive");
                 }
             });
             if(document.querySelectorAll(".book-sum-flex").length == 0){

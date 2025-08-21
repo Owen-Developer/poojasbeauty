@@ -253,53 +253,134 @@ app.post("/api/book-appointment", async (req, res) => {
             });
         });
     } else {
-async function payProduct() {
-    let productPriceMap = {
-        "product_4": "price_1RxietIO0M0lx6yNP46TImTe", // chin
-        "product_5": "price_1RxietIO0M0lx6yNP46TImTe" // example
-    };
+        async function payProduct() {
+            let productPriceMap = {
+                "product_1": "price_1RyGREIO0M0lx6yNWh1fONaP", // chin
+                "product_2": "price_1RyGUIIO0M0lx6yN1DREpeSw", // chin
+                "product_3": "price_1RyGUqIO0M0lx6yNTotKK3v3", // chin
+                "product_4": "price_1RyGV8IO0M0lx6yNpGZkVsq0", // chin
+                "product_5": "price_1RyGVhIO0M0lx6yNXpiJMasP", // chin
+                "product_6": "price_1RyGVxIO0M0lx6yNbea3WkaJ", // chin
+                "product_7": "price_1RyGWeIO0M0lx6yN5o9Op4oQ", // chin
+                "product_8": "price_1RyGXQIO0M0lx6yNYNnDiYiH", // chin
+                "product_9": "price_1RyGXhIO0M0lx6yNqpaOYeBX", // chin
+                "product_10": "price_1RyGY2IO0M0lx6yNWLZbeoF8", // chin
+                "product_11": "price_1RyGYYIO0M0lx6yN2u3EZ9bN", // chin
+                "product_12": "price_1RyGYmIO0M0lx6yN8cTD5B2s", // chin
+                "product_13": "price_1RyGZ1IO0M0lx6yNkPtjbGGl", // chin
+                "product_14": "price_1RyGZCIO0M0lx6yNsCxzz6Eg", // chin
+                "product_15": "price_1RyGZlIO0M0lx6yNLKU3owY4", // chin
+                "product_16": "price_1RyGZvIO0M0lx6yNCZlidYfH", // chin
+                "product_17": "price_1RyGaFIO0M0lx6yNYn67q07P", // chin
+                "product_18": "price_1RyGaUIO0M0lx6yNOKldur2K", // chin
+                "product_19": "price_1RyGasIO0M0lx6yNncimM5GY", // chin
+                "product_20": "price_1RyGb4IO0M0lx6yNpBoHM4WJ", // chin
+                "product_21": "price_1RyGbTIO0M0lx6yNXRQVWnMZ", // chin
+                "product_22": "price_1RyGbsIO0M0lx6yNl12eGnXY", // chin
+                "product_23": "price_1RyGcCIO0M0lx6yNkL8NqI0m", // chin
+                "product_24": "price_1RyGcRIO0M0lx6yNze03prdf", // chin
+                "product_25": "price_1RyGckIO0M0lx6yN7A1HNajW", // chin
+                "product_26": "price_1RyGd7IO0M0lx6yNBDchKEF9", // chin
+                "product_27": "price_1RyGdIIO0M0lx6yNGJDGixwy", // chin
+                "product_28": "price_1RyGdYIO0M0lx6yNJ8OmZEdj", // chin
+                "product_29": "price_1RyGdmIO0M0lx6yNRhaYzAp4", // chin
+                "product_30": "price_1RyGe5IO0M0lx6yNlHZtHTF5", // chin
+                "product_31": "price_1RyGgxIO0M0lx6yNqBgzuvRX", // chin
+                "product_32": "price_1RyGhBIO0M0lx6yN8FLQFyuW", // chin
+                "product_33": "price_1RyGhbIO0M0lx6yNzSjy2Uli", // chin
+                "product_34": "price_1RyGhqIO0M0lx6yNUsYxqSeP", // chin
+                "product_35": "price_1RyGivIO0M0lx6yNQTNVBSxX", // chin
+                "product_36": "price_1RyGjQIO0M0lx6yNgdOx6MqF", // chin
+                "product_37": "price_1RyGjiIO0M0lx6yNCqg3Vuxn", // chin
+                "product_38": "price_1RyGk1IO0M0lx6yNzG5lAy2c", // chin
+                "product_39": "price_1RyGkLIO0M0lx6yN4Lvp5lxY", // chin
+                "product_40": "price_1RyGkYIO0M0lx6yNDruW8XZn", // chin
+                "product_41": "price_1RyGlHIO0M0lx6yNskKM2VsU", // chin
+                "product_42": "price_1RyGlZIO0M0lx6yNxe7u0W7E", // chin
+                "product_43": "price_1RyGlmIO0M0lx6yNqx4kKW8s", // chin
+                "product_44": "price_1RyGoyIO0M0lx6yN74jOKAcD", // chin
+                "product_45": "price_1RyGpFIO0M0lx6yNzIqhcr2x", // chin
+                "product_46": "price_1RyGpZIO0M0lx6yNLoKCT3Wg", // chin
+                "product_47": "price_1RyGqIIO0M0lx6yNCPoD2Wm4", // chin
+                "product_48": "price_1RyGqgIO0M0lx6yNbjib7Uc1", // chin
+                "product_49": "price_1RyGrEIO0M0lx6yNOfNX4SB7", // chin
+                "product_50": "price_1RyGrYIO0M0lx6yN7Rx5h9zu", // chin
+                "product_51": "price_1RyGrsIO0M0lx6yNfHJtY79x", // chin
+                "product_52": "price_1RyGsFIO0M0lx6yNe1W0ORlM", // chin
+                "product_53": "price_1RyGsgIO0M0lx6yN9D47J4UL", // chin
+                "product_54": "price_1RyGt6IO0M0lx6yNAs9DN63o", // chin
+                "product_55": "price_1RyGtMIO0M0lx6yNcV4P4I6k", // chin
+                "product_56": "price_1RyGtsIO0M0lx6yNVZGhysr5", // chin
+                "product_57": "price_1RyGuAIO0M0lx6yNs7HNgxDx", // chin
+                "product_58": "price_1RyGuUIO0M0lx6yNRs8F3h6D", // chin
+                "product_59": "price_1RyGuvIO0M0lx6yNDYbLWPwv", // chin
+                "product_60": "price_1RyGv7IO0M0lx6yNRTfvXKXf", // chin
+                "product_61": "price_1RyGvQIO0M0lx6yNFwo1inhU", // chin
+                "product_62": "price_1RyGvgIO0M0lx6yNtCQwa9da", // chin
+                "product_63": "price_1RyGw8IO0M0lx6yNvbGuEsq7", // chin
+                "product_64": "price_1RyGwNIO0M0lx6yNa62JC7Lc", // chin
+                "product_65": "price_1RyGwgIO0M0lx6yNhgpHj4Mw", // chin
+                "product_66": "price_1RyH0ZIO0M0lx6yNYOmZF2kf", // chin
+                "product_67": "price_1RyH6gIO0M0lx6yNJUIYewsr", // chin
+                "product_68": "price_1RyH6zIO0M0lx6yN0nvaFDuu", // chin
+                "product_69": "price_1RyH7DIO0M0lx6yNmtkO0U1B", // chin
+                "product_70": "price_1RyH7qIO0M0lx6yNzRM4qgzG", // chin
+                "product_71": "price_1RyH8NIO0M0lx6yNfFZv7Kg5", // chin
+                "product_72": "price_1RyH90IO0M0lx6yNfr61RCYj", // chin
+                "product_73": "price_1RyHE9IO0M0lx6yNOQdS9yl2", // chin
+                "product_74": "price_1RyHEXIO0M0lx6yNTAWDO8IK", // chin
+                "product_75": "price_1RyHF4IO0M0lx6yNnMUnkRwi", // chin
+                "product_76": "price_1RyHFOIO0M0lx6yNmmdNATy3", // chin
+                "product_77": "price_1RyHFuIO0M0lx6yN68TPoC0g", // chin
+                "product_78": "price_1RyHGDIO0M0lx6yNv0uOerUD", // chin
+                "product_79": "price_1RyHGRIO0M0lx6yNcwMjsaSS", // chin
+                "product_80": "price_1RyHGnIO0M0lx6yNeju4DcC7", // chin
+                "product_81": "price_1RyHHBIO0M0lx6yNXvFKEym3", // chin
+                "product_82": "price_1RyHHRIO0M0lx6yNhfs8y8bW", // chin
+                "product_83": "price_1RyHHfIO0M0lx6yNbSzaAH8w", // chin
+            };
 
-    try {
-        let productIds = req.body.productIds;
-        if (!Array.isArray(productIds)) {
-            // If single product sent, wrap it in array
-            productIds = [productIds];
+            try {
+                let productIds = req.body.productIds;
+                if (!Array.isArray(productIds)) {
+                    // If single product sent, wrap it in array
+                    productIds = [productIds];
+                }
+
+                // Build line_items dynamically
+                const lineItems = [];
+                for (const id of productIds) {
+                    const priceId = productPriceMap[id];
+                    if (!priceId) return res.status(400).json({ error: "Invalid product: " + id });
+                    lineItems.push({ price: priceId, quantity: 1 });
+                }
+
+                // Create Stripe Checkout Session
+                const session = await stripe.checkout.sessions.create({
+                    payment_method_types: ["card"],
+                    line_items: lineItems,
+                    mode: "payment",
+                    metadata: {
+                        customer_date: date,
+                        customer_time: time,
+                        customer_email: email,
+                        customer_message: message,
+                        customer_services: services,
+                        customer_type: type,
+                        customer_price: price,
+                        customer_cancelCode: cancelCode,
+                        customer_cancelLink: cancelLink,
+                    },
+                    success_url: url + "/bookings.html?success=true&session_id={CHECKOUT_SESSION_ID}&product=true",
+                    cancel_url: url + "/bookings.html?success=false",
+                });
+
+                return res.json({ message: 'continue', url: session.url });
+            } catch (err) {
+                console.error(err);
+                return res.status(500).json({ error: "Server error" });
+            }
         }
-
-        // Build line_items dynamically
-        const lineItems = [];
-        for (const id of productIds) {
-            const priceId = productPriceMap[id];
-            if (!priceId) return res.status(400).json({ error: "Invalid product: " + id });
-            lineItems.push({ price: priceId, quantity: 1 });
-        }
-
-        // Create Stripe Checkout Session
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ["card"],
-            line_items: lineItems,
-            mode: "payment",
-            metadata: {
-                customer_date: date,
-                customer_time: time,
-                customer_email: email,
-                customer_message: message,
-                customer_services: services,
-                customer_type: type,
-                customer_price: price,
-                customer_cancelCode: cancelCode,
-                customer_cancelLink: cancelLink,
-            },
-            success_url: url + "/bookings.html?success=true&session_id={CHECKOUT_SESSION_ID}&product=true",
-            cancel_url: url + "/bookings.html?success=false",
-        });
-
-        return res.json({ message: 'continue', url: session.url });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ error: "Server error" });
-    }
-}
 
         payProduct();
     }
