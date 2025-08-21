@@ -107,7 +107,7 @@ function sendClientFree(userEmail, date, time, email, message, code, services) {
 function sendClientGiftRequest(email, price){
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
-        to: "info@nextdesignwebsite.com",                 // Receiver's email
+        to: process.env.ADMIN_EMAIL,                 // Receiver's email
         subject: 'Gift Card Purchase', // Subject line
         text: `Hello, a gift card purchase was made for poojas beauty salon with the email: ${email}, for £${price}.`,
     };
@@ -227,7 +227,7 @@ app.post("/api/book-appointment", async (req, res) => {
     const cancelLink = url + "/bookings.html?cancel=" + cancelCode;
 
     if(applied){
-        sendClientFree("info@nextdesignwebsite.com", date, time, email, message, code, services);
+        sendClientFree(process.env.ADMIN_EMAIL, date, time, email, message, code, services);
         sendUserFree(email, date, time, cancelLink);
         db.query("select * from codes where coupon_code = ?", [code], (err, result) => {
             if(err){
@@ -734,7 +734,7 @@ app.post("/api/verify-booking", async (req, res) => {
             return res.json({ message: 'failed' });
         }
 
-        sendClientEmail("info@nextdesignwebsite.com", session.metadata.customer_date, session.metadata.customer_time, session.metadata.customer_email, session.metadata.customer_messages, session.metadata.customer_services, session.metadata.customer_price);
+        sendClientEmail(process.env.ADMIN_EMAIL, session.metadata.customer_date, session.metadata.customer_time, session.metadata.customer_email, session.metadata.customer_messages, session.metadata.customer_services, session.metadata.customer_price);
         sendUserEmail(session.metadata.customer_email, session.metadata.customer_date, session.metadata.customer_time, session.metadata.customer_cancelLink);
         return res.json({ message: 'success' });
     });
