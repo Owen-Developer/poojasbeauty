@@ -1100,6 +1100,11 @@ if(document.querySelector(".book-container")){
                 document.querySelector(".book-modal").style.pointerEvents = "auto";
             } else if(responseData.message == "continue") {
                 window.location.href = responseData.url;
+            } else {
+                document.querySelector(".book-email-error").style.display = "block";
+                setTimeout(() => {
+                    document.querySelector(".book-email-error").style.display = "none";
+                }, 2000);
             }
         } catch (error) {
             console.error('Error posting data:', error);

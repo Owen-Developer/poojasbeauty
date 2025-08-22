@@ -254,7 +254,7 @@ app.post("/api/book-appointment", async (req, res) => {
                 return res.json({ message: 'failed' });
             }
 
-            
+            return res.json({ message: 'success' });
         });
     } else if(applied){
         sendClientFree(process.env.ADMIN_EMAIL, date, time, email, message, code, services);
