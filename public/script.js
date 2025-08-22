@@ -1,5 +1,3 @@
-const e = require("express");
-
 let heroIdx = 0;
 let bookNavIdx = 0;
 let bookStage = 0;
