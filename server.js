@@ -14,7 +14,7 @@ const crypto = require('crypto');
 const e = require('express');
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-const accessKey = "237410";
+const accessKey = process.env.ACCESS_KEY;
 const url = "https://poojasbeauty.onrender.com";
 // http://localhost:3000
 
@@ -641,7 +641,7 @@ app.post("/api/create-checkout-session", async (req, res) => {
       line_items: [
         {
           price_data: {
-            currency: "eur",
+            currency: "gbp",
             product_data: {
               name: "Voucher Purchase",
             },

@@ -1,3 +1,5 @@
+const e = require("express");
+
 let heroIdx = 0;
 let bookNavIdx = 0;
 let bookStage = 0;
@@ -899,6 +901,31 @@ if(document.querySelector(".book-container")){
             checkCode();
         }
     }
+    document.getElementById("giftValueInput").addEventListener("input", () => {
+        if(document.getElementById("giftValueInput").value.length > 0){
+            document.querySelectorAll(".book-gift-pill").forEach(pill => {
+                pill.classList.add("btn-inactive");
+            });
+        } else {
+            document.querySelectorAll(".book-gift-pill").forEach(pill => {
+                pill.classList.remove("btn-inactive");
+            });
+        }
+    });
+    document.querySelectorAll(".book-gift-pill").forEach(pill => {
+        pill.addEventListener("click", () => {
+            document.querySelectorAll(".book-gift-pill").forEach(other => {
+                other.classList.remove("gift-pill-active");
+            });
+            if(pill.classList.contains("gift-pill-active")){
+                document.getElementById("giftValueInput").readOnly = false;
+            } else {
+                document.getElementById("giftValueInput").readOnly = true;
+                pill.classList.add("gift-pill-active");
+            }
+            
+        });
+    });
 
     // calendar
     function setCalendar(monthIdx, yearStr, firstCall){
@@ -1345,7 +1372,7 @@ if(document.querySelector(".book-container")){
                             <div class="book-show-time">${obj.booking_time}</div>
                             <div class="book-show-price">Total price: ${obj.price}</div>
                             <div class="book-show-message">Message: ${obj.message}</div>
-                            <div class="book-show-services">${obj.services.replace(",,", ", ")}</div>
+                            <div class="book-show-services">${obj.services.replace(/,,/g, ", ")}</div>
                             <div class="btn-show-delete">Delete Booking</div>
                         `
                         newCard.querySelector(".btn-show-delete").addEventListener("click", () => {
@@ -1374,7 +1401,7 @@ if(document.querySelector(".book-container")){
                                             closeShowModal();
                                         }
                                     } else {
-                                        window.location.href = "/bookings.html";
+                                        window.location.href = "/bookings.html?admin=true";
                                     }
                                 } catch (error) {
                                     console.error('Error posting data:', error);

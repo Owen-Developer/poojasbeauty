@@ -226,7 +226,6 @@
             <i class="fa-solid fa-xmark modal-exit"></i>
 
             <div class="book-gift-title">Buy a Voucher</div>
-            <div class="book-gift-para">Treat someone special with a gift card, perfect for pampering and self-care.</div>
 
             <div class="book-gift-label">Your email</div>
             <input type="text" class="book-gift-input" id="giftEmailInput" placeholder="Your email" />
@@ -234,6 +233,17 @@
             <div class="book-gift-label" style="margin-top: 22px;">Select Value</div>
             <input type="text" class="book-gift-input" id="giftValueInput" placeholder="e.g. £50" />
             <div class="book-gift-error">Please enter a valid amount.</div>
+            <div class="book-gift-flex">
+                <div class="book-gift-pill">£20</div>
+                <div class="book-gift-pill">£30</div>
+                <div class="book-gift-pill">£40</div>
+                <div class="book-gift-pill">£50</div>
+                <div class="book-gift-pill">£60</div>
+                <div class="book-gift-pill">£70</div>
+                <div class="book-gift-pill">£80</div>
+                <div class="book-gift-pill">£90</div>
+                <div class="book-gift-pill">£100</div>
+            </div>
 
             <div class="btn-book-gift" onclick="requestGift()">Purchase</div>
         </div>
@@ -517,7 +527,6 @@
             createNewBooking();
         } else {
             displayError();
-            console.log("here2");
         }
 
         function displayPaid(){
