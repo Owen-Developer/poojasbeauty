@@ -848,8 +848,8 @@ if(document.querySelector(".book-container")){
             document.querySelectorAll(".book-code-input-container")[idx].style.border = "";
         });
     }); 
-    function createBooking(){
-        postBooking();
+    function createBooking(inStore){
+        postBooking(inStore);
     }
     function applyCode(){
         if(!codeApplied){
@@ -902,11 +902,13 @@ if(document.querySelector(".book-container")){
     document.getElementById("giftValueInput").addEventListener("input", () => {
         if(document.getElementById("giftValueInput").value.length > 0){
             document.querySelectorAll(".book-gift-pill").forEach(pill => {
-                pill.classList.add("btn-inactive");
+                pill.classList.add("book-btn-inactive");
+                pill.classList.remove("gift-pill-active");
             });
+            
         } else {
             document.querySelectorAll(".book-gift-pill").forEach(pill => {
-                pill.classList.remove("btn-inactive");
+                pill.classList.remove("book-btn-inactive");
             });
         }
     });
@@ -916,12 +918,10 @@ if(document.querySelector(".book-container")){
                 other.classList.remove("gift-pill-active");
             });
             if(pill.classList.contains("gift-pill-active")){
-                document.getElementById("giftValueInput").readOnly = false;
+                pill.classList.remove("gift-pill-active");
             } else {
-                document.getElementById("giftValueInput").readOnly = true;
                 pill.classList.add("gift-pill-active");
             }
-            
         });
     });
 
@@ -1053,7 +1053,7 @@ if(document.querySelector(".book-container")){
     }
 
     // backend
-    async function postBooking(){
+    async function postBooking(inStore){
         let monStr = String(currentMonth + 1);
         if(monStr.length == 1){
             monStr = "0" + monStr;
@@ -1075,7 +1075,7 @@ if(document.querySelector(".book-container")){
                 fullServices += label.textContent + ",,";
             }
         }); 
-        const dataToSend = { date: fullDate, time: fullTime, email: emailTxt, message: bookingMessage, code: couponCode, services: fullServices, price: price, type: 'user', applied: codeApplied, productIds: productIds };
+        const dataToSend = { date: fullDate, time: fullTime, email: emailTxt, message: bookingMessage, code: couponCode, services: fullServices, price: price, type: 'user', applied: codeApplied, inStore: inStore, productIds: productIds };
         try {
             const response = await fetch(url + '/api/book-appointment', {
                 method: 'POST',
@@ -1368,6 +1368,7 @@ if(document.querySelector(".book-container")){
                         newCard.classList.add("book-show-section");
                         newCard.innerHTML = `
                             <div class="book-show-time">${obj.booking_time}</div>
+                            <div class="book-show-price">Payment Status: ${obj.payment_status}</div>
                             <div class="book-show-price">Total price: ${obj.price}</div>
                             <div class="book-show-message">Message: ${obj.message}</div>
                             <div class="book-show-services">${obj.services.replace(/,,/g, ", ")}</div>

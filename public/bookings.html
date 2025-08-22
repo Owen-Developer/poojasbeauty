@@ -217,7 +217,10 @@
                 <div class="book-code-head">Total</div>
                 <div class="book-code-total">free</div>
             </div>
-            <div class="btn-book-code" onclick="createBooking()">Create Booking</div>
+            <div class="code-btn-flex">
+                <div class="btn-book-code" onclick="createBooking(false)">Purchase Now</div>
+                <div class="btn-book-code btn-store" onclick="createBooking(true)">Pay In Store</div>
+            </div>
         </div>
     </div>
 
@@ -229,6 +232,7 @@
 
             <div class="book-gift-label">Your email</div>
             <input type="text" class="book-gift-input" id="giftEmailInput" placeholder="Your email" />
+            <div class="book-gift-email-error">Please enter a valid email.</div>
 
             <div class="book-gift-label" style="margin-top: 22px;">Select Value</div>
             <input type="text" class="book-gift-input" id="giftValueInput" placeholder="e.g. £50" />
@@ -402,12 +406,19 @@
     const stripe = Stripe("pk_test_51Rx2OjIO0M0lx6yNqqLnjy2beSuhsiPfJXyLK7hR2nIya0sRdGHbL5EgTUdOU1nsFypSU6LqbZbgC7R1SMtmeZpm00aeNzMAvg");
 
     if(params.get("voucher")){
+        console.log("wtf");
         document.querySelector(".book-gift-modal").style.opacity = "1";
         document.querySelector(".book-gift-modal").style.pointerEvents = "auto";
         function requestGift(){
-            if(!isNaN(document.getElementById("giftValueInput").value.replace(/£/g, "")) && document.getElementById("giftValueInput").value.replace(/£/g, "").length > 0){
+            if(((!isNaN(document.getElementById("giftValueInput").value.replace(/£/g, "")) && document.getElementById("giftValueInput").value.replace(/£/g, "").length > 0) || document.querySelector(".gift-pill-active")) && document.getElementById("giftEmailInput").value.length > 0){
                 async function postGift() {
-                    const dataToSend = { amount: Number(document.getElementById("giftValueInput").value.replace(/£/g, "")), email: document.getElementById("giftEmailInput").value };
+                    let amountNum;
+                    if(!isNaN(document.getElementById("giftValueInput").value.replace(/£/g, "")) && document.getElementById("giftValueInput").value.replace(/£/g, "").length > 0){
+                        amountNum = Number(document.getElementById("giftValueInput").value.replace(/£/g, ""));
+                    } else {
+                        amountNum = Number(document.querySelector(".gift-pill-active").textContent.slice(1));
+                    }
+                    const dataToSend = { amount: amountNum, email: document.getElementById("giftEmailInput").value };
                     try {
                         const response = await fetch('/api/create-checkout-session', {
                             method: 'POST',
@@ -424,15 +435,27 @@
                         }
 
                         const responseData = await response.json();
-                        document.querySelector(".book-gift-modal").style.opacity = "0";
-                        document.querySelector(".book-gift-modal").style.pointerEvents = "none";
-                        window.location.href = responseData.url;
+                        if(responseData.message == "invalid email"){
+                            document.querySelector(".book-gift-email-error").style.display = "block";
+                            setTimeout(() => {
+                                document.querySelector(".book-gift-email-error").style.display = "none";
+                            }, 2000);
+                        } else {
+                            document.querySelector(".book-gift-modal").style.opacity = "0";
+                            document.querySelector(".book-gift-modal").style.pointerEvents = "none";
+                            window.location.href = responseData.url;
+                        }
                     } catch (error) {
                         console.error('Error posting data:', error);
                     }
                 }
 
                 postGift();
+            } else if(!document.getElementById("giftEmailInput").value.length > 0){
+                document.querySelector(".book-gift-email-error").style.display = "block";
+                setTimeout(() => {
+                    document.querySelector(".book-gift-email-error").style.display = "none";
+                }, 2000);
             } else {
                 document.querySelector(".book-gift-error").style.display = "block";
                 setTimeout(() => {

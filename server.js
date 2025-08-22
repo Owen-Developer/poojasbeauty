@@ -104,6 +104,23 @@ function sendClientFree(userEmail, date, time, email, message, code, services) {
         }
     });
 }
+function sendClientStore(userEmail, date, time, email, message, services) { 
+    const mailOptions = {
+        from: process.env.EMAIL_USER,  // Sender address
+        to: userEmail,                 // Receiver's email
+        subject: 'New Booking', // Subject line
+        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nServices: ${services.replace(",,", ", ")}\n\nThis booking it to be paid in store.`,
+    };
+  
+    // Send mail
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log('Error sending email:', error);
+        } else {
+            console.log('Verification email sent:', info.response);
+        }
+    });
+}
 function sendClientGiftRequest(email, price){
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
@@ -226,17 +243,31 @@ app.post("/api/book-appointment", async (req, res) => {
     const cancelCode = generateNumber();
     const cancelLink = url + "/bookings.html?cancel=" + cancelCode;
 
-    if(applied){
+    if(req.body.inStore){
+        sendClientStore(process.env.ADMIN_EMAIL, date, time, email, message, services);
+        sendUserFree(email, date, time, cancelLink);
+
+        const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        db.query(insertQuery, [date, time, email, message, code, services, type, price, cancelCode, "Not Paid Yet"], (err, result) => {
+            if(err){
+                console.error("Error updating booking: ", err);
+                return res.json({ message: 'failed' });
+            }
+
+            
+        });
+    } else if(applied){
         sendClientFree(process.env.ADMIN_EMAIL, date, time, email, message, code, services);
         sendUserFree(email, date, time, cancelLink);
+
         db.query("select * from codes where coupon_code = ?", [code], (err, result) => {
             if(err){
                 console.error("Error selecting codes: " + err);
             }
 
             let newValue = result[0].value - Number(price.slice(1));
-            const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            db.query(insertQuery, [date, time, email, message, code, services, type, price, cancelCode], (err, result) => {
+            const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            db.query(insertQuery, [date, time, email, message, code, services, type, price, cancelCode, "Paid Online (Voucher)"], (err, result) => {
                 if(err){
                     console.error("Error updating booking: ", err);
                     return res.json({ message: 'failed' });
@@ -635,6 +666,10 @@ app.post("/api/create-checkout-session", async (req, res) => {
   try {
     const amount = req.body.amount * 100;
 
+    if(!isValidEmail(req.body.email)){
+        return res.json({ message: 'invalid email' });
+    }
+
     // Create a Checkout Session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -656,10 +691,10 @@ app.post("/api/create-checkout-session", async (req, res) => {
         cancel_url: url + "/bookings.html?success=false",
     });
 
-    res.json({ url: session.url });
+    res.json({ message: 'success', url: session.url });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: 'falied' });
   }
 });
 
@@ -728,8 +763,8 @@ app.post("/api/verify-booking", async (req, res) => {
         return res.json("failed");
     }
     
-    const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    db.query(insertQuery, [session.metadata.customer_date, session.metadata.customer_time, session.metadata.customer_email, session.metadata.customer_message, "Not entered", session.metadata.customer_services, session.metadata.customer_type, session.metadata.customer_price, session.metadata.customer_cancelCode], (err, result) => {
+    const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    db.query(insertQuery, [session.metadata.customer_date, session.metadata.customer_time, session.metadata.customer_email, session.metadata.customer_message, "Not entered", session.metadata.customer_services, session.metadata.customer_type, session.metadata.customer_price, session.metadata.customer_cancelCode, "Paid Online"], (err, result) => {
         if(err){
             console.error("Error updating booking: ", err);
             return res.json({ message: 'failed' });
