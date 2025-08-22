@@ -75,7 +75,7 @@ function sendClientEmail(userEmail, date, time, email, message, services, price)
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
         subject: 'New Booking', // Subject line
-        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nServices: ${services.replace(",,", ", ")}\n\nPrice: ${price}`,
+        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nServices: ${services.replace(/,,/g, ", ")}\n\nPrice: ${price}`,
     };
   
     // Send mail
@@ -92,7 +92,7 @@ function sendClientFree(userEmail, date, time, email, message, code, services) {
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
         subject: 'New Booking', // Subject line
-        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nVoucher code: ${code}\n\nServices: ${services.replace(",,", ", ")}\n\nThis booking was made using a voucher.`,
+        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nVoucher code: ${code}\n\nServices: ${services.replace(/,,/g, ", ")}\n\nThis booking was made using a voucher.`,
     };
   
     // Send mail
@@ -109,7 +109,7 @@ function sendClientStore(userEmail, date, time, email, message, services) {
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
         subject: 'New Booking', // Subject line
-        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nServices: ${services.replace(",,", ", ")}\n\nThis booking it to be paid in store.`,
+        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nServices: ${services.replace(/,,/g, ", ")}\n\nThis booking it to be paid in store.`,
     };
   
     // Send mail

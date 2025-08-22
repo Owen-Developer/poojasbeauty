@@ -10,6 +10,7 @@ let bookingMessage = "Not entered";
 let couponCode = "Not entered";
 let codeApplied = false;
 let price = 0;
+let storePrice = 0;
 let isAdmin = false;
 
 let todayBox;
@@ -699,6 +700,7 @@ document.querySelectorAll(".book-li").forEach(li => {
             document.querySelector(".btn-book-sum").classList.remove("book-btn-inactive");
 
             document.querySelector(".book-code-total").innerHTML = "£" + totalPrice;
+            storePrice = "£" + totalPrice;
             let newNum = (Number(document.querySelector(".book-code-total").textContent.slice(1)) * 0.90).toFixed(2);
             price = "£" + newNum;
             document.querySelector(".book-code-total").innerHTML = `<span class="book-code-total" style="text-decoration: line-through; margin-right: 10px;">${document.querySelector(".book-sum-total").textContent}</span> £${newNum}`;
@@ -1075,7 +1077,11 @@ if(document.querySelector(".book-container")){
                 fullServices += label.textContent + ",,";
             }
         }); 
-        const dataToSend = { date: fullDate, time: fullTime, email: emailTxt, message: bookingMessage, code: couponCode, services: fullServices, price: price, type: 'user', applied: codeApplied, inStore: inStore, productIds: productIds };
+        let endPrice = price;
+        if(inStore){
+            endPrice = storePrice;
+        }
+        const dataToSend = { date: fullDate, time: fullTime, email: emailTxt, message: bookingMessage, code: couponCode, services: fullServices, price: endPrice, type: 'user', applied: codeApplied, inStore: inStore, productIds: productIds };
         try {
             const response = await fetch(url + '/api/book-appointment', {
                 method: 'POST',
