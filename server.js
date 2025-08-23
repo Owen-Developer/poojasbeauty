@@ -56,8 +56,10 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-  maxAge: 86400000
-}
+        maxAge: 24 * 60 * 60 * 1000, 
+    secure: true,       // HTTPS only
+    sameSite: 'none'    // allow cross-site cookies
+    }
 }));
 
 app.use(express.static('public'));
