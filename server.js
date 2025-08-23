@@ -7,6 +7,7 @@ const PORT = process.env.PORT || 3000;
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 require('dotenv').config();
+const cors = require('cors');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const e = require('express');
