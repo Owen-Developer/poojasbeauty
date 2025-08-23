@@ -6,8 +6,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
@@ -33,15 +31,6 @@ db.query('SELECT 1', (err, results) => {
     if (err) console.error('Error running query:', err);
     else console.log('Database is working');
 });
-/*
-db.connect((err) => {
-    if (err) {
-        console.error('Database connection failed:', err.stack);
-        return;
-    }
-    console.log('Connected to MySQL database.');
-});
-*/
 
 const store = new MySQLStore({
     host: process.env.DB_HOST,
@@ -50,6 +39,16 @@ const store = new MySQLStore({
     database: process.env.DB_NAME,
     port: process.env.PORT // 24642 or 3306
 });
+
+app.use(cors({
+    origin: 'https://owen-developer.github.io', // GitHub Pages root domain
+    credentials: true
+}));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.set('trust proxy', 1);
+
 app.use(session({
     store,
     secret: 'your-secret-key',

@@ -293,7 +293,7 @@ const services = [
     },
 ];
 
-let url = "";
+let url = "https://poojasbeauty.onrender.com";
 
 let productIds = [];
 
@@ -1201,7 +1201,10 @@ if(document.querySelector(".book-container")){
     if(params.get("admin") == "true"){
         async function checkAdmin() {
             try {
-                const response = await fetch(url + '/api/check-admin');
+                const response = await fetch(`${backendUrl}/api/check-admin`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
                 const data = await response.json(); 
                 if(data.message == "Failure"){
                     document.querySelector(".book-access-modal").style.pointerEvents = "auto";
@@ -1224,7 +1227,10 @@ if(document.querySelector(".book-container")){
 
         async function verifyBooking(){
             try {
-                const response = await fetch(`/api/verify-booking?verify=${params.get("verify")}`);
+                const response = await fetch(`${backendUrl}/api/verify-booking?verify=${params.get("verify")}`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
                 const data = await response.json(); 
 
                 if(data.message == "success"){
@@ -1241,7 +1247,10 @@ if(document.querySelector(".book-container")){
 
         async function verifyGift(){
             try {
-                const response = await fetch(`/api/verify-gift?verifyvoucher=${params.get("verifyvoucher")}`);
+                const response = await fetch(`${backendUrl}/api/verify-gift?verifyvoucher=${params.get("verifyvoucher")}`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
                 const data = await response.json(); 
 
                 if(data.message == "success"){

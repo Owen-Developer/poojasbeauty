@@ -404,6 +404,7 @@
     <script>
     const params = new URLSearchParams(window.location.search);
     const stripe = Stripe("pk_test_51Rx2OjIO0M0lx6yNqqLnjy2beSuhsiPfJXyLK7hR2nIya0sRdGHbL5EgTUdOU1nsFypSU6LqbZbgC7R1SMtmeZpm00aeNzMAvg");
+    let url = "https://poojasbeauty.onrender.com";
 
     if(params.get("voucher")){
         document.querySelector(".book-gift-modal").style.opacity = "1";
@@ -419,8 +420,9 @@
                     }
                     const dataToSend = { amount: amountNum, email: document.getElementById("giftEmailInput").value };
                     try {
-                        const response = await fetch('/api/create-checkout-session', {
+                        const response = await fetch(url + '/api/create-checkout-session', {
                             method: 'POST',
+                            credentials: 'include',
                             headers: {
                                 'Content-Type': 'application/json', 
                             },
@@ -476,14 +478,14 @@
                 }
 
                 // Call your backend to verify this session
-                const res = await fetch(`/api/verify-session?session_id=${sessionId}`);
+                const res = await fetch(url + `/api/verify-session?session_id=${sessionId}`);
                 const data = await res.json();
                 stripeSessionId = data.session.id;
 
                 async function createGift() {
                     const dataToSend = { id: stripeSessionId };
                     try {
-                        const response = await fetch('/api/create-gift', {
+                        const response = await fetch(url + '/api/create-gift', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json', 
@@ -522,8 +524,9 @@
 
                 const dataToSend = { id: sessionId };
                 try {
-                    const response = await fetch('/api/verify-booking', {
+                    const response = await fetch(url + '/api/verify-booking', {
                         method: 'POST',
+                        credentials: 'include',
                         headers: {
                             'Content-Type': 'application/json', 
                         },
