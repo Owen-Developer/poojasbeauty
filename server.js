@@ -42,7 +42,7 @@ const store = new MySQLStore({
 });
 
 app.use(cors({
-    origin: 'https://owen-developer.github.io', // GitHub Pages root domain
+    origin: 'https://owen-developer.github.io',
     credentials: true
 }));
 
