@@ -14,7 +14,7 @@ const e = require('express');
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const accessKey = process.env.ACCESS_KEY;
-const url = "http://localhost:3000";
+const url = "https://poojasbeauty.onrender.com";
 // http://localhost:3000  https://poojasbeauty.onrender.com
 
 
