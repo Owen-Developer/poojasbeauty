@@ -266,6 +266,13 @@ app.post("/api/book-appointment", async (req, res) => {
                 newTime = time;
 
                 let lastTime = time.slice(0, 3) + String(minNum + (15 * (timeTaken - 1)));
+                if(minNum + (15 * (timeTaken - 1)) > 45){
+                    let exceed = Math.floor((minNum + (15 * (timeTaken - 1))) / 60);
+                    lastTime = String(Number(time.slice(0, 2)) + exceed) + ":" + String((minNum + (15 * (timeTaken - 1))) - (60 * exceed));
+                    if(String((minNum + (15 * i)) - (60 * exceed)) == "0"){
+                        lastTime = lastTime + "0";
+                    }
+                }
                 finishTime = lastTime.slice(0, 3) + String(Number(lastTime.slice(3)) + 15);
                 if((Number(lastTime.slice(3)) + 15) == 60){
                     finishTime = String(Number(lastTime.slice(0, 2)) + 1) + ":00";
@@ -312,6 +319,13 @@ app.post("/api/book-appointment", async (req, res) => {
                     newTime = time;
 
                     let lastTime = time.slice(0, 3) + String(minNum + (15 * (timeTaken - 1)));
+                    if(minNum + (15 * (timeTaken - 1)) > 45){
+                        let exceed = Math.floor((minNum + (15 * (timeTaken - 1))) / 60);
+                        lastTime = String(Number(time.slice(0, 2)) + exceed) + ":" + String((minNum + (15 * (timeTaken - 1))) - (60 * exceed));
+                        if(String((minNum + (15 * i)) - (60 * exceed)) == "0"){
+                            lastTime = lastTime + "0";
+                        }
+                    }
                     finishTime = lastTime.slice(0, 3) + String(Number(lastTime.slice(3)) + 15);
                     if((Number(lastTime.slice(3)) + 15) == 60){
                         finishTime = String(Number(lastTime.slice(0, 2)) + 1) + ":00";
@@ -841,6 +855,13 @@ app.post("/api/verify-booking", async (req, res) => {
             newTime = session.metadata.customer_time;
 
             let lastTime = session.metadata.customer_time.slice(0, 3) + String(minNum + (15 * (timeTaken - 1)));
+            if(minNum + (15 * (timeTaken - 1)) > 45){
+                let exceed = Math.floor((minNum + (15 * (timeTaken - 1))) / 60);
+                lastTime = String(Number(time.slice(0, 2)) + exceed) + ":" + String((minNum + (15 * (timeTaken - 1))) - (60 * exceed));
+                if(String((minNum + (15 * i)) - (60 * exceed)) == "0"){
+                    lastTime = lastTime + "0";
+                }
+            }
             finishTime = lastTime.slice(0, 3) + String(Number(lastTime.slice(3)) + 15);
             if((Number(lastTime.slice(3)) + 15) == 60){
                 finishTime = String(Number(lastTime.slice(0, 2)) + 1) + ":00";
