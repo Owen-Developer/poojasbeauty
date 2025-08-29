@@ -248,7 +248,7 @@ app.post("/api/book-appointment", async (req, res) => {
 
     if(req.body.inStore){
         let values = [];
-        let finishTime;
+        let finishTime = null;
         for(let i = 0; i < timeTaken; i++){
             let minNum = Number(time.slice(3, 5));
             let newTime = time.slice(0, 3) + String(minNum + (15 * i));
@@ -259,13 +259,15 @@ app.post("/api/book-appointment", async (req, res) => {
                     newTime = newTime + "0";
                 }
             }
+            let rowType = "filler";
             if(i == 0){
+                rowType = "user";
                 newTime = time;
-            }
-            if(i == (timeTaken - 1)){
-                finishTime = newTime.slice(0, 3) + String(Number(newTime.slice(3)) + 15);
-                if((Number(newTime.slice(3)) + 15) == 60){
-                    finishTime = String(Number(newTime.slice(0, 2)) + 1) + ":00";
+
+                let lastTime = time.slice(0, 3) + String(minNum + (15 * (timeTaken - 1)));
+                finishTime = lastTime.slice(0, 3) + String(Number(lastTime.slice(3)) + 15);
+                if((Number(lastTime.slice(3)) + 15) == 60){
+                    finishTime = String(Number(lastTime.slice(0, 2)) + 1) + ":00";
                 }
             }
             values.push([date, newTime, email, message, code, services, type, price, cancelCode, "Paid Online (Voucher)", timeTaken, finishTime]);
@@ -290,7 +292,7 @@ app.post("/api/book-appointment", async (req, res) => {
             }
 
             let values = [];
-            let finishTime;
+            let finishTime = null;
             for(let i = 0; i < timeTaken; i++){
                 let minNum = Number(time.slice(3, 5));
                 let newTime = time.slice(0, 3) + String(minNum + (15 * i));
@@ -301,13 +303,15 @@ app.post("/api/book-appointment", async (req, res) => {
                         newTime = newTime + "0";
                     }
                 }
+                let rowType = "filler";
                 if(i == 0){
+                    rowType = "user";
                     newTime = time;
-                }
-                if(i == (timeTaken - 1)){
-                    finishTime = newTime.slice(0, 3) + String(Number(newTime.slice(3)) + 15);
-                    if((Number(newTime.slice(3)) + 15) == 60){
-                        finishTime = String(Number(newTime.slice(0, 2)) + 1) + ":00";
+
+                    let lastTime = time.slice(0, 3) + String(minNum + (15 * (timeTaken - 1)));
+                    finishTime = lastTime.slice(0, 3) + String(Number(lastTime.slice(3)) + 15);
+                    if((Number(lastTime.slice(3)) + 15) == 60){
+                        finishTime = String(Number(lastTime.slice(0, 2)) + 1) + ":00";
                     }
                 }
                 values.push([date, newTime, email, message, code, services, type, price, cancelCode, "Paid Online (Voucher)", timeTaken, finishTime]);
@@ -600,7 +604,9 @@ app.post("/api/close-all", requireAdmin, (req, res) => {
 
         if(result.length > 0){
             result.forEach(obj => {
-                sendApologyEmail(obj.email, date);
+                if(obj.booking_type == "user"){
+                    sendApologyEmail(obj.email, date);
+                }
             });
         }
 
@@ -611,8 +617,19 @@ app.post("/api/close-all", requireAdmin, (req, res) => {
             }
 
             let values = [];
-            let times = ["09:30:00", "10:00:00", "10:30:00", "11:00:00", "11:30:00", "12:00:00", "12:30:00", "13:00:00", "13:30:00", "14:00:00", "14:30:00", "15:00:00", "15:30:00", "16:00:00", "16:30:00", "17:00:00", "17:30:00", "18:00:00"];
-            for(let i = 0; i < 18; i++){
+            let times = [
+                "09:30", "09:45",
+                "10:00", "10:15", "10:30", "10:45",
+                "11:00", "11:15", "11:30", "11:45",
+                "12:00", "12:15", "12:30", "12:45",
+                "13:00", "13:15", "13:30", "13:45",
+                "14:00", "14:15", "14:30", "14:45",
+                "15:00", "15:15", "15:30", "15:45",
+                "16:00", "16:15", "16:30", "16:45",
+                "17:00", "17:15", "17:30", "17:45",
+                "18:00"
+            ];
+            for(let i = 0; i < 35; i++){
                 values.push([times[i], date, "marceauowen@gmail.com", "Not entered", "Not entered", "No Services", "admin", "£0", "n/a"]);
             }
             const closeQuery = "insert into bookings (booking_time, booking_date, email, message, coupon_code, services, booking_type, price, cancel_code) values ?";
@@ -673,20 +690,6 @@ app.get("/api/verify-booking", requireAdmin, (req, res) => {
     db.query(changeStatusQuery, ["verified", req.query.verify], (err, result) => {
         if(err){
             console.error("Error changing payment status: " + err);
-        }
-
-        return res.json({ message: 'success' });
-    });
-});
-
-app.post("/api/mark-paid", requireAdmin, (req, res) => {
-    const id = req.body.id;
-
-    const markQuery = "update bookings set payment_status = ? where id = ?";
-    db.query(markQuery, ["verified", id], (err, result) => {
-        if(err){
-            console.error("Error updating booking status: " + err);
-            return res.json({ message: 'failure' });
         }
 
         return res.json({ message: 'success' });
@@ -816,7 +819,7 @@ app.post("/api/verify-booking", async (req, res) => {
 
     let timeTaken = session.metadata.customer_timeTaken;
     let values = [];
-    let finishTime;
+    let finishTime = null;
     for(let i = 0; i < timeTaken; i++){
         let minNum = Number(session.metadata.customer_time.slice(3, 5));
         let newTime = session.metadata.customer_time.slice(0, 3) + String(minNum + (15 * i));
@@ -827,13 +830,15 @@ app.post("/api/verify-booking", async (req, res) => {
                 newTime = newTime + "0";
             }
         }
+        let rowType = "filler";
         if(i == 0){
+            rowType = "user";
             newTime = session.metadata.customer_time;
-        }
-        if(i == (timeTaken - 1)){
-            finishTime = newTime.slice(0, 3) + String(Number(newTime.slice(3)) + 15);
-            if((Number(newTime.slice(3)) + 15) == 60){
-                finishTime = String(Number(newTime.slice(0, 2)) + 1) + ":00";
+
+            let lastTime = session.metadata.customer_time.slice(0, 3) + String(minNum + (15 * (timeTaken - 1)));
+            finishTime = lastTime.slice(0, 3) + String(Number(lastTime.slice(3)) + 15);
+            if((Number(lastTime.slice(3)) + 15) == 60){
+                finishTime = String(Number(lastTime.slice(0, 2)) + 1) + ":00";
             }
         }
         values.push([session.metadata.customer_date, newTime, session.metadata.customer_email, session.metadata.customer_messages, null, session.metadata.customer_services, session.metadata.customer_type, session.metadata.customer_price, session.metadata.customer_cancelCode, "Paid Online", timeTaken, finishTime]);

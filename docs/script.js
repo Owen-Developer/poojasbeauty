@@ -1162,6 +1162,7 @@ if(document.querySelector(".book-container")){
 
             const responseData = await response.json();
             if(response.message == "failure"){
+                document.querySelector(".book-time-empty").style.display = "block";
             } else {
                 const ukTime = new Date().toLocaleTimeString('en-GB', {
                     timeZone: 'Europe/London',
@@ -1410,7 +1411,7 @@ if(document.querySelector(".book-container")){
                         let newCard = document.createElement("div");
                         newCard.classList.add("book-show-section");
                         newCard.innerHTML = `
-                            <div class="book-show-time">${obj.booking_time}</div>
+                            <div class="book-show-time">${obj.booking_time} - ${obj.finish_time}</div>
                             <div class="book-show-price">Payment Status: ${obj.payment_status}</div>
                             <div class="book-show-price">Total price: ${obj.price}</div>
                             <div class="book-show-message">Message: ${obj.message}</div>

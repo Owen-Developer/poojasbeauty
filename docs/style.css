@@ -2787,7 +2787,7 @@ i.book-show-x {
     border-bottom: 1px solid hsl(0, 0%, 18%);
 }
 .book-show-time {
-    font-size: 40px;
+    font-size: 32px;
     color: white;
 }
 .book-show-price {
