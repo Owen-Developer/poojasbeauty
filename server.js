@@ -248,8 +248,8 @@ app.post("/api/book-appointment", async (req, res) => {
 
     if(req.body.inStore){
         let values = [];
-        let finishTime = null;
         for(let i = 0; i < timeTaken; i++){
+            let finishTime = null;
             let minNum = Number(time.slice(3, 5));
             let newTime = time.slice(0, 3) + String(minNum + (15 * i));
             if(minNum + (15 * i) > 45){
@@ -270,7 +270,7 @@ app.post("/api/book-appointment", async (req, res) => {
                     finishTime = String(Number(lastTime.slice(0, 2)) + 1) + ":00";
                 }
             }
-            values.push([date, newTime, email, message, code, services, type, price, cancelCode, "Paid Online (Voucher)", timeTaken, finishTime]);
+            values.push([date, newTime, email, message, code, services, rowType, price, cancelCode, "Paid Online (Voucher)", timeTaken, finishTime]);
         }
 
         sendClientStore(process.env.ADMIN_EMAIL, date, time + " - " + finishTime, email, message, services);
@@ -292,8 +292,8 @@ app.post("/api/book-appointment", async (req, res) => {
             }
 
             let values = [];
-            let finishTime = null;
             for(let i = 0; i < timeTaken; i++){
+                let finishTime = null;
                 let minNum = Number(time.slice(3, 5));
                 let newTime = time.slice(0, 3) + String(minNum + (15 * i));
                 if(minNum + (15 * i) > 45){
@@ -314,7 +314,7 @@ app.post("/api/book-appointment", async (req, res) => {
                         finishTime = String(Number(lastTime.slice(0, 2)) + 1) + ":00";
                     }
                 }
-                values.push([date, newTime, email, message, code, services, type, price, cancelCode, "Paid Online (Voucher)", timeTaken, finishTime]);
+                values.push([date, newTime, email, message, code, services, rowType, price, cancelCode, "Paid Online (Voucher)", timeTaken, finishTime]);
             }
 
             let newValue = result[0].value - Number(price.slice(1));
@@ -819,8 +819,8 @@ app.post("/api/verify-booking", async (req, res) => {
 
     let timeTaken = session.metadata.customer_timeTaken;
     let values = [];
-    let finishTime = null;
     for(let i = 0; i < timeTaken; i++){
+        let finishTime = null;
         let minNum = Number(session.metadata.customer_time.slice(3, 5));
         let newTime = session.metadata.customer_time.slice(0, 3) + String(minNum + (15 * i));
         if(minNum + (15 * i) > 45){
@@ -841,7 +841,7 @@ app.post("/api/verify-booking", async (req, res) => {
                 finishTime = String(Number(lastTime.slice(0, 2)) + 1) + ":00";
             }
         }
-        values.push([session.metadata.customer_date, newTime, session.metadata.customer_email, session.metadata.customer_messages, null, session.metadata.customer_services, session.metadata.customer_type, session.metadata.customer_price, session.metadata.customer_cancelCode, "Paid Online", timeTaken, finishTime]);
+        values.push([session.metadata.customer_date, newTime, session.metadata.customer_email, session.metadata.customer_messages, null, session.metadata.customer_services, rowType, session.metadata.customer_price, session.metadata.customer_cancelCode, "Paid Online", timeTaken, finishTime]);
     }
     
     const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status, time_taken, finish_time) values ?";
