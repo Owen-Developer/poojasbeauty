@@ -263,8 +263,8 @@ app.post("/api/book-appointment", async (req, res) => {
                 newTime = time;
             }
             if(i == (timeTaken - 1)){
-                finishTime = newTime.slice(0, 3) + (minNum + 15);
-                if((minNum + 15) == 60){
+                finishTime = newTime.slice(0, 3) + String(Number(newTime.slice(3)) + 15);
+                if((Number(newTime.slice(3)) + 15) == 60){
                     finishTime = String(Number(newTime.slice(0, 2)) + 1) + ":00";
                 }
             }
@@ -305,8 +305,8 @@ app.post("/api/book-appointment", async (req, res) => {
                     newTime = time;
                 }
                 if(i == (timeTaken - 1)){
-                    finishTime = newTime.slice(0, 3) + (minNum + 15);
-                    if((minNum + 15) == 60){
+                    finishTime = newTime.slice(0, 3) + String(Number(newTime.slice(3)) + 15);
+                    if((Number(newTime.slice(3)) + 15) == 60){
                         finishTime = String(Number(newTime.slice(0, 2)) + 1) + ":00";
                     }
                 }
@@ -831,8 +831,8 @@ app.post("/api/verify-booking", async (req, res) => {
             newTime = session.metadata.customer_time;
         }
         if(i == (timeTaken - 1)){
-            finishTime = newTime.slice(0, 3) + (minNum + 15);
-            if((minNum + 15) == 60){
+            finishTime = newTime.slice(0, 3) + String(Number(newTime.slice(3)) + 15);
+            if((Number(newTime.slice(3)) + 15) == 60){
                 finishTime = String(Number(newTime.slice(0, 2)) + 1) + ":00";
             }
         }
