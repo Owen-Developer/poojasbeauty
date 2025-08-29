@@ -294,7 +294,7 @@ const services = [
     },
 ];
 
-let url = ""; // https://poojasbeauty.onrender.com
+let url = "https://poojasbeauty.onrender.com"; // https://poojasbeauty.onrender.com
 
 let productIds = [];
 
