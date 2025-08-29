@@ -294,7 +294,7 @@ const services = [
     },
 ];
 
-let url = "https://poojasbeauty.onrender.com"; // https://poojasbeauty.onrender.com
+let url = ""; // https://poojasbeauty.onrender.com
 
 let productIds = [];
 
@@ -1161,10 +1161,8 @@ if(document.querySelector(".book-container")){
             }
 
             const responseData = await response.json();
-            if(response.message == "failure"){
-                document.querySelector(".book-time-empty").style.display = "block";
-            } else {
-                const ukTime = new Date().toLocaleTimeString('en-GB', {
+            if(responseData.message == "success") {
+                let ukTime = new Date().toLocaleTimeString('en-GB', {
                     timeZone: 'Europe/London',
                     hour: '2-digit',
                     minute: '2-digit',

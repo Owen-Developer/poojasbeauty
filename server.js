@@ -14,7 +14,7 @@ const e = require('express');
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const accessKey = process.env.ACCESS_KEY;
-const url = "https://poojasbeauty.onrender.com";
+const url = "http://localhost:3000";
 // http://localhost:3000  https://poojasbeauty.onrender.com
 
 
@@ -532,7 +532,7 @@ app.post("/api/check-slots", (req, res) => {
             }); 
             return res.json({ message: 'success', times: timesTaken, closed: daysClosed });
         } else {
-            return res.json({ message: 'failure', times: timesTaken});
+            return res.json({ message: 'success', times: timesTaken, closed: daysClosed });
         }
     });
 });
