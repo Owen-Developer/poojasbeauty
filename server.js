@@ -248,6 +248,7 @@ app.post("/api/book-appointment", async (req, res) => {
 
     if(req.body.inStore){
         let values = [];
+        let emailFinish;
         for(let i = 0; i < timeTaken; i++){
             let finishTime = null;
             let minNum = Number(time.slice(3, 5));
@@ -269,12 +270,13 @@ app.post("/api/book-appointment", async (req, res) => {
                 if((Number(lastTime.slice(3)) + 15) == 60){
                     finishTime = String(Number(lastTime.slice(0, 2)) + 1) + ":00";
                 }
+                emailFinish = finishTime;
             }
             values.push([date, newTime, email, message, code, services, rowType, price, cancelCode, "Paid Online (Voucher)", timeTaken, finishTime]);
         }
 
-        sendClientStore(process.env.ADMIN_EMAIL, date, time + " - " + finishTime, email, message, services);
-        sendUserFree(email, date, time + " - " + finishTime, cancelLink);
+        sendClientStore(process.env.ADMIN_EMAIL, date, time + " - " + emailFinish, email, message, services);
+        sendUserFree(email, date, time + " - " + emailFinish, cancelLink);
 
         const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status, time_taken, finish_time) values ?";
         db.query(insertQuery, [values], (err, result) => {
@@ -292,6 +294,7 @@ app.post("/api/book-appointment", async (req, res) => {
             }
 
             let values = [];
+            let emailFinish;
             for(let i = 0; i < timeTaken; i++){
                 let finishTime = null;
                 let minNum = Number(time.slice(3, 5));
@@ -313,6 +316,7 @@ app.post("/api/book-appointment", async (req, res) => {
                     if((Number(lastTime.slice(3)) + 15) == 60){
                         finishTime = String(Number(lastTime.slice(0, 2)) + 1) + ":00";
                     }
+                    emailFinish = finishTime;
                 }
                 values.push([date, newTime, email, message, code, services, rowType, price, cancelCode, "Paid Online (Voucher)", timeTaken, finishTime]);
             }
@@ -331,8 +335,8 @@ app.post("/api/book-appointment", async (req, res) => {
                         console.error("Error updating gift value: " + err);
                     }
 
-                    sendClientFree(process.env.ADMIN_EMAIL, date, time + " - " + finishTime, email, message, code, services);
-                    sendUserFree(email, date, time + " - " + finishTime, cancelLink);
+                    sendClientFree(process.env.ADMIN_EMAIL, date, time + " - " + emailFinish, email, message, code, services);
+                    sendUserFree(email, date, time + " - " + emailFinish, cancelLink);
                     return res.json({ message: 'success' });
                 });
             });
@@ -819,6 +823,7 @@ app.post("/api/verify-booking", async (req, res) => {
 
     let timeTaken = session.metadata.customer_timeTaken;
     let values = [];
+    let emailFinish;
     for(let i = 0; i < timeTaken; i++){
         let finishTime = null;
         let minNum = Number(session.metadata.customer_time.slice(3, 5));
@@ -840,6 +845,7 @@ app.post("/api/verify-booking", async (req, res) => {
             if((Number(lastTime.slice(3)) + 15) == 60){
                 finishTime = String(Number(lastTime.slice(0, 2)) + 1) + ":00";
             }
+            emailFinish = finishTime;
         }
         values.push([session.metadata.customer_date, newTime, session.metadata.customer_email, session.metadata.customer_messages, null, session.metadata.customer_services, rowType, session.metadata.customer_price, session.metadata.customer_cancelCode, "Paid Online", timeTaken, finishTime]);
     }
@@ -851,8 +857,8 @@ app.post("/api/verify-booking", async (req, res) => {
             return res.json({ message: 'failed' });
         }
 
-        sendClientEmail(process.env.ADMIN_EMAIL, session.metadata.customer_date, session.metadata.customer_time + " - " + finishTime, session.metadata.customer_email, session.metadata.customer_messages, session.metadata.customer_services, session.metadata.customer_price);
-        sendUserEmail(session.metadata.customer_email, session.metadata.customer_date, session.metadata.customer_time + " - " + finishTime, session.metadata.customer_cancelLink);
+        sendClientEmail(process.env.ADMIN_EMAIL, session.metadata.customer_date, session.metadata.customer_time + " - " + emailFinish, session.metadata.customer_email, session.metadata.customer_messages, session.metadata.customer_services, session.metadata.customer_price);
+        sendUserEmail(session.metadata.customer_email, session.metadata.customer_date, session.metadata.customer_time + " - " + emailFinish, session.metadata.customer_cancelLink);
         return res.json({ message: 'success' });
     });
 });
