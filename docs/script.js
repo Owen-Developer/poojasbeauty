@@ -11,6 +11,7 @@ let couponCode = "Not entered";
 let codeApplied = false;
 let price = 0;
 let storePrice = 0;
+let totalTime = 0;
 let isAdmin = false;
 
 let todayBox;
@@ -293,7 +294,7 @@ const services = [
     },
 ];
 
-let url = "https://poojasbeauty.onrender.com";
+let url = ""; // https://poojasbeauty.onrender.com
 
 let productIds = [];
 
@@ -668,6 +669,12 @@ document.querySelectorAll(".book-li").forEach(li => {
         if(li.classList.contains("book-li-active")){
             li.classList.remove("book-li-active");
 
+            Array.from(li.classList).forEach(cls => {
+                if(cls.includes("st")){
+                    totalTime -= Number(cls.split("-")[1]);
+                }
+            });
+
             document.querySelectorAll(".book-sum-flex").forEach(cont => {
                 if(cont.querySelector(".book-sum-label").textContent == li.textContent.slice(0, (li.textContent.indexOf("-") - 1))){
                     document.querySelector(".book-sum-ul").removeChild(cont);
@@ -682,6 +689,12 @@ document.querySelectorAll(".book-li").forEach(li => {
             }
         } else {
             li.classList.add("book-li-active");
+
+            Array.from(li.classList).forEach(cls => {
+                if(cls.includes("st")){
+                    totalTime += Number(cls.split("-")[1]);
+                }
+            });
 
             let section = document.createElement("div");
             section.classList.add("book-sum-flex");
@@ -826,6 +839,7 @@ function nextBookingStage(){
                 document.querySelector(".book-time").style.opacity = "1";
             }, 50);
         }, 200);
+        console.log(totalTime);
     } 
     
     else {
@@ -987,7 +1001,7 @@ if(document.querySelector(".book-container")){
                                 todayBookings++;
                             }
                         });
-                        if(todayBookings == 18){
+                        if(todayBookings == 35){
                             box.classList.add("book-cal-disabled");
 
                             if(Number(box.textContent) >= todayDate){
@@ -1081,7 +1095,9 @@ if(document.querySelector(".book-container")){
         if(inStore){
             endPrice = storePrice;
         }
-        const dataToSend = { date: fullDate, time: fullTime, email: emailTxt, message: bookingMessage, code: couponCode, services: fullServices, price: endPrice, type: 'user', applied: codeApplied, inStore: inStore, productIds: productIds };
+        let slotsTaken = Math.ceil(totalTime / 15);
+        
+        const dataToSend = { date: fullDate, time: fullTime, email: emailTxt, message: bookingMessage, code: couponCode, services: fullServices, price: endPrice, type: 'user', applied: codeApplied, inStore: inStore, productIds: productIds, totalTime: slotsTaken };
         try {
             const response = await fetch(url + '/api/book-appointment', {
                 method: 'POST',
@@ -1127,6 +1143,7 @@ if(document.querySelector(".book-container")){
         }
         let fullDate = currentYear + "-" + monStr + "-" + dateStr;
         const dataToSend = { date: fullDate };
+
         try {
             const response = await fetch(url + '/api/check-slots', {
                 method: 'POST',
@@ -1145,7 +1162,6 @@ if(document.querySelector(".book-container")){
 
             const responseData = await response.json();
             if(response.message == "failure"){
-                console.log("Fail");
             } else {
                 const ukTime = new Date().toLocaleTimeString('en-GB', {
                     timeZone: 'Europe/London',
@@ -1159,6 +1175,7 @@ if(document.querySelector(".book-container")){
                 document.querySelector(".btn-book-delete").classList.remove("admin-none");
                 document.querySelector(".btn-book-open").classList.add("admin-none");
                 document.querySelectorAll(".book-time-wrapper").forEach(wrapper => {
+                    // if today, and time is earlier in the day, display none.
                     wrapper.style.display = "block";
                     if(todayBox.classList.contains("book-cal-active") && (Number(ukTime.slice(0, 2)) > wrapper.textContent.slice(0, 2) || (Number(ukTime.slice(0, 2)) == wrapper.textContent.slice(0, 2) && Number(ukTime.slice(3, 5)) > wrapper.textContent.slice(3, 5)))){
                         wrapper.style.display = "none";
@@ -1175,18 +1192,24 @@ if(document.querySelector(".book-container")){
                     });
                 }
                 let bookingFound = false;
-                document.querySelectorAll(".book-time-wrapper").forEach(wrapper => {
+                document.querySelectorAll(".book-time-wrapper").forEach((wrapper, idx) => {
                     wrapper.classList.remove("book-time-active");
                     document.querySelector(".btn-book-sum").classList.add("book-btn-inactive");
                     document.querySelector(".book-mobile").style.opacity = "0";
                     document.querySelector(".book-mobile").style.pointerEvents = "none";
+                    let slotsTaken = Math.ceil(totalTime / 15);
+                    for(let i = 1; i < slotsTaken; i++){
+                        if(!document.querySelectorAll(".book-time-wrapper")[idx + i] || document.querySelectorAll(".book-time-wrapper")[idx + i].style.display == "none"){
+                            wrapper.style.display = "none";
+                        }
+                    }
                     if(wrapper.style.display == "block"){
                         bookingFound = true;
                     }
                 });
-                if(!bookingFound && responseData.closed < 18){
+                if(!bookingFound && responseData.closed < 35){
                     document.querySelector(".book-time-empty").style.display = "block";
-                } else if(responseData.closed == 18){
+                } else if(responseData.closed == 35){
                     document.querySelector(".btn-book-delete").classList.add("admin-none");
                     document.querySelector(".btn-book-open").classList.remove("admin-none");
                     document.querySelector(".book-time-closed").style.display = "block";

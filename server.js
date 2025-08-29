@@ -15,7 +15,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const accessKey = process.env.ACCESS_KEY;
 const url = "https://poojasbeauty.onrender.com";
-// http://localhost:3000
+// http://localhost:3000  https://poojasbeauty.onrender.com
 
 
 const db = mysql.createPool({
@@ -62,7 +62,7 @@ app.use(session({
     }
 }));
 
-app.use(express.static('public'));
+app.use(express.static('docs'));
 
 ////////////////////////// REUSABLE FUNCTIONS LOGIC ///////////////////////////
 const transporter = nodemailer.createTransport({
@@ -237,6 +237,7 @@ app.post("/api/book-appointment", async (req, res) => {
     const price = req.body.price;
     const type = req.body.type;
     const applied = req.body.applied;
+    const timeTaken = req.body.totalTime;
 
     if(!isValidEmail(email)){
         return res.json({ message: 'failed' });
@@ -249,8 +250,25 @@ app.post("/api/book-appointment", async (req, res) => {
         sendClientStore(process.env.ADMIN_EMAIL, date, time, email, message, services);
         sendUserFree(email, date, time, cancelLink);
 
-        const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        db.query(insertQuery, [date, time, email, message, code, services, type, price, cancelCode, "Not Paid Yet"], (err, result) => {
+        let values = [];
+        for(let i = 0; i < timeTaken; i++){
+            let minNum = Number(time.slice(3, 5));
+            let newTime = time.slice(0, 3) + String(minNum + (15 * i));
+            if(minNum + (15 * i) > 45){
+                let exceed = Math.floor((minNum + (15 * i)) / 60);
+                newTime = String(Number(time.slice(0, 2)) + exceed) + ":" + String((minNum + (15 * i)) - (60 * exceed));
+                if(String((minNum + (15 * i)) - (60 * exceed)) == "0"){
+                    newTime = newTime + "0";
+                }
+            }
+            if(i == 0){
+                newTime = time;
+            }
+            values.push([date, newTime, email, message, code, services, type, price, cancelCode, "Not Paid Yet (in store)", timeTaken]);
+        }
+
+        const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status, time_taken) values ?";
+        db.query(insertQuery, [values], (err, result) => {
             if(err){
                 console.error("Error updating booking: ", err);
                 return res.json({ message: 'failed' });
@@ -267,9 +285,26 @@ app.post("/api/book-appointment", async (req, res) => {
                 console.error("Error selecting codes: " + err);
             }
 
+            let values = [];
+            for(let i = 0; i < timeTaken; i++){
+                let minNum = Number(time.slice(3, 5));
+                let newTime = time.slice(0, 3) + String(minNum + (15 * i));
+                if(minNum + (15 * i) > 45){
+                    let exceed = Math.floor((minNum + (15 * i)) / 60);
+                    newTime = String(Number(time.slice(0, 2)) + exceed) + ":" + String((minNum + (15 * i)) - (60 * exceed));
+                    if(String((minNum + (15 * i)) - (60 * exceed)) == "0"){
+                        newTime = newTime + "0";
+                    }
+                }
+                if(i == 0){
+                    newTime = time;
+                }
+                values.push([date, newTime, email, message, code, services, type, price, cancelCode, "Paid Online (Voucher)", timeTaken]);
+            }
+
             let newValue = result[0].value - Number(price.slice(1));
-            const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            db.query(insertQuery, [date, time, email, message, code, services, type, price, cancelCode, "Paid Online (Voucher)"], (err, result) => {
+            const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status, time_taken) values ?";
+            db.query(insertQuery, [values], (err, result) => {
                 if(err){
                     console.error("Error updating booking: ", err);
                     return res.json({ message: 'failed' });
@@ -286,7 +321,7 @@ app.post("/api/book-appointment", async (req, res) => {
             });
         });
     } else {
-        async function payProduct() {
+        async function payProduct(){
             let productPriceMap = {
                 "product_1": "price_1RyGREIO0M0lx6yNWh1fONaP", // chin
                 "product_2": "price_1RyGUIIO0M0lx6yN1DREpeSw", // chin
@@ -404,6 +439,7 @@ app.post("/api/book-appointment", async (req, res) => {
                         customer_price: price,
                         customer_cancelCode: cancelCode,
                         customer_cancelLink: cancelLink,
+                        customer_timeTaken: timeTaken,
                     },
                     success_url: url + "/bookings.html?success=true&session_id={CHECKOUT_SESSION_ID}&product=true",
                     cancel_url: url + "/bookings.html?success=false",
@@ -764,9 +800,27 @@ app.post("/api/verify-booking", async (req, res) => {
     if(session.payment_status != "paid"){
         return res.json("failed");
     }
+
+    let timeTaken = session.metadata.customer_timeTaken;
+    let values = [];
+    for(let i = 0; i < timeTaken; i++){
+        let minNum = Number(time.slice(3, 5));
+        let newTime = time.slice(0, 3) + String(minNum + (15 * i));
+        if(minNum + (15 * i) > 45){
+            let exceed = Math.floor((minNum + (15 * i)) / 60);
+            newTime = String(Number(time.slice(0, 2)) + exceed) + ":" + String((minNum + (15 * i)) - (60 * exceed));
+            if(String((minNum + (15 * i)) - (60 * exceed)) == "0"){
+                newTime = newTime + "0";
+            }
+        }
+        if(i == 0){
+            newTime = time;
+        }
+        values.push([date, newTime, email, message, code, services, type, price, cancelCode, "Paid Online", timeTaken]);
+    }
     
-    const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    db.query(insertQuery, [session.metadata.customer_date, session.metadata.customer_time, session.metadata.customer_email, session.metadata.customer_message, "Not entered", session.metadata.customer_services, session.metadata.customer_type, session.metadata.customer_price, session.metadata.customer_cancelCode, "Paid Online"], (err, result) => {
+    const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status, time_taken) values ?";
+    db.query(insertQuery, [values], (err, result) => {
         if(err){
             console.error("Error updating booking: ", err);
             return res.json({ message: 'failed' });
