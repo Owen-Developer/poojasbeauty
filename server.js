@@ -868,7 +868,7 @@ app.post("/api/verify-booking", async (req, res) => {
             }
             emailFinish = finishTime;
         }
-        values.push([session.metadata.customer_date, newTime, session.metadata.customer_email, session.metadata.customer_messages, null, session.metadata.customer_services, rowType, session.metadata.customer_price, session.metadata.customer_cancelCode, "Paid Online", timeTaken, finishTime]);
+        values.push([session.metadata.customer_date, newTime, session.metadata.customer_email, session.metadata.customer_message, null, session.metadata.customer_services, rowType, session.metadata.customer_price, session.metadata.customer_cancelCode, "Paid Online", timeTaken, finishTime]);
     }
     
     const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status, time_taken, finish_time) values ?";
@@ -878,7 +878,7 @@ app.post("/api/verify-booking", async (req, res) => {
             return res.json({ message: 'failed' });
         }
 
-        sendClientEmail(process.env.ADMIN_EMAIL, session.metadata.customer_date, session.metadata.customer_time + " - " + emailFinish, session.metadata.customer_email, session.metadata.customer_messages, session.metadata.customer_services, session.metadata.customer_price);
+        sendClientEmail(process.env.ADMIN_EMAIL, session.metadata.customer_date, session.metadata.customer_time + " - " + emailFinish, session.metadata.customer_email, session.metadata.customer_message, session.metadata.customer_services, session.metadata.customer_price);
         sendUserEmail(session.metadata.customer_email, session.metadata.customer_date, session.metadata.customer_time + " - " + emailFinish, session.metadata.customer_cancelLink);
         return res.json({ message: 'success' });
     });

@@ -3573,7 +3573,7 @@ i.book-show-x {
     }
 
     .book-show-wrapper {
-        max-height: calc(100% - 200px);
+        max-height: calc(100% - 300px);
     }
     .book-code-modal, .book-delete-modal, .book-show-modal, .book-pay-modal, .book-inst-modal, .book-gift-modal {
         align-items: flex-end;

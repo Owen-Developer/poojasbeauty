@@ -1420,7 +1420,7 @@ if(document.querySelector(".book-container")){
                         `
                         newCard.querySelector(".btn-show-delete").addEventListener("click", () => {
                             async function deleteCard() {
-                                const dataToSend = { code: obj.cancel_code };
+                                const dataToSend = { code: obj.cancel_code, user: true };
                                 try {
                                     const response = await fetch(url + '/api/delete-booking', {
                                         method: 'POST',
