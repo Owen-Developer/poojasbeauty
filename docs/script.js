@@ -294,7 +294,8 @@ const services = [
     },
 ];
 
-let url = "https://poojasbeauty.onrender.com"; // 
+let url = "https://poojasbeauty.onrender.com"; // backend routes
+let frontendUrl = "https://owen-developer.github.io/poojasbeauty";
 
 let productIds = [];
 
@@ -493,7 +494,7 @@ document.addEventListener("click", (e) => {
 
 document.querySelectorAll(".serv-link").forEach(li => {
     li.addEventListener("click", () => {
-        window.location.href = "/services.html?service=" + li.textContent.toLowerCase().replace(/ /g, "-").replace(/&/g, "and");
+        window.location.href = frontendUrl + "/services.html?service=" + li.textContent.toLowerCase().replace(/ /g, "-").replace(/&/g, "and");
     });
 });
 
@@ -520,7 +521,7 @@ if(document.querySelector(".detail-container")){
         });
         document.querySelectorAll(".detail-li").forEach(li => {
             li.addEventListener("click", () => {
-                window.location.href = "/services.html?service=" + li.textContent.toLowerCase().replace(/ /g, "-").replace(/&/g, "and");
+                window.location.href = frontendUrl + "/services.html?service=" + li.textContent.toLowerCase().replace(/ /g, "-").replace(/&/g, "and");
             });
             if(li.innerHTML.includes(serviceData.name)){
                 li.classList.add("detail-li-active");
@@ -591,7 +592,7 @@ document.querySelector(".menu-li-main").addEventListener("click", (e) => {if(!do
 }});
 document.querySelectorAll(".menu-flex").forEach(li => {
     li.addEventListener("click", (e) => {
-        window.location.href = "/services.html?service=" + li.querySelector(".menu-drop-txt").textContent.toLowerCase().replace(/ /g, "-").replace(/&/g, "and");
+        window.location.href = frontendUrl + "/services.html?service=" + li.querySelector(".menu-drop-txt").textContent.toLowerCase().replace(/ /g, "-").replace(/&/g, "and");
     });
 });
 
@@ -809,7 +810,7 @@ document.querySelectorAll(".book-time-wrapper").forEach(box => {
                 }
 
                 const responseData = await response.json();
-                window.location.href = "/bookings.html?admin=true";
+                window.location.href = frontendUrl + "/bookings.html?admin=true";
             } catch (error) {
                 console.error('Error posting data:', error);
             }
@@ -1121,7 +1122,7 @@ if(document.querySelector(".book-container")){
                 document.querySelector(".book-modal").style.opacity = "1";
                 document.querySelector(".book-modal").style.pointerEvents = "auto";
             } else if(responseData.message == "continue") {
-                window.location.href = responseData.url;
+                window.location.href = frontendUrl + responseData.url;
             } else {
                 document.querySelector(".book-email-error").style.display = "block";
                 setTimeout(() => {
@@ -1364,7 +1365,7 @@ if(document.querySelector(".book-container")){
                     }
 
                     const responseData = await response.json();
-                    window.location.href = "/bookings.html?admin=true";
+                    window.location.href = frontendUrl + "/bookings.html?admin=true";
                 } catch (error) {
                     console.error('Error posting data:', error);
                 }
@@ -1402,7 +1403,7 @@ if(document.querySelector(".book-container")){
 
                     const responseData = await response.json();
                     if(responseData.message == "Unauth"){
-                        window.location.href = "/bookings.html";
+                        window.location.href = frontendUrl + "/bookings.html";
                     }
                     let bookings = responseData.arrayObjs;
                     bookings.forEach(obj => {
@@ -1447,7 +1448,7 @@ if(document.querySelector(".book-container")){
                                             closeShowModal();
                                         }
                                     } else {
-                                        window.location.href = "/bookings.html?admin=true";
+                                        window.location.href = frontendUrl + "/bookings.html?admin=true";
                                     }
                                 } catch (error) {
                                     console.error('Error posting data:', error);
@@ -1513,7 +1514,7 @@ if(document.querySelector(".book-container")){
                     }
 
                     const responseData = await response.json();
-                    window.location.href = "/bookings.html?admin=true";
+                    window.location.href = frontendUrl + "/bookings.html?admin=true";
                 } catch (error) {
                     console.error('Error posting data:', error);
                 }
@@ -1544,7 +1545,7 @@ if(document.querySelector(".book-container")){
 
                 const responseData = await response.json()
                 if(responseData.message == "Failure"){
-                    window.location.href = "/bookings.html";
+                    window.location.href = frontendUrl + "/bookings.html";
                 } else {
                     document.querySelector(".book-delete-modal").style.opacity = "1";
                     document.querySelector(".book-delete-modal").style.pointerEvents = "auto";
@@ -1576,7 +1577,7 @@ if(document.querySelector(".book-container")){
 
                     const responseData = await response.json();
                     if(responseData.message == "Success"){
-                        window.location.href = "/bookings.html";
+                        window.location.href = frontendUrl + "/bookings.html";
                     }
                 } catch (error) {
                     console.error('Error posting data:', error);
