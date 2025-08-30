@@ -213,7 +213,7 @@ function sendClientForm(name, email, phone, message){
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
         to: process.env.ADMIN_EMAIL,                 // Receiver's email
-        subject: 'Booking Cancelled', // Subject line
+        subject: 'Message Recieved', // Subject line
         text: `Hello, a contact form was submitted from Pooja's Beauty Salon's website:\n\nName: ${name}\n\nEmail: ${email}\n\nPhone Number: ${phone}\n\nMessage: ${message}`,
     };
   
