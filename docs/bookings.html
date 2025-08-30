@@ -537,12 +537,12 @@
             <div class="contact-title">Tailor Your Booking</div>
             <div class="contact-para">Let us know your unique requirements and we’ll craft a package that suits you perfectly.</div>
             <div class="contact-flex">
-                <form method="POST" class="contact-form">
-                        <input type="text" placeholder="Full name" name="name" class="contact-inp" />
-                        <input type="text" placeholder="Your email" name="email" class="contact-inp" />
-                    <input type="text" placeholder="Phone number" name="phone" class="contact-inp" />
-                    <textarea name="message" placeholder="Share your requirements..." class="contact-area"></textarea>
-                    <button class="btn-contact">Send Message</button>
+                <form method="POST" action="/api/submit-form" id="contactForm" class="contact-form">
+                    <input type="text" placeholder="Full name" name="name" class="contact-inp" required/>
+                    <input type="text" placeholder="Your email" name="email" class="contact-inp" required/>
+                    <input type="text" placeholder="Phone number" name="phone" class="contact-inp" required/>
+                    <textarea name="message" placeholder="Type your message..." class="contact-area"></textarea>
+                    <button type="submit" class="btn-contact">Send Message</button>
                 </form>
 
                 <div class="contact-info-col">

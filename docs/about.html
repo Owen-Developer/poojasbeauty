@@ -692,12 +692,12 @@
             <div class="contact-title">Get in Touch</div>
             <div class="contact-para">We're happy to answer your questions, give advice, or help you feel confident before booking.</div>
             <div class="contact-flex">
-                <form method="POST" class="contact-form">
-                        <input type="text" placeholder="Full name" name="name" class="contact-inp" />
-                        <input type="text" placeholder="Your email" name="email" class="contact-inp" />
-                    <input type="text" placeholder="Phone number" name="phone" class="contact-inp" />
+                <form method="POST" action="/api/submit-form" id="contactForm" class="contact-form">
+                    <input type="text" placeholder="Full name" name="name" class="contact-inp" required/>
+                    <input type="text" placeholder="Your email" name="email" class="contact-inp" required/>
+                    <input type="text" placeholder="Phone number" name="phone" class="contact-inp" required/>
                     <textarea name="message" placeholder="Type your message..." class="contact-area"></textarea>
-                    <button class="btn-contact">Send Message</button>
+                    <button type="submit" class="btn-contact">Send Message</button>
                 </form>
 
                 <div class="contact-info-col">
