@@ -858,7 +858,7 @@ if(document.getElementById("contactForm")){
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
 
-        const res = await fetch("/api/submit-form", {
+        const res = await fetch(url + "/api/submit-form", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
