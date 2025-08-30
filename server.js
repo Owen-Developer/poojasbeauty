@@ -212,7 +212,7 @@ function sendApologyEmail(userEmail, date){
 function sendClientForm(name, email, phone, message){
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
-        to: userEmail,                 // Receiver's email
+        to: process.env.ADMIN_EMAIL,                 // Receiver's email
         subject: 'Booking Cancelled', // Subject line
         text: `Hello, a contact form was submitted from Pooja's Beauty Salon's website:\n\nName: ${name}\n\nEmail: ${email}\n\nPhone Number: ${phone}\n\nMessage: ${message}`,
     };
