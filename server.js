@@ -857,7 +857,7 @@ app.post("/api/verify-booking", async (req, res) => {
             let lastTime = session.metadata.customer_time.slice(0, 3) + String(minNum + (15 * (timeTaken - 1)));
             if(minNum + (15 * (timeTaken - 1)) > 45){
                 let exceed = Math.floor((minNum + (15 * (timeTaken - 1))) / 60);
-                lastTime = String(Number(time.slice(0, 2)) + exceed) + ":" + String((minNum + (15 * (timeTaken - 1))) - (60 * exceed));
+                lastTime = String(Number(session.metadata.customer_time.slice(0, 2)) + exceed) + ":" + String((minNum + (15 * (timeTaken - 1))) - (60 * exceed));
                 if(String((minNum + (15 * i)) - (60 * exceed)) == "0"){
                     lastTime = lastTime + "0";
                 }
