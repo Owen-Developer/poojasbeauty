@@ -294,8 +294,8 @@ const services = [
     },
 ];
 
-let url = ""; // https://poojasbeauty.onrender.com   backend routes
-let frontendUrl = ""; // https://owen-developer.github.io/poojasbeauty
+let url = "https://poojasbeauty.onrender.com"; // https://poojasbeauty.onrender.com   backend routes
+let frontendUrl = "https://poojasbeautysalon.com"; // https://owen-developer.github.io/poojasbeauty
 
 let productIds = [];
 
