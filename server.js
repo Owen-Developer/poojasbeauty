@@ -209,6 +209,41 @@ function sendApologyEmail(userEmail, date){
         }
     });
 }
+function sendClientForm(name, email, phone, message){
+    const mailOptions = {
+        from: process.env.EMAIL_USER,  // Sender address
+        to: userEmail,                 // Receiver's email
+        subject: 'Booking Cancelled', // Subject line
+        text: `Hello, a contact form was submitted from Pooja's Beauty Salon's website:\n\nName: ${name}\n\nEmail: ${email}\n\nPhone Number: ${phone}\n\nMessage: ${message}`,
+    };
+  
+    // Send mail
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log('Error sending email:', error);
+        } else {
+            console.log('Verification email sent:', info.response);
+        }
+    });
+}
+function sendClientDelete(date){  
+    const mailOptions = {
+        from: process.env.EMAIL_USER,  // Sender address
+        to: process.env.ADMIN_EMAIL,                 // Receiver's email
+        subject: 'Booking Cancelled', // Subject line
+        html: `<p>A booking for Pooja's Beauty Salon was cancelled by the user for: ${date}</p>`,
+        text: `A booking for Pooja's Beauty Salon was cancelled by the user for: ${date}`,
+    };
+  
+    // Send mail
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log('Error sending email:', error);
+        } else {
+            console.log('Verification email sent:', info.response);
+        }
+    });
+}
 function isValidEmail(email){
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 	return emailRegex.test(email);
@@ -607,7 +642,14 @@ app.post("/api/delete-booking", (req, res, next) => {
             console.error("Error deleting bookings: " + err);
         }
 
-        return res.json({ message: 'Success' });
+        db.query("select * from bookings where cancel_code = ?", [code], (err, result) => {
+            if(err){
+                console.error("Error selecting bookings: " + err);
+            }
+
+            sendClientDelete(result.booking_date);
+            return res.json({ message: 'Success' });
+        });
     });
 });
 
@@ -729,6 +771,19 @@ app.get("/api/verify-gift", requireAdmin, (req, res) => {
             return res.json({ message: 'failure' });
         }
     });
+});
+
+app.post("/api/submit-form", (req, res) => {
+    const name = req.body.name;
+    const email = req.body.email;
+    const phone = req.body.phone;
+    const message = req.body.message;
+
+    if(!message){
+        message = "Not entered";
+    }
+    sendClientForm(name, email, phone, message);
+    return res.json({ message: 'success' });
 });
 /////////////////////////////////////////////////////////////////
 

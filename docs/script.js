@@ -851,6 +851,27 @@ function nextBookingStage(){
     }
 }
 
+if(document.getElementById("contactForm")){
+    document.getElementById("contactForm").addEventListener("submit", async (e) => {
+        e.preventDefault(); 
+
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+
+        const res = await fetch("/api/submit-form", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+
+        const responseData = await res.json();
+        if(responseData.message == "success"){
+            document.getElementById("formThankModal").style.opacity = "1";
+            document.getElementById("formThankModal").style.pointerEvents = "auto";
+        }
+    });
+}
+
 // summary
 if(document.querySelector(".book-container")){
     const params = new URLSearchParams(window.location.search);
