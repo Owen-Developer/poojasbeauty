@@ -2276,6 +2276,9 @@ i.book-modal-check {
     background-color: var(--purple);
     color: white;
 }
+.gift-pill-active:hover {
+    background-color: var(--purple);
+}
 
 .book-right {
     width: 450px;

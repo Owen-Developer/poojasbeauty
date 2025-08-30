@@ -14,8 +14,8 @@ const e = require('express');
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const accessKey = process.env.ACCESS_KEY;
-const url = "https://poojasbeauty.onrender.com";
-// http://localhost:3000  https://poojasbeauty.onrender.com
+const url = "https://owen-developer.github.io/poojasbeauty";
+// http://localhost:3000  redirect to url + /bookings.html?query=param....
 
 
 const db = mysql.createPool({
@@ -196,8 +196,8 @@ function sendApologyEmail(userEmail, date){
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
         subject: 'Booking Cancelled', // Subject line
-        html: `<p>Sorry, your booking for poojasbeautysalon on ${date} has been cancelled due to a schedule change. Please refund and rebook at your convenience.</p>`,
-        text: `Sorry, your booking for poojasbeautysalon on ${date} has been cancelled due to a schedule change. Please refund and rebook at your convenience.`,
+        html: `<p>Sorry, your booking for poojasbeautysalon on ${date} has been cancelled due to a schedule change. Please and rebook at your convenience.</p>`,
+        text: `Sorry, your booking for poojasbeautysalon on ${date} has been cancelled due to a schedule change. Please and rebook at your convenience.`,
     };
   
     // Send mail

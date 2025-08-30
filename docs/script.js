@@ -1004,7 +1004,7 @@ if(document.querySelector(".book-container")){
                         if(todayBookings == 35){
                             box.classList.add("book-cal-disabled");
 
-                            if(Number(box.textContent) >= todayDate){
+                            if(Number(box.textContent) >= todayDate || monthIdx != startPosition){
                                 box.style.pointerEvents = "auto";
                             }
                         }
@@ -1408,12 +1408,17 @@ if(document.querySelector(".book-container")){
                     bookings.forEach(obj => {
                         let newCard = document.createElement("div");
                         newCard.classList.add("book-show-section");
+                        let objMsg = obj.message;
+                        if(!objMsg){
+                            objMsg = "Not entered";
+                        }
                         newCard.innerHTML = `
                             <div class="book-show-time">${obj.booking_time} - ${obj.finish_time}</div>
+                            <div class="book-show-price">Email: ${obj.email}</div>
                             <div class="book-show-price">Payment Status: ${obj.payment_status}</div>
                             <div class="book-show-price">Total price: ${obj.price}</div>
                             <div class="book-show-message">Message: ${obj.message}</div>
-                            <div class="book-show-services">${obj.services.replace(/,,/g, ", ")}</div>
+                            <div class="book-show-services">Services: ${obj.services.replace(/,,/g, ", ")}</div>
                             <div class="btn-show-delete">Delete Booking</div>
                         `
                         newCard.querySelector(".btn-show-delete").addEventListener("click", () => {
