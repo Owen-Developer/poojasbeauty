@@ -1122,7 +1122,7 @@ if(document.querySelector(".book-container")){
                 document.querySelector(".book-modal").style.opacity = "1";
                 document.querySelector(".book-modal").style.pointerEvents = "auto";
             } else if(responseData.message == "continue") {
-                window.location.href = frontendUrl + responseData.url;
+                window.location.href = responseData.url;
             } else {
                 document.querySelector(".book-email-error").style.display = "block";
                 setTimeout(() => {
