@@ -2684,7 +2684,7 @@ i.book-delete-icon {
     background-color: hsl(0, 68%, 58%);
 }
 
-.book-show-modal {
+.book-show-modal, .book-slot-modal {
     pointer-events: none;
     opacity: 0;
     z-index: 101;
@@ -2699,7 +2699,7 @@ i.book-delete-icon {
     justify-content: center;
     transition: 0.3s ease;
 }
-.book-show-wrapper {
+.book-show-wrapper, .book-slot-wrapper {
     background-color: hsl(0, 0%, 9%);
     border: 1px solid hsl(0, 0%, 15%);
     border-radius: 8px;
@@ -2713,7 +2713,7 @@ i.book-delete-icon {
     overflow: auto;
     scrollbar-width: 0;
 }
-.book-show-empty {
+.book-show-empty, .book-slot-empty {
     padding: 25px 0 1px;
 }
 .book-show-title {
@@ -2725,6 +2725,20 @@ i.book-delete-icon {
     margin-top: 12px;
     font-size: 14px;
     color: hsl(0, 0%, 75%);
+}
+.btn-slot-open {
+    margin-top: 18px;
+    text-align: center;
+    display: inline-block;
+    padding: 12px 18px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 8px;
+    background-color: hsl(0, 0%, 9%);
+    border: 1px solid hsl(0, 0%, 15%);
+    color: white;
+    cursor: pointer;
+    transition: 0.2s ease;
 }
 .btn-show-delete {
     margin-top: 18px;
@@ -2789,6 +2803,11 @@ i.book-show-x {
     padding: 25px 0;
     border-bottom: 1px solid hsl(0, 0%, 18%);
 }
+.book-slot-section {
+    width: 100%;
+    padding: 25px 0;
+    border-bottom: 1px solid hsl(0, 0%, 18%);
+}
 .book-show-time {
     font-size: 32px;
     color: white;
@@ -2849,6 +2868,18 @@ i.book-show-x {
     background-color: var(--purple-bright);
 }
 .btn-book-open {
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 17px;
+    font-weight: 500;
+    padding: 12px 0;
+    border-radius: 8px;
+    transition: 0.2s ease;
+    background-color: hsl(0, 0%, 9%);
+    border: 1px solid hsl(0, 0%, 15%);
+}
+.btn-book-slot {
     text-align: center;
     cursor: pointer;
     width: 100%;
@@ -3578,7 +3609,7 @@ i.book-show-x {
     .book-show-wrapper {
         max-height: calc(100% - 300px);
     }
-    .book-code-modal, .book-delete-modal, .book-show-modal, .book-pay-modal, .book-inst-modal, .book-gift-modal {
+    .book-code-modal, .book-delete-modal, .book-show-modal, .book-slot-modal, .book-pay-modal, .book-inst-modal, .book-gift-modal {
         align-items: flex-end;
         padding-bottom: 25px;
     }

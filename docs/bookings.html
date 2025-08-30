@@ -293,6 +293,7 @@
                 <div class="book-time-ul">
                     <div class="btn-book-delete admin-element" onclick="closeAllBookings()">Close This Day</div>
                     <div class="btn-book-open admin-element" onclick="openDay()">Open This Day</div>
+                    <div class="btn-book-slot admin-element" onclick="openSlot()">Open a Slot</div>
                     <div class="btn-book-show admin-element" onclick="showBookings()">Show Bookings</div>
 
                     <div class="book-time-wrapper">09:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
@@ -499,6 +500,21 @@
                 <div class="book-show-services">Brow threading, lumi eye, other treatments</div>
                 <div class="btn-show-mark">Mark as Paid</div>
                 <div class="btn-show-delete">Delete Booking</div>
+            </div>
+            -->
+        </div>
+    </div>
+
+    <div class="book-slot-modal">
+        <div class="book-slot-wrapper">
+                        <i class="fa-solid fa-xmark book-show-x" onclick="closeSlotModal()"></i>
+                        <div class="book-slot-empty">
+                            <div class="book-show-title">No Slots Removed</div>
+                            <div class="book-show-para">No slots have been removed for this day so far.</div>
+                            <div class="btn-book-show-empty" onclick="closeSlotModal()">Go Back</div>
+                        </div>
+                        <!-- 
+            <div class="book-slot-section">
             </div>
             -->
         </div>

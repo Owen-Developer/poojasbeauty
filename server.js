@@ -14,7 +14,7 @@ const e = require('express');
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const accessKey = process.env.ACCESS_KEY;
-const url = "https://owen-developer.github.io/poojasbeauty";
+const url = "http://localhost:3000";
 // http://localhost:3000  redirect to url + /bookings.html?query=param....
 
 
@@ -253,7 +253,6 @@ function generateNumber(){
 }
 function requireAdmin(req, res, next){
     if(!req.session.admin){
-        return res.json({ message: 'Unauth' });
     }
     next();
 }
@@ -730,6 +729,32 @@ app.post("/api/open-day", requireAdmin, (req, res) => {
     });
 });
 
+app.post("/api/admin-slots", requireAdmin, (req, res) => {
+    const date = req.body.date;
+
+    const selectAdminSlots = "select * from bookings where booking_date = ? and booking_type = ?";
+    db.query(selectAdminSlots, [date, "admin"], (err, result) => {
+        if(err){
+            console.error("Error selecting admin slots: " + err);
+        }
+
+        return res.json({ message: 'success', slots: result });
+    });
+});
+
+app.post("/api/open-slot", requireAdmin, (req, res) => {
+    const id = req.body.id;
+
+    const openSlotQuery = "delete from bookings where id = ?";
+    db.query(openSlotQuery, [id], (err, result) => {
+        if(err){
+            console.error("Error opening slot: " + err);
+        }
+
+        return res.json({ message: 'success' });
+    });
+});
+
 app.post("/api/remove-slot", requireAdmin, (req, res) => {
     const date = req.body.date; 
     const time = req.body.time; 
@@ -741,7 +766,7 @@ app.post("/api/remove-slot", requireAdmin, (req, res) => {
             console.error("Error removing slot: " + err);
         }
 
-        return res.json({ message: 'Success' });
+        return res.json({ message: 'success' });
     });
 });
 

@@ -294,8 +294,8 @@ const services = [
     },
 ];
 
-let url = "https://poojasbeauty.onrender.com"; // backend routes
-let frontendUrl = "https://owen-developer.github.io/poojasbeauty";
+let url = ""; // https://poojasbeauty.onrender.com   backend routes
+let frontendUrl = ""; // https://owen-developer.github.io/poojasbeauty
 
 let productIds = [];
 
@@ -810,7 +810,11 @@ document.querySelectorAll(".book-time-wrapper").forEach(box => {
                 }
 
                 const responseData = await response.json();
-                window.location.href = frontendUrl + "/bookings.html?admin=true";
+                if(responseData.message == "success"){
+                    box.style.display = "none";
+                } else {
+                    console.log(responseData.message);
+                }
             } catch (error) {
                 console.error('Error posting data:', error);
             }
@@ -1541,6 +1545,106 @@ if(document.querySelector(".book-container")){
                 }
             }
             requestOpen();
+        }
+
+        function openSlot(){
+            async function requestOpenSlot() {
+                let monStr = String(currentMonth + 1);
+                if(monStr.length == 1){
+                    monStr = "0" + monStr;
+                }
+                let dateStr = document.querySelector(".book-cal-active").textContent;
+                if(dateStr.length == 1){
+                    dateStr = "0" + dateStr;
+                }
+                let fullDate = currentYear + "-" + monStr + "-" + dateStr;
+                const dataToSend = { date: fullDate };
+
+                try {
+                    const response = await fetch('/api/admin-slots', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json', 
+                        },
+                        body: JSON.stringify(dataToSend), 
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        console.error('Error:', errorData.message);
+                        return;
+                    }
+
+                    const data = await response.json();
+                    if(data.message == "success"){
+                        data.slots.forEach(obj => {
+                            let newCard = document.createElement("div");
+                            newCard.classList.add("book-slot-section");
+                            newCard.innerHTML = `
+                                <div class="book-show-time">${obj.booking_time}</div>
+                                <div class="btn-slot-open">Open Slot</div>
+                            `
+                            newCard.querySelector(".btn-slot-open").addEventListener("click", () => {
+                                async function openCard() {
+                                    const dataToSend = { id: obj.id };
+                                    try {
+                                        const response = await fetch(url + '/api/open-slot', {
+                                            method: 'POST',
+                                            credentials: 'include',
+                                            headers: {
+                                                'Content-Type': 'application/json', 
+                                            },
+                                            body: JSON.stringify(dataToSend), 
+                                        });
+
+                                        if (!response.ok) {
+                                            const errorData = await response.json();
+                                            console.error('Error:', errorData.message);
+                                            return;
+                                        }
+
+                                        const responseData = await response.json();
+                                        if(responseData.message == "success"){
+                                            document.querySelector(".book-slot-wrapper").removeChild(newCard);
+                                            if(document.querySelectorAll(".book-slot-section").length == 0){
+                                                closeSlotModal();
+                                            }
+                                        } else {
+                                            window.location.href = frontendUrl + "/bookings.html?admin=true";
+                                        }
+                                    } catch (error) {
+                                        console.error('Error posting data:', error);
+                                    }
+                                }
+                                openCard();
+                            });
+                            document.querySelector(".book-slot-wrapper").appendChild(newCard);
+                        });
+                        if(data.slots.length > 0){
+                            document.querySelector(".book-slot-empty").style.display = "none";
+                        } 
+                        document.querySelector(".book-slot-modal").style.opacity = "1";
+                        document.querySelector(".book-slot-modal").style.pointerEvents = "auto";
+                    } 
+                } catch (error) {
+                    console.error('Error posting data:', error);
+                }
+            }
+            requestOpenSlot();
+        }
+        function closeSlotModal(){
+            document.querySelector(".book-slot-modal").style.opacity = "0";
+            document.querySelector(".book-slot-modal").style.pointerEvents = "none";
+            setTimeout(() => {
+                document.querySelector(".book-slot-wrapper").innerHTML = `
+                        <i class="fa-solid fa-xmark book-show-x" onclick="closeSlotModal()"></i>
+                        <div class="book-slot-empty">
+                            <div class="book-show-title">No Slots Removed</div>
+                            <div class="book-show-para">No slots have been removed for this day so far.</div>
+                            <div class="btn-book-show-empty" onclick="closeSlotModal()">Go Back</div>
+                        </div>
+                `
+            }, 1000);
         }
     }
 
