@@ -1561,7 +1561,7 @@ if(document.querySelector(".book-container")){
                 const dataToSend = { date: fullDate };
 
                 try {
-                    const response = await fetch('/api/admin-slots', {
+                    const response = await fetch(url + '/api/admin-slots', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json', 
