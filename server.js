@@ -42,7 +42,7 @@ const store = new MySQLStore({
 });
 
 app.use(cors({
-    origin: 'https://owen-developer.github.io',
+    origin: 'https://poojasbeautysalon.com',
     credentials: true
 }));
 
