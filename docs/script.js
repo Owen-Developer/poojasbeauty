@@ -1100,6 +1100,25 @@ if(document.querySelector(".book-container")){
         const year = parseInt(yearStr);
         return new Date(year, monthIdx + 1, 0).getDate();
     }
+    function okayRedirect(){
+        async function checkAdmin() {
+            try {
+                const response = await fetch(`${url}/api/check-admin`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                const data = await response.json(); 
+                if(data.message == "Success"){
+                    window.location.href = url + "/bookings.html?admin=true";
+                } else {
+                    window.location.href = url + "/bookings.html";
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        checkAdmin();
+    }
 
     // backend
     async function postBooking(inStore){
@@ -1125,7 +1144,7 @@ if(document.querySelector(".book-container")){
             }
         }); 
         let endPrice = price;
-        if(inStore == "true" || inStore == "paid"){
+        if(inStore == "true" || inStore == "paid" || inStore == "unpaid"){
             endPrice = storePrice;
         }
         let slotsTaken = Math.ceil(totalTime / 15);

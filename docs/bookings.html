@@ -374,7 +374,7 @@
             <i class="fa-solid fa-check book-modal-check"></i>
             <div class="book-modal-title">Thank You!</div>
             <div class="book-modal-para">Your booking has been successfully<br> created. Thanks!</div>
-            <a href="index.html" class="btn-book-modal">Okay</a>
+            <a onclick="okayRedirect()" class="btn-book-modal">Okay</a>
         </div>
     </div>
 
@@ -404,6 +404,7 @@
                 <div class="btn-book-code btn-store" onclick="createBooking('true')">Pay In Store</div>
             </div>
             <div class="btn-book-code" id="adminBookingBtn" onclick="createBooking('paid')">Mark as Paid</div>
+            <div class="btn-book-code" id="adminBookingBtn" onclick="createBooking('unpaid')">Mark as Unpaid</div>
         </div>
     </div>
 
@@ -527,7 +528,7 @@
             <i class="fa-solid fa-check book-modal-check"></i>
             <div class="book-modal-title">Booking Verified!</div>
             <div class="book-modal-para">This boking is now marked as verified.<br> Thank you!</div>
-            <a href="index.html" class="btn-book-modal">Okay</a>
+            <a onclick="okayRedirect()" class="btn-book-modal">Okay</a>
         </div>
     </div>
 
@@ -536,7 +537,7 @@
             <i class="fa-solid fa-check book-modal-check"></i>
             <div class="book-modal-title">Order Complete!</div>
             <div class="book-modal-para">You have recieved your voucher code through email. Thank you!</div>
-            <a href="index.html" class="btn-book-modal">Okay</a>
+            <a onclick="okayRedirect()" class="btn-book-modal">Okay</a>
         </div>
     </div>
 
@@ -545,7 +546,7 @@
             <i class="fa-solid fa-check book-modal-check"></i>
             <div class="book-modal-title">Booking Deleted</div>
             <div class="book-modal-para">You have successfully deleted this booking. Thank you!</div>
-            <a href="index.html" class="btn-book-modal">Okay</a>
+            <a onclick="okayRedirect()" class="btn-book-modal">Okay</a>
         </div>
     </div>
 
@@ -554,7 +555,7 @@
             <i class="fa-solid fa-xmark book-modal-check"></i>
             <div class="book-modal-title">Payment Error</div>
             <div class="book-modal-para">Sorry, there was a problem processing your payment. Try again.</div>
-            <a href="index.html" class="btn-book-modal">Okay</a>
+            <a onclick="okayRedirect()" class="btn-book-modal">Okay</a>
         </div>
     </div>
 

@@ -304,9 +304,11 @@ app.post("/api/book-appointment", async (req, res) => {
     let paymentStr = "Not Paid Yet (instore)";
     if(req.body.inStore == "paid" && req.session.admin){
         paymentStr = "Paid in Store";
+    } else if(req.body.inStore == "unpaid" && req.session.admin){
+        paymentStr = "Not Paid Yet";
     }
 
-    if(req.body.inStore == "paid" || req.body.inStore == "true"){
+    if(req.body.inStore == "paid" || req.body.inStore == "unpaid" || req.body.inStore == "true"){
         let values = [];
         let emailFinish;
         for(let i = 0; i < timeTaken; i++){
