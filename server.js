@@ -271,7 +271,7 @@ function generateNumber(){
 }
 function requireAdmin(req, res, next){
     if(!req.session.admin){
-        //return res.json({ message: 'Unauth' });
+        return res.json({ message: 'Unauth' });
     }
     next();
 }
@@ -607,7 +607,7 @@ app.post("/api/admin-access", (req, res) => {
 });
 
 app.get("/api/check-admin", (req, res) => {
-    if(req.session.admin || true){
+    if(req.session.admin){
         return res.json({ message: 'Success' });
     } else {
         return res.json({ message: 'Failure' });
@@ -1029,10 +1029,3 @@ app.post("/api/verify-booking", async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
 });
-
-
-/*
-1. 10% off online only
-2. admin can book for a user
-3. refund + message/reason on delete booking
-*/

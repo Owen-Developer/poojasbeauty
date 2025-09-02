@@ -1575,6 +1575,7 @@ if(document.querySelector(".book-container")){
                 try {
                     const response = await fetch(url + '/api/admin-slots', {
                         method: 'POST',
+                        credentials: 'include',
                         headers: {
                             'Content-Type': 'application/json', 
                         },
