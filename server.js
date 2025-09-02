@@ -23,7 +23,7 @@ const db = mysql.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    port: process.env.PORT,
+    port: process.env.DB_PORT,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
@@ -38,7 +38,7 @@ const store = new MySQLStore({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    port: process.env.PORT // 24642 or 3306
+    port: process.env.DB_PORT // 24642 or 3306
 });
 
 app.use(cors({
@@ -52,11 +52,13 @@ app.set('trust proxy', 1);
 
 app.use(session({
     store,
-    secret: 'your-secret-key',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
+        httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000, 
+        domain: '.poojasbeautysalon.com',
     secure: true,       // HTTPS only
     sameSite: 'none'    // allow cross-site cookies
     }

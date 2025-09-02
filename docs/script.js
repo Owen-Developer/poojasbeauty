@@ -295,7 +295,7 @@ const services = [
     },
 ];
 
-let url = "https://poojasbeauty.onrender.com"; // https://poojasbeauty.onrender.com   backend routes
+let url = "https://api.poojasbeautysalon.com"; // https://poojasbeauty.onrender.com   backend routes
 let frontendUrl = "https://poojasbeautysalon.com"; // https://poojasbeautysalon.com   http://localhost:3000/
 
 let productIds = [];
@@ -1455,7 +1455,7 @@ if(document.querySelector(".book-container")){
                             <div class="btn-show-delete">Delete Booking</div>
                         `
                         newCard.querySelector(".btn-show-delete").addEventListener("click", () => {
-                            window.location.href = "http://localhost:3000/bookings.html?cancel=" + obj.cancel_code;
+                        window.location.href = url + "/bookings.html?cancel=" + obj.cancel_code;
                             /*
                             
                             async function deleteCard() {
