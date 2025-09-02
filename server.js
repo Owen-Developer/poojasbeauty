@@ -42,7 +42,7 @@ const store = new MySQLStore({
 });
 
 app.use(cors({
-    origin: 'https://poojasbeautysalon.com',
+    origin: url,
     credentials: true
 }));
 
@@ -157,7 +157,7 @@ function sendUserVoucher(userEmail, Giftcode) {
         }
     });
 }
-function sendUserEmail(userEmail, date, time, link) {  
+function sendUserEmail(userEmail, date, time, link) {
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
@@ -191,7 +191,7 @@ function sendUserFree(userEmail, date, time, link){
         }
     });
 }
-function sendApologyEmail(userEmail, date){  
+function sendApologyEmail(userEmail, date){
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
         to: userEmail,                 // Receiver's email
@@ -209,10 +209,10 @@ function sendApologyEmail(userEmail, date){
         }
     });
 }
-function sendClientForm(name, email, phone, message){
+function sendClientForm(infoEmail, name, email, phone, message){
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
-        to: process.env.ADMIN_EMAIL,                 // Receiver's email
+        to: infoEmail,                 // Receiver's email
         subject: 'Message Recieved', // Subject line
         text: `Hello, a contact form was submitted from Pooja's Beauty Salon's website:\n\nName: ${name}\n\nEmail: ${email}\n\nPhone Number: ${phone}\n\nMessage: ${message}`,
     };
@@ -226,13 +226,31 @@ function sendClientForm(name, email, phone, message){
         }
     });
 }
-function sendClientDelete(date){  
+function sendClientDelete(date, reason){  
     const mailOptions = {
         from: process.env.EMAIL_USER,  // Sender address
         to: process.env.ADMIN_EMAIL,                 // Receiver's email
         subject: 'Booking Cancelled', // Subject line
-        html: `<p>A booking for Pooja's Beauty Salon was cancelled by the user for: ${date}</p>`,
-        text: `A booking for Pooja's Beauty Salon was cancelled by the user for: ${date}`,
+        html: `<p>A booking for Pooja's Beauty Salon was cancelled for: ${date}<br><br>Reason: ${reason}</p>`,
+        text: `A booking for Pooja's Beauty Salon was cancelled for: ${date}\n\nReason: ${reason}`,
+    };
+  
+    // Send mail
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log('Error sending email:', error);
+        } else {
+            console.log('Verification email sent:', info.response);
+        }
+    });
+}
+function sendUserDelete(userEmail, date, reason){  
+    const mailOptions = {
+        from: process.env.EMAIL_USER,  // Sender address
+        to: userEmail,                 // Receiver's email
+        subject: 'Booking Cancelled', // Subject line
+        html: `<p>Your booking for Pooja's Beauty Salon was cancelled for: ${date}<br><br>Reason: ${reason}</p>`,
+        text: `Your booking for Pooja's Beauty Salon was cancelled for: ${date}\n\nReason: ${reason}`,
     };
   
     // Send mail
@@ -253,6 +271,7 @@ function generateNumber(){
 }
 function requireAdmin(req, res, next){
     if(!req.session.admin){
+        //return res.json({ message: 'Unauth' });
     }
     next();
 }
@@ -280,7 +299,12 @@ app.post("/api/book-appointment", async (req, res) => {
     const cancelCode = generateNumber();
     const cancelLink = url + "/bookings.html?cancel=" + cancelCode;
 
-    if(req.body.inStore){
+    let paymentStr = "Not Paid Yet (instore)";
+    if(req.body.inStore == "paid" && req.session.admin){
+        paymentStr = "Paid in Store";
+    }
+
+    if(req.body.inStore == "paid" || req.body.inStore == "true"){
         let values = [];
         let emailFinish;
         for(let i = 0; i < timeTaken; i++){
@@ -313,7 +337,7 @@ app.post("/api/book-appointment", async (req, res) => {
                 }
                 emailFinish = finishTime;
             }
-            values.push([date, newTime, email, message, code, services, rowType, price, cancelCode, "Paid Online (Voucher)", timeTaken, finishTime]);
+            values.push([date, newTime, email, message, code, services, rowType, price, cancelCode, paymentStr, timeTaken, finishTime]);
         }
 
         sendClientStore(process.env.ADMIN_EMAIL, date, time + " - " + emailFinish, email, message, services);
@@ -583,7 +607,7 @@ app.post("/api/admin-access", (req, res) => {
 });
 
 app.get("/api/check-admin", (req, res) => {
-    if(req.session.admin){
+    if(req.session.admin || true){
         return res.json({ message: 'Success' });
     } else {
         return res.json({ message: 'Failure' });
@@ -628,25 +652,60 @@ app.post("/api/verify-cancel", (req, res) => {
 });
 
 app.post("/api/delete-booking", (req, res, next) => {
-    if(!req.session.admin || !req.body.user){
+    if(!req.body.user){
         return res.json({ message: 'Unauth' });
     }
     next();
 }, (req, res) => {
     const code = req.body.code;
+    const reason = req.body.reason;
 
-    const deleteQuery = "delete from bookings where cancel_code = ?";
-    db.query(deleteQuery, [code], (err, result) => {
+    db.query("select * from bookings where cancel_code = ? and booking_type = ?", [code, "user"], (err, result) => {
         if(err){
-            console.error("Error deleting bookings: " + err);
+            console.error("Error selecting bookings: " + err);
         }
-
-        db.query("select * from bookings where cancel_code = ?", [code], (err, result) => {
+        
+        const deleteQuery = "delete from bookings where cancel_code = ?";
+        db.query(deleteQuery, [code], async (err, delResult) => {
             if(err){
-                console.error("Error selecting bookings: " + err);
+                console.error("Error deleting bookings: " + err);
             }
 
-            sendClientDelete(result.booking_date);
+
+            sendClientDelete(result[0].booking_date, reason);
+            sendUserDelete(result[0].email, result[0].booking_date, reason);
+            if(result[0].coupon_code && result[0].coupon != "Not entered"){
+                db.query("select * from codes where coupon_code = ?", [result[0].coupon_code], async (err, result) => {
+                    if(err){
+                        console.error("Error getting id from codes: " + err);
+                    }
+
+                    if(result.length > 0){
+                        const session = await stripe.checkout.sessions.retrieve(result[0].session_id);
+                        const paymentIntentId = session.payment_intent;
+                        if (!paymentIntentId) {
+                            console.log("no paymentintendid found for coupon");
+                            return res.status(400).json({ message: "No payment intent found for this session." });
+                        }
+                        await stripe.refunds.create({
+                        payment_intent: paymentIntentId,
+                        });
+                        return res.json({ message: 'Success' });
+                    }
+                });
+            }
+            else if(result[0].session_id){
+                const session = await stripe.checkout.sessions.retrieve(result[0].session_id);
+                const paymentIntentId = session.payment_intent;
+                if (!paymentIntentId) {
+                    console.log("no paymentintendid found for payment");
+                    return res.status(400).json({ message: "No payment intent found for this session." });
+                }
+                await stripe.refunds.create({
+                payment_intent: paymentIntentId,
+                });
+                return res.json({ message: 'Success' });
+            }
             return res.json({ message: 'Success' });
         });
     });
@@ -807,7 +866,7 @@ app.post("/api/submit-form", (req, res) => {
     if(!message){
         message = "Not entered";
     }
-    sendClientForm(name, email, phone, message);
+    sendClientForm("info@poojasbeautysalon.com", name, email, phone, message);
     return res.json({ message: 'success' });
 });
 /////////////////////////////////////////////////////////////////
@@ -948,10 +1007,10 @@ app.post("/api/verify-booking", async (req, res) => {
             }
             emailFinish = finishTime;
         }
-        values.push([session.metadata.customer_date, newTime, session.metadata.customer_email, session.metadata.customer_message, null, session.metadata.customer_services, rowType, session.metadata.customer_price, session.metadata.customer_cancelCode, "Paid Online", timeTaken, finishTime]);
+        values.push([session.metadata.customer_date, newTime, session.metadata.customer_email, session.metadata.customer_message, null, session.metadata.customer_services, rowType, session.metadata.customer_price, session.metadata.customer_cancelCode, "Paid Online", timeTaken, finishTime, id]);
     }
     
-    const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status, time_taken, finish_time) values ?";
+    const insertQuery = "insert into bookings (booking_date, booking_time, email, message, coupon_code, services, booking_type, price, cancel_code, payment_status, time_taken, finish_time, session_id) values ?";
     db.query(insertQuery, [values], (err, result) => {
         if(err){
             console.error("Error updating booking: ", err);
@@ -959,6 +1018,7 @@ app.post("/api/verify-booking", async (req, res) => {
         }
 
         sendClientEmail(process.env.ADMIN_EMAIL, session.metadata.customer_date, session.metadata.customer_time + " - " + emailFinish, session.metadata.customer_email, session.metadata.customer_message, session.metadata.customer_services, session.metadata.customer_price);
+        sendClientEmail("jackbaileywoods@gmail.com", session.metadata.customer_date, session.metadata.customer_time + " - " + emailFinish, session.metadata.customer_email, session.metadata.customer_message, session.metadata.customer_services, session.metadata.customer_price);
         sendUserEmail(session.metadata.customer_email, session.metadata.customer_date, session.metadata.customer_time + " - " + emailFinish, session.metadata.customer_cancelLink);
         return res.json({ message: 'success' });
     });
@@ -966,7 +1026,13 @@ app.post("/api/verify-booking", async (req, res) => {
 /////////////////////////////////////////////////////////////////////////////
 
 
-
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
 });
+
+
+/*
+1. 10% off online only
+2. admin can book for a user
+3. refund + message/reason on delete booking
+*/

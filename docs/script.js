@@ -13,6 +13,7 @@ let price = 0;
 let storePrice = 0;
 let totalTime = 0;
 let isAdmin = false;
+let adminBooking = false;
 
 let todayBox;
 const months = [
@@ -295,7 +296,7 @@ const services = [
 ];
 
 let url = "https://poojasbeauty.onrender.com"; // https://poojasbeauty.onrender.com   backend routes
-let frontendUrl = "https://poojasbeautysalon.com"; // https://owen-developer.github.io/poojasbeauty
+let frontendUrl = "https://poojasbeautysalon.com"; // https://poojasbeautysalon.com   http://localhost:3000/
 
 let productIds = [];
 
@@ -454,7 +455,7 @@ function createHtml(){
                         <div class="foot-label">Get in Touch</div>
                         <a href="bookings.html" class="foot-txt">Book now</a>
                         <a href="#contact" class="foot-txt">Message us</a>
-                        <a href="#" class="foot-txt">Call us</a>
+                        <a href="tel:+447394142705" class="foot-txt">Call us</a>
                         <a href="https://www.instagram.com/poojasbeauty2025/" target="_blank" class="foot-txt">Instagram</a>
                         <a href="about.html" class="foot-txt">Learn more</a>
                     </div>
@@ -677,7 +678,7 @@ document.querySelectorAll(".book-li").forEach(li => {
             });
 
             document.querySelectorAll(".book-sum-flex").forEach(cont => {
-                if(cont.querySelector(".book-sum-label").textContent == li.textContent.slice(0, (li.textContent.indexOf("-") - 1))){
+                if(cont.querySelector(".book-sum-label").textContent == li.textContent.slice(0, (li.textContent.indexOf("-") - 1)) && !document.querySelector(".book-li-active")){
                     document.querySelector(".book-sum-ul").removeChild(cont);
                     document.querySelector(".book-sum-total").textContent = "free";
                     document.querySelector(".btn-book-sum").classList.add("book-btn-inactive");
@@ -717,7 +718,6 @@ document.querySelectorAll(".book-li").forEach(li => {
             storePrice = "£" + totalPrice;
             let newNum = (Number(document.querySelector(".book-code-total").textContent.slice(1)) * 0.90).toFixed(2);
             price = "£" + newNum;
-            document.querySelector(".book-code-total").innerHTML = `<span class="book-code-total" style="text-decoration: line-through; margin-right: 10px;">${document.querySelector(".book-sum-total").textContent}</span> £${newNum}`;
             document.querySelector(".book-mobile-head").textContent = "Total £" + totalPrice;
             if(document.querySelectorAll(".book-sum-flex").length == 1){
                 document.querySelector(".book-mobile-txt").textContent = "1 Service";
@@ -771,7 +771,7 @@ document.querySelectorAll(".book-all-modal").forEach(modal => {
 // choose time
 document.querySelectorAll(".book-time-wrapper").forEach(box => {
     box.addEventListener("click", () => {
-        if(!isAdmin){
+        if(!isAdmin || adminBooking){
             document.querySelectorAll(".book-time-wrapper").forEach(other => {
                 other.classList.remove("book-time-active");
             });
@@ -844,10 +844,16 @@ function nextBookingStage(){
                 document.querySelector(".book-time").style.opacity = "1";
             }, 50);
         }, 200);
-        console.log(totalTime);
     } 
-    
     else {
+        if(adminBooking){
+            document.querySelectorAll(".btn-book-code").forEach(btn => {
+                btn.style.display = "none";
+            });
+            document.getElementById("adminBookingBtn").style.display = "block";
+        } else {
+            document.getElementById("adminBookingBtn").style.display = "none";
+        }
         document.querySelector(".book-code-modal").style.opacity = "1";
         document.querySelector(".book-code-modal").style.pointerEvents = "auto";
         document.querySelector(".book-mobile").style.opacity = "0";
@@ -923,9 +929,10 @@ if(document.querySelector(".book-container")){
                         if(responseData.value >= Number(price.slice(1))){
                             codeApplied = true;
                             couponCode = document.querySelector(".book-code-code").value;
-                            document.querySelector(".book-code-total").innerHTML = `<span class="book-code-total" style="text-decoration: line-through; margin-right: 10px;">${price}</span>`;
+                            let newNum = (Number(document.querySelector(".book-code-total").textContent.slice(1)) * 0.90).toFixed(2);
+                            document.querySelector(".book-code-total").innerHTML = `<span class="book-code-total" style="text-decoration: line-through; margin-right: 10px;">$${newNum}</span>`;
                         } else {
-                            document.querySelector(".book-code-error").textContent = "This voucher does not have enough funds.";
+                            document.querySelector(".book-code-error").textContent = "This voucher does not have enough funds. (£" + responseData.value + ")";
                             document.querySelector(".book-code-error").style.display = "block";
                             setTimeout(() => {
                                 document.querySelector(".book-code-error").style.display = "none";
@@ -1118,7 +1125,7 @@ if(document.querySelector(".book-container")){
             }
         }); 
         let endPrice = price;
-        if(inStore){
+        if(inStore == "true" || inStore == "paid"){
             endPrice = storePrice;
         }
         let slotsTaken = Math.ceil(totalTime / 15);
@@ -1448,6 +1455,9 @@ if(document.querySelector(".book-container")){
                             <div class="btn-show-delete">Delete Booking</div>
                         `
                         newCard.querySelector(".btn-show-delete").addEventListener("click", () => {
+                            window.location.href = "http://localhost:3000/bookings.html?cancel=" + obj.cancel_code;
+                            /*
+                            
                             async function deleteCard() {
                                 const dataToSend = { code: obj.cancel_code, user: true };
                                 try {
@@ -1480,6 +1490,8 @@ if(document.querySelector(".book-container")){
                                 }
                             }
                             deleteCard();
+
+                            */
                         });
                         document.querySelector(".book-show-wrapper").appendChild(newCard);
                     });
@@ -1646,6 +1658,28 @@ if(document.querySelector(".book-container")){
                 `
             }, 1000);
         }
+
+        function bookAsAdmin(){
+            async function checkAdmin() {
+                try {
+                    const response = await fetch(`${url}/api/check-admin`, {
+                        method: 'GET',
+                        credentials: 'include'
+                    });
+                    const data = await response.json(); 
+                    if(data.message == "Success"){
+                        adminBooking = true;
+                        document.querySelector(".book-time").style.display = "none";
+                        document.querySelector(".book-time").style.opacity = "0";
+                        document.querySelector(".book-treatments").style.display = "block";
+                        document.querySelector(".book-treatments").style.opacity = "1";
+                    }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            }
+            checkAdmin();
+        }
     }
 
     // cancel
@@ -1683,7 +1717,11 @@ if(document.querySelector(".book-container")){
 
         function deleteBooking(){
             async function requestDelete() {
-                const dataToSend = { code: params.get("cancel"), user: true };
+                let reasonValue = document.getElementById("deleteArea").value;
+                if(reasonValue == ""){
+                    reasonValue = "Not Entered";
+                }
+                const dataToSend = { code: params.get("cancel"), user: true, reason: reasonValue };
                 try {
                     const response = await fetch(url + '/api/delete-booking', {
                         method: 'POST',
@@ -1702,7 +1740,10 @@ if(document.querySelector(".book-container")){
 
                     const responseData = await response.json();
                     if(responseData.message == "Success"){
-                        window.location.href = frontendUrl + "/bookings.html";
+                        document.querySelector(".book-deletethank-modal").style.opacity = "1";
+                        document.querySelector(".book-deletethank-modal").style.pointerEvents = "auto";
+                        document.querySelector(".book-delete-modal").style.opacity = "0";
+                        document.querySelector(".book-delete-modal").style.pointerEvents = "none";
                     }
                 } catch (error) {
                     console.error('Error posting data:', error);

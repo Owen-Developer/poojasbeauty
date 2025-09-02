@@ -294,6 +294,7 @@
                     <div class="btn-book-delete admin-element" onclick="closeAllBookings()">Close This Day</div>
                     <div class="btn-book-open admin-element" onclick="openDay()">Open This Day</div>
                     <div class="btn-book-slot admin-element" onclick="openSlot()">Open a Slot</div>
+                    <div class="btn-book-slot admin-element" onclick="bookAsAdmin()">Make a Booking</div>
                     <div class="btn-book-show admin-element" onclick="showBookings()">Show Bookings</div>
 
                     <div class="book-time-wrapper">09:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
@@ -399,9 +400,10 @@
                 <div class="book-code-total">free</div>
             </div>
             <div class="code-btn-flex">
-                <div class="btn-book-code" onclick="createBooking(false)">Purchase Now</div>
-                <div class="btn-book-code btn-store" onclick="createBooking(true)">Pay In Store</div>
+                <div class="btn-book-code" onclick="createBooking('false')">Purchase Now</div>
+                <div class="btn-book-code btn-store" onclick="createBooking('true')">Pay In Store</div>
             </div>
+            <div class="btn-book-code" id="adminBookingBtn" onclick="createBooking('paid')">Mark as Paid</div>
         </div>
     </div>
 
@@ -476,7 +478,7 @@
             <i class="fa-solid fa-xmark modal-exit"></i>
             <i class="fa-solid fa-triangle-exclamation book-delete-icon"></i>
             <div class="book-delete-title">Delete Booking</div>
-            <div class="book-delete-para">Are you sure you want to delete your booking?</div>
+            <textarea class="book-delete-area" id="deleteArea" placeholder="Message..." class="book-delete-area"></textarea>
             <div class="book-delete-flex">
                 <a href="bookings.html" class="btn-book-nodelete">No, keep it.</a>
                 <div onclick="deleteBooking()" class="btn-book-delete-booking">Yes, delete!</div>
@@ -538,6 +540,15 @@
         </div>
     </div>
 
+    <div class="book-deletethank-modal">
+        <div class="book-wrapper">
+            <i class="fa-solid fa-check book-modal-check"></i>
+            <div class="book-modal-title">Booking Deleted</div>
+            <div class="book-modal-para">You have successfully deleted this booking. Thank you!</div>
+            <a href="index.html" class="btn-book-modal">Okay</a>
+        </div>
+    </div>
+
     <div class="book-vouchererror-modal">
         <div class="book-wrapper">
             <i class="fa-solid fa-xmark book-modal-check"></i>
@@ -577,7 +588,7 @@
                         </div>
                         <div class="contact-info-content">
                             <div class="contact-info-label">Message Us</div>
-                            <div class="contact-info-txt">poojasbeautysalon@gmail.com</div>
+                            <div class="contact-info-txt">info@poojasbeautysalon.com</div>
                         </div>
                     </div>
                     <div class="contact-info-section">
@@ -606,7 +617,7 @@
         document.querySelector(".book-gift-modal").style.opacity = "1";
         document.querySelector(".book-gift-modal").style.pointerEvents = "auto";
         function requestGift(){
-            if(((!isNaN(document.getElementById("giftValueInput").value.replace(/£/g, "")) && document.getElementById("giftValueInput").value.replace(/£/g, "").length > 0) || document.querySelector(".gift-pill-active")) && document.getElementById("giftEmailInput").value.length > 0){
+            if(((!isNaN(document.getElementById("giftValueInput").value.replace(/£/g, "")) && document.getElementById("giftValueInput").value.replace(/£/g, "").length > 0) || document.querySelector(".gift-pill-active")) && document.getElementById("giftEmailInput").value.length > 0 && Number(document.getElementById("giftValueInput").value.replace(/£/g, "") > 0)){
                 async function postGift() {
                     let amountNum;
                     if(!isNaN(document.getElementById("giftValueInput").value.replace(/£/g, "")) && document.getElementById("giftValueInput").value.replace(/£/g, "").length > 0){
