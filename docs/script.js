@@ -851,8 +851,10 @@ function nextBookingStage(){
                 btn.style.display = "none";
             });
             document.getElementById("adminBookingBtn").style.display = "block";
+            document.getElementById("adminUnpaidBtn").style.display = "block";
         } else {
             document.getElementById("adminBookingBtn").style.display = "none";
+            document.getElementById("adminUnpaidBtn").style.display = "none";
         }
         document.querySelector(".book-code-modal").style.opacity = "1";
         document.querySelector(".book-code-modal").style.pointerEvents = "auto";
