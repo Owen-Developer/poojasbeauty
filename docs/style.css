@@ -2049,6 +2049,19 @@ i.book-cal-chevron {
     width: 100%;
     transition: 0.2s ease;
 }
+.book-time-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.book-time-time {
+    font-size: 18px;
+    color: white;
+}
+.book-time-txt {
+    font-size: 15px;
+    color: hsl(0, 0%, 75%);
+}
 i.time-trash {
     cursor: pointer;
     top: 50%;
@@ -2068,6 +2081,48 @@ i.time-trash {
     transition: 0.2s ease;
 }
 i.time-trash:hover {
+    background-color: hsl(0, 0%, 5%);
+}
+i.time-plus {
+    cursor: pointer;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    background-color: hsl(0, 0%, 9%);
+    border: 1px solid hsl(0, 0%, 15%);
+    font-size: 18px;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    transition: 0.2s ease;
+}
+i.time-plus:hover {
+    background-color: hsl(0, 0%, 5%);
+}
+i.time-create {
+    cursor: pointer;
+    top: 50%;
+    right: 70px;
+    transform: translateY(-50%);
+    background-color: hsl(0, 0%, 9%);
+    border: 1px solid hsl(0, 0%, 15%);
+    font-size: 18px;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    transition: 0.2s ease;
+}
+i.time-create:hover {
     background-color: hsl(0, 0%, 5%);
 }
 .book-time-wrapper:hover {

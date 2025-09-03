@@ -293,46 +293,58 @@
                 <div class="book-time-ul">
                     <div class="btn-book-delete admin-element" onclick="closeAllBookings()">Close This Day</div>
                     <div class="btn-book-open admin-element" onclick="openDay()">Open This Day</div>
-                    <div class="btn-book-slot admin-element" onclick="openSlot()">Open a Slot</div>
-                    <div class="btn-book-slot admin-element" onclick="bookAsAdmin()">Make a Booking</div>
+                    <!--  <div class="btn-book-slot admin-element" onclick="openSlot()">Open a Slot</div>  -->
+                    <!-- 
+                        <div class="btn-book-slot admin-element" onclick="bookAsAdmin()">Make a Booking</div>
+                        -->
                     <div class="btn-book-show admin-element" onclick="showBookings()">Show Bookings</div>
 
-                    <div class="book-time-wrapper">09:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">09:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">10:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">10:15<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">10:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">10:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">11:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">11:15<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">11:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">11:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">12:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">12:15<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">12:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">12:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">13:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">13:15<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">13:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">13:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">14:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">14:15<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">14:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">14:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">15:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">15:15<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">15:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">15:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">16:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">16:15<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">16:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">16:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">17:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">17:15<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">17:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">17:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
-                    <div class="book-time-wrapper">18:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
 
+                    <!-- 
+                        <div class="book-time-wrapper" id="09-30">
+                            <div class="book-time-col">
+                                <div class="book-time-time">9:30 - 10:45</div>
+                                <div class="book-time-txt">sanyahayenese@gmail.com</div>
+                                <div class="book-time-txt">Not Paid Yet (instore)</div>
+                            </div>
+                            <i class="fa-solid fa-trash time-trash"></i>
+                        </div>
+                    -->
+                    <div class="book-time-wrapper" id="09-30">09:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="09-45">09:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="10-00">10:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="10-15">10:15<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="10-30">10:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="10-45">10:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="11-00">11:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="11-15">11:15<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="11-30">11:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="11-45">11:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="12-00">12:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="12-15">12:15<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="12-30">12:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="12-45">12:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="13-00">13:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="13-15">13:15<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="13-30">13:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="13-45">13:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="14-00">14:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="14-15">14:15<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="14-30">14:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="14-45">14:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="15-00">15:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="15-15">15:15<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="15-30">15:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="15-45">15:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="16-00">16:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="16-15">16:15<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="16-30">16:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="16-45">16:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="17-00">17:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="17-15">17:15<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="17-30">17:30<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="17-45">17:45<i class="fa-solid fa-trash time-trash admin-element"></i></div>
+                    <div class="book-time-wrapper" id="18-00">18:00<i class="fa-solid fa-trash time-trash admin-element"></i></div>
 
                     <div class="book-time-empty">
                         <div class="book-empty-title">No Bookings Available</div>

@@ -14,6 +14,9 @@ let storePrice = 0;
 let totalTime = 0;
 let isAdmin = false;
 let adminBooking = false;
+let preChosen = false;
+let preDate;
+let preTime;
 
 let todayBox;
 const months = [
@@ -295,7 +298,7 @@ const services = [
     },
 ];
 
-let url = "https://api.poojasbeautysalon.com"; // https://poojasbeauty.onrender.com   backend routes
+let url = "https://api.poojasbeautysalon.com"; // https://api.poojasbeautysalon.com   backend routes
 let frontendUrl = "https://poojasbeautysalon.com"; // https://poojasbeautysalon.com   http://localhost:3000/
 
 let productIds = [];
@@ -781,6 +784,7 @@ document.querySelectorAll(".book-time-wrapper").forEach(box => {
             document.querySelector(".book-mobile").style.pointerEvents = "auto";
         }
     });
+    /*
     box.querySelector("i.time-trash").addEventListener("click", () => {
         async function removeSlot() {
             let monStr = String(currentMonth + 1);
@@ -792,7 +796,7 @@ document.querySelectorAll(".book-time-wrapper").forEach(box => {
                 dateStr = "0" + dateStr;
             }
             let fullDate = currentYear + "-" + monStr + "-" + dateStr;
-            const dataToSend = { date: fullDate, time: box.textContent };
+            const dataToSend = { date: fullDate, time: box.id.replace(/-/g, ":") };
             try {
                 const response = await fetch(url + '/api/remove-slot', {
                     method: 'POST',
@@ -821,10 +825,26 @@ document.querySelectorAll(".book-time-wrapper").forEach(box => {
         }
         removeSlot();
     });
+    */
 });
 function nextBookingStage(){
     bookStage++;
-    if(bookStage == 1){
+    if(preChosen || bookStage == 2) {
+        if(adminBooking){
+            document.querySelectorAll(".btn-book-code").forEach(btn => {
+                btn.style.display = "none";
+            });
+            document.getElementById("adminBookingBtn").style.display = "block";
+            document.getElementById("adminUnpaidBtn").style.display = "block";
+        } else {
+            document.getElementById("adminBookingBtn").style.display = "none";
+            document.getElementById("adminUnpaidBtn").style.display = "none";
+        }
+        document.querySelector(".book-code-modal").style.opacity = "1";
+        document.querySelector(".book-code-modal").style.pointerEvents = "auto";
+        document.querySelector(".book-mobile").style.opacity = "0";
+        document.querySelector(".book-mobile").style.pointerEvents = "none";
+    } else if(bookStage == 1){
         document.querySelectorAll(".book-li-active").forEach(li => {
             productIds.push(li.id);
         });
@@ -845,22 +865,6 @@ function nextBookingStage(){
             }, 50);
         }, 200);
     } 
-    else {
-        if(adminBooking){
-            document.querySelectorAll(".btn-book-code").forEach(btn => {
-                btn.style.display = "none";
-            });
-            document.getElementById("adminBookingBtn").style.display = "block";
-            document.getElementById("adminUnpaidBtn").style.display = "block";
-        } else {
-            document.getElementById("adminBookingBtn").style.display = "none";
-            document.getElementById("adminUnpaidBtn").style.display = "none";
-        }
-        document.querySelector(".book-code-modal").style.opacity = "1";
-        document.querySelector(".book-code-modal").style.pointerEvents = "auto";
-        document.querySelector(".book-mobile").style.opacity = "0";
-        document.querySelector(".book-mobile").style.pointerEvents = "none";
-    }
 }
 
 if(document.getElementById("contactForm")){
@@ -1124,6 +1128,8 @@ if(document.querySelector(".book-container")){
 
     // backend
     async function postBooking(inStore){
+        let fullTime;
+        let fullDate;
         let monStr = String(currentMonth + 1);
         if(monStr.length == 1){
             monStr = "0" + monStr;
@@ -1132,8 +1138,10 @@ if(document.querySelector(".book-container")){
         if(dateStr.length == 1){
             dateStr = "0" + dateStr;
         }
-        let fullDate = currentYear + "-" + monStr + "-" + dateStr;
-        const fullTime = document.querySelector(".book-time-active").textContent;
+        if(!preChosen){
+            fullDate = currentYear + "-" + monStr + "-" + dateStr;
+            fullTime = document.querySelector(".book-time-active").id.replace(/-/g, ":");
+        }
         const emailTxt = document.querySelector(".book-code-email").value;
         if(document.querySelector(".book-code-area").value.length > 0){
             bookingMessage = document.querySelector(".book-code-area").value;
@@ -1150,6 +1158,11 @@ if(document.querySelector(".book-container")){
             endPrice = storePrice;
         }
         let slotsTaken = Math.ceil(totalTime / 15);
+
+        if(preChosen){
+            fullDate = preDate;
+            fullTime = preTime;
+        }
         
         const dataToSend = { date: fullDate, time: fullTime, email: emailTxt, message: bookingMessage, code: couponCode, services: fullServices, price: endPrice, type: 'user', applied: codeApplied, inStore: inStore, productIds: productIds, totalTime: slotsTaken };
         try {
@@ -1215,6 +1228,7 @@ if(document.querySelector(".book-container")){
             }
 
             const responseData = await response.json();
+            let bookings = responseData.bookings;
             if(responseData.message == "success") {
                 let ukTime = new Date().toLocaleTimeString('en-GB', {
                     timeZone: 'Europe/London',
@@ -1227,23 +1241,159 @@ if(document.querySelector(".book-container")){
                 document.querySelector(".book-time-closed").style.display = "none";
                 document.querySelector(".btn-book-delete").classList.remove("admin-none");
                 document.querySelector(".btn-book-open").classList.add("admin-none");
+                // if today, and time is earlier in the day, display none.
                 document.querySelectorAll(".book-time-wrapper").forEach(wrapper => {
-                    // if today, and time is earlier in the day, display none.
+                    if(isAdmin){
+                        wrapper.innerHTML = wrapper.id.replace(/-/g, ":") + '<i class="fa-solid fa-plus time-create"></i> <i class="fa-solid fa-trash time-trash"></i>';
+                    } else {
+                        wrapper.innerHTML = wrapper.id.replace(/-/g, ":") + '<i class="fa-solid fa-plus time-create admin-element"></i> <i class="fa-solid fa-trash time-trash admin-element"></i>';
+                    }
                     wrapper.style.display = "block";
-                    if(todayBox.classList.contains("book-cal-active") && (Number(ukTime.slice(0, 2)) > wrapper.textContent.slice(0, 2) || (Number(ukTime.slice(0, 2)) == wrapper.textContent.slice(0, 2) && Number(ukTime.slice(3, 5)) > wrapper.textContent.slice(3, 5)))){
+                    if(todayBox.classList.contains("book-cal-active") && (Number(ukTime.slice(0, 2)) > wrapper.id.replace(/-/g, ":").slice(0, 2) || (Number(ukTime.slice(0, 2)) == wrapper.id.replace(/-/g, ":").slice(0, 2) && Number(ukTime.slice(3, 5)) > wrapper.id.replace(/-/g, ":").slice(3, 5)))){
                         wrapper.style.display = "none";
                     }
                 });
-                if(responseData.times != ""){
+                // check if the wrapper's time matches an existing booking
+                    let bookedWrappers = [];
                     const timesTaken = responseData.times.split(",,");
+                    if(timesTaken.length == ""){
+                        timesTaken = ["xx:xx"];
+                    }
                     timesTaken.forEach(time => {
                         document.querySelectorAll(".book-time-wrapper").forEach(wrapper => {
-                            if(wrapper.textContent == time){
-                                wrapper.style.display = "none";
+                            if(wrapper.id.replace(/-/g, ":") == time){
+                                bookedWrappers.push(wrapper);
+                                //wrapper.style.display = "none";
+                            } else {
+                                wrapper.querySelector("i.time-trash").onclick = function(e){
+                                    e.stopPropagation();
+                                    async function removeSlot() {
+                                        let monStr = String(currentMonth + 1);
+                                        if(monStr.length == 1){
+                                            monStr = "0" + monStr;
+                                        }
+                                        let dateStr = document.querySelector(".book-cal-active").textContent;
+                                        if(dateStr.length == 1){
+                                            dateStr = "0" + dateStr;
+                                        }
+                                        let fullDate = currentYear + "-" + monStr + "-" + dateStr;
+                                        const dataToSend = { date: fullDate, time: wrapper.id.replace(/-/g, ":") };
+                                        try {
+                                            const response = await fetch(url + '/api/remove-slot', {
+                                                method: 'POST',
+                                                credentials: 'include',
+                                                headers: {
+                                                    'Content-Type': 'application/json', 
+                                                },
+                                                body: JSON.stringify(dataToSend), 
+                                            });
+
+                                            if (!response.ok) {
+                                                const errorData = await response.json();
+                                                console.error('Error:', errorData.message);
+                                                return;
+                                            }
+
+                                            const responseData = await response.json();
+                                            if(responseData.message == "success"){
+                                                setCalendar(currentMonth, currentYear, false);
+                                            } else {
+                                                console.log(responseData.message);
+                                            }
+                                        } catch (error) {
+                                            console.error('Error posting data:', error);
+                                        }
+                                    }
+                                    removeSlot();
+                                }
+                                wrapper.querySelector("i.time-create").onclick = function(e){
+                                    e.stopPropagation();
+                                    preChosen = true;
+                                    preDate = fullDate;
+                                    preTime = wrapper.id.replace(/-/g, ":");
+                                    adminBooking = true;
+                                    document.querySelector(".book-treatments").style.display = "block";
+                                    document.querySelector(".book-treatments").style.opacity = "1";
+                                    document.querySelector(".book-time").style.display = "none";
+                                    document.querySelector(".book-time").style.opacity = "0";
+                                }
                             }
                         });
                     });
-                }
+                    if(isAdmin){
+                        async function verifyAdmin(){
+                            try {
+                                const response = await fetch(`${url}/api/check-admin`, {
+                                    method: 'GET',
+                                    credentials: 'include'
+                                });
+                                const data = await response.json(); 
+                                if(data.message == "Failure"){
+                                    bookedWrappers.forEach(wrapper => {wrapper.style.display = "none";});
+                                } else if(data.message == "Success"){
+                                    bookedWrappers.forEach(wrapper => {
+                                        bookings.forEach(booking => {
+                                            if(booking.booking_time == wrapper.id.replace(/-/g, ":")){
+                                                if(booking.booking_type == "user"){
+                                                    wrapper.innerHTML = `
+                                                        <div class="book-time-col">
+                                                            <div class="book-time-time">${booking.booking_time} - ${booking.finish_time}</div>
+                                                            <div class="book-time-txt">${booking.email}</div>
+                                                            <div class="book-time-txt">Price: ${booking.price} - ${booking.payment_status}</div>
+                                                        </div>
+                                                        <i class="fa-solid fa-trash time-trash" onclick="window.location.href = '${frontendUrl}/bookings.html?admin=true&cancel=${booking.cancel_code}'"></i>
+                                                    `
+                                                } else if(booking.booking_type == "admin"){
+                                                    wrapper.innerHTML = `
+                                                        <div class="book-time-col">
+                                                            <div class="book-time-time" style="text-decoration: line-through;">${booking.booking_time}</div>
+                                                            <div class="book-time-txt">This time was closed by an admin.</div>
+                                                        </div>
+                                                        <i class="fa-solid fa-plus time-plus"></i>
+                                                    `
+                                                    wrapper.querySelector("i.time-plus").onclick = function(e){
+                                                        e.stopPropagation();
+                                                        async function openCard() {
+                                                            const dataToSend = { id: booking.id };
+                                                            try {
+                                                                const response = await fetch(url + '/api/open-slot', {
+                                                                    method: 'POST',
+                                                                    credentials: 'include',
+                                                                    headers: {
+                                                                        'Content-Type': 'application/json', 
+                                                                    },
+                                                                    body: JSON.stringify(dataToSend), 
+                                                                });
+
+                                                                if (!response.ok) {
+                                                                    const errorData = await response.json();
+                                                                    console.error('Error:', errorData.message);
+                                                                    return;
+                                                                }
+
+                                                                const responseData = await response.json();
+                                                                setCalendar(currentMonth, currentYear, false);
+                                                            } catch (error) {
+                                                                console.error('Error posting data:', error);
+                                                            }
+                                                        }
+                                                        openCard();
+                                                    }
+                                                } else if(booking.booking_type == "filler"){
+                                                    wrapper.style.display = "none";
+                                                }
+                                            }
+                                        });
+                                    });
+                                }
+                            } catch (error) {
+                                console.error('Error fetching data:', error);
+                            }
+                        }
+                        verifyAdmin();
+                    } else {
+                        bookedWrappers.forEach(wrapper => {wrapper.style.display = "none";});
+                    }
                 let bookingFound = false;
                 document.querySelectorAll(".book-time-wrapper").forEach((wrapper, idx) => {
                     wrapper.classList.remove("book-time-active");
@@ -1275,7 +1425,7 @@ if(document.querySelector(".book-container")){
 
     // admin
     if(params.get("admin") == "true"){
-        async function checkAdmin() {
+        async function checkAdmin(){
             try {
                 const response = await fetch(`${url}/api/check-admin`, {
                     method: 'GET',
@@ -1418,7 +1568,7 @@ if(document.querySelector(".book-container")){
                     }
 
                     const responseData = await response.json();
-                    window.location.href = frontendUrl + "/bookings.html?admin=true";
+                    setCalendar(currentMonth, currentYear, false);
                 } catch (error) {
                     console.error('Error posting data:', error);
                 }
@@ -1476,7 +1626,7 @@ if(document.querySelector(".book-container")){
                             <div class="btn-show-delete">Delete Booking</div>
                         `
                         newCard.querySelector(".btn-show-delete").addEventListener("click", () => {
-                        window.location.href = url + "/bookings.html?cancel=" + obj.cancel_code;
+                        window.location.href = url + "/bookings.html?admin=true&cancel=" + obj.cancel_code;
                             /*
                             
                             async function deleteCard() {
@@ -1572,7 +1722,7 @@ if(document.querySelector(".book-container")){
                     }
 
                     const responseData = await response.json();
-                    window.location.href = frontendUrl + "/bookings.html?admin=true";
+                    setCalendar(currentMonth, currentYear, false);
                 } catch (error) {
                     console.error('Error posting data:', error);
                 }
