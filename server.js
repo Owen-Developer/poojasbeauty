@@ -272,7 +272,7 @@ function generateNumber(){
     return crypto.randomBytes(5).toString('hex'); 
 }
 function requireAdmin(req, res, next){
-    if(!req.session.admin && false){
+    if(!req.session.admin){
         return res.json({ message: 'Unauth' });
     }
     next();
@@ -611,7 +611,7 @@ app.post("/api/admin-access", (req, res) => {
 });
 
 app.get("/api/check-admin", (req, res) => {
-    if(req.session.admin || true){
+    if(req.session.admin){
         return res.json({ message: 'Success' });
     } else {
         return res.json({ message: 'Failure' });
