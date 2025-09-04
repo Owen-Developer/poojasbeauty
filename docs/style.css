@@ -3291,13 +3291,6 @@ span.lac-mon-active {
 }
 /*////////////////////////////////////////////////////////////////*/
 
-/*
-1. Handle switching to book as admin
-2. Handle displaying lac
-2. Handle mobile version
-3. Test booking as user, checking on admin
-*/
-
 
 
 .header-burger {
@@ -3953,6 +3946,9 @@ span.lac-mon-active {
     }
     .lac-time-txt {
         font-size: 16px;
+    }
+    .lac-hover-el {
+        opacity: 1;
     }
 }
 @media only screen and (max-width: 450px){
