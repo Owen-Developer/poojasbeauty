@@ -23,8 +23,12 @@ const months = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
+const days = [
+  "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"
+];
 const now = new Date();
-const todayDate = now.getDate();
+const todayDate = now.getDate(); // 12-07 = 7
+let currentDate = todayDate;
 const startPosition = now.getMonth();
 let currentMonth = now.getMonth();
 const startYear = now.getFullYear().toString();
@@ -299,7 +303,7 @@ const services = [
 ];
 
 let url = "https://api.poojasbeautysalon.com"; // https://api.poojasbeautysalon.com   backend routes
-let frontendUrl = "https://poojasbeautysalon.com"; // https://poojasbeautysalon.com   http://localhost:3000/
+let frontendUrl = "https://poojasbeautysalon.com"; // https://poojasbeautysalon.com   http://localhost:3000
 
 let productIds = [];
 
@@ -1104,7 +1108,7 @@ if(document.querySelector(".book-container")){
     }
     function totalDays(monthIdx, yearStr) {
         const year = parseInt(yearStr);
-        return new Date(year, monthIdx + 1, 0).getDate();
+        return new Date(year, monthIdx + 1, 0).getDate(); // last day of previous month
     }
     function okayRedirect(){
         async function checkAdmin() {
@@ -1435,7 +1439,10 @@ if(document.querySelector(".book-container")){
                 if(data.message == "Failure"){
                     document.querySelector(".book-access-modal").style.pointerEvents = "auto";
                     document.querySelector(".book-access-modal").style.opacity = "1";
-                } 
+                }  else {
+                    document.querySelector(".lac-container").style.display = "block";
+                    document.querySelector(".book-flex").style.display = "none";
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -1443,10 +1450,6 @@ if(document.querySelector(".book-container")){
         checkAdmin();
 
         isAdmin = true;
-        document.querySelector(".book-time").style.display = "block";
-        document.querySelector(".book-time").style.opacity = "1";
-        document.querySelector(".book-treatments").style.display = "none";
-        document.querySelector(".book-treatments").style.opacity = "0";
         document.querySelectorAll(".admin-element").forEach(element => {
             element.classList.remove("admin-element");
         });
@@ -1519,6 +1522,8 @@ if(document.querySelector(".book-container")){
 
                     const responseData = await response.json();
                     if(responseData.message == "Success"){
+                        document.querySelector(".lac-container").style.display = "block";
+                        document.querySelector(".book-flex").style.display = "none";
                         closeAccessModal();
                         if(params.get("verify")){
                             verifyBooking();
@@ -1923,5 +1928,532 @@ if(document.querySelector(".book-container")){
             }
             requestDelete();
         }
+    }
+
+
+
+    /*
+    function setCalendar2(monthIdx, yearStr, firstCall){
+        document.querySelector(".cal-nav-title").textContent = months[monthIdx] + " " + yearStr;
+        document.querySelector(".lac-nav-title").textContent = months[monthIdx] + " " + yearStr;
+
+        let startIdx = firstDay(monthIdx, yearStr);
+        let endIdx = totalDays(monthIdx, yearStr);
+
+        let bookings = [];
+        async function getBookings(){
+            const dataToSend = { month: monthIdx + 1, year: yearStr };
+            try {
+                const response = await fetch(url + '/api/get-events', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json', 
+                    },
+                    body: JSON.stringify(dataToSend), 
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Error:', errorData.message);
+                    return;
+                }
+
+                const responseData = await response.json();
+                console.log(responseData.bookings);
+                bookings = responseData.bookings;
+
+                resetBoxes();
+                document.querySelectorAll(".cal-box").forEach((box, idx) => {
+                    if(idx >= startIdx && idx < (endIdx + startIdx)){
+                        box.querySelector(".cal-box-day").textContent = String(idx - (startIdx - 1));
+                        let boxDay = Number(String(idx - (startIdx - 1)));
+
+                        if(monthIdx == startPosition && boxDay == todayDate){
+                            makeBoxToday(box);
+                            if(firstCall){
+                                todayBox2 = box;
+                            }
+                        }
+
+                        bookings.forEach(booking => {
+                            if(Number(booking.event_date.slice(8, 10)) == boxDay){
+                                box.classList.add("cal-box-event");
+                                let taken = "";
+                                if(booking.max_slots == booking.current_slots){
+                                    taken = " (no spots left)";
+                                }
+                                if(taken == ""){
+                                    box.innerHTML += `
+                                    <div class="cal-event-head">${booking.title}</div>
+                                    <div class="cal-event-cta">BOOK NOW</div>
+                                    `;
+                                    box.querySelector(".cal-event-cta").addEventListener("click", () => {
+                                        if(booking.team_size == "2"){
+                                            document.querySelector(".reg-player3").style.display = "none";
+                                            document.querySelector(".reg-player3").removeAttribute('required');
+                                        } else {
+                                            document.querySelector(".reg-player3").style.display = "flex";
+                                            document.querySelector(".reg-player3").setAttribute('required', '');
+                                        }
+                                        openInfoModal();
+                                        document.querySelectorAll(".info-txt")[0].textContent = booking.title;
+                                        document.querySelectorAll(".info-txt")[1].textContent = booking.event_date.replace(/-/g, "/");
+                                        document.querySelectorAll(".info-txt")[2].textContent = booking.latest_entry.replace(/-/g, "/");
+                                        document.querySelectorAll(".info-txt")[3].textContent = booking.location;
+                                        document.querySelectorAll(".info-txt")[4].textContent = booking.cost;
+                                        document.querySelectorAll(".info-txt")[5].textContent = booking.team_size;
+                                        document.querySelectorAll(".info-txt")[6].textContent = booking.event_description;
+                                        document.getElementById("event").value = JSON.stringify(booking);
+                                        if(taken == ""){
+                                            document.querySelector("div.btn-info-cta").classList.remove("btn-inactive");
+                                        } else {
+                                            document.querySelector("div.btn-info-cta").classList.add("btn-inactive");
+                                        }
+                                    });
+                                } else {
+                                    box.innerHTML += `
+                                    <div class="cal-event-head">${booking.title}</div>
+                                    <div class="cal-event-time">(No spots left)</div>
+                                    `;
+                                }
+                            }
+                        });
+                    } else {
+                        box.classList.add("cal-day-disabled");
+                    }
+                });
+
+                document.querySelectorAll(".lac-top-mon").forEach(mon => mon.style.display = "none");
+                document.querySelectorAll(".lac-box").forEach((box, idx) => {
+                    if(idx >= startIdx && idx < (endIdx + startIdx)){
+                        box.querySelector(".lac-box-day").textContent = String(idx - (startIdx - 1));
+                        let boxDay = Number(String(idx - (startIdx - 1)));
+                        document.querySelectorAll(".lac-top-mon")[idx].style.display = "flex";
+                        let subtractNum = Math.floor(idx / 7) * 7;
+                        document.querySelectorAll(".lac-top-mon")[idx].textContent = days[idx - subtractNum];
+
+                        if(monthIdx == startPosition && boxDay == todayDate){
+                            makeBoxToday(box);
+                            box.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+                            if(firstCall){
+                                todayBox2 = box;
+                            }
+                        }
+
+                        bookings.forEach(booking => {
+                            if(Number(booking.event_date.slice(8, 10)) == boxDay){
+                                box.classList.add("lac-box-event");
+                                let taken = "";
+                                if(booking.max_slots == booking.current_slots){
+                                    taken = " (no spots left)";
+                                }
+                                if(taken == ""){
+                                    box.innerHTML += `
+                                    <div class="lac-event-head">${booking.title}</div>
+                                    <div class="lac-event-cta">BOOK NOW</div>
+                                    `;
+                                    box.querySelector(".lac-event-cta").addEventListener("click", () => {
+                                        if(booking.team_size == "2"){
+                                            document.querySelector(".reg-player3").style.display = "none";
+                                            document.querySelector(".reg-player3").removeAttribute('required');
+                                        } else {
+                                            document.querySelector(".reg-player3").style.display = "flex";
+                                            document.querySelector(".reg-player3").setAttribute('required', '');
+                                        }
+                                        openInfoModal();
+                                        document.querySelectorAll(".info-txt")[0].textContent = booking.title;
+                                        document.querySelectorAll(".info-txt")[1].textContent = booking.event_date.replace(/-/g, "/");
+                                        document.querySelectorAll(".info-txt")[2].textContent = booking.latest_entry.replace(/-/g, "/");
+                                        document.querySelectorAll(".info-txt")[3].textContent = booking.location;
+                                        document.querySelectorAll(".info-txt")[4].textContent = booking.cost;
+                                        document.querySelectorAll(".info-txt")[5].textContent = booking.team_size;
+                                        document.querySelectorAll(".info-txt")[6].textContent = booking.event_description;
+                                        document.getElementById("event").value = JSON.stringify(booking);
+                                        if(taken == ""){
+                                            document.querySelector("div.btn-info-cta").classList.remove("btn-inactive");
+                                        } else {
+                                            document.querySelector("div.btn-info-cta").classList.add("btn-inactive");
+                                        }
+                                    });    
+                                } else {
+                                    box.innerHTML += `
+                                    <div class="lac-event-head">${booking.title}</div>
+                                    <div class="lac-event-time">(No spots left)</div>
+                                    `;
+                                }
+                            }
+                        });
+                    } else {
+                        box.classList.add("lac-day-disabled");
+                    }
+                });
+
+                if(document.querySelector(".last-flex").querySelectorAll(".cal-day-disabled").length < 7){
+                    document.querySelector(".last-flex").style.display = "flex";
+                } else {
+                    document.querySelector(".last-flex").style.display = "none";
+                }
+            } catch (error) {
+                console.error('Error posting data:', error);
+            }
+        }
+        getBookings();
+    }
+    if(document.querySelector(".cal-container")){
+        setCalendar(currentMonth, currentYear, true);
+    }
+    function changeMonth2(direction){
+        if(direction == "right"){
+            currentMonth++;
+        } else if(currentMonth > startPosition || Number(currentYear) > Number(startYear)){
+            currentMonth--;
+        }
+
+        if(currentMonth == 12){
+            currentMonth = 0;
+            currentYear = Number(currentYear) + 1;
+        } else if(currentMonth < 0) {
+            currentMonth = 11;
+            currentYear = Number(currentYear) - 1;
+        }
+        setCalendar(currentMonth, currentYear, false);
+    }
+    function firstDay2(monthIdx, yearStr) {
+        const date = new Date(parseInt(yearStr), monthIdx, 1);
+        let day = date.getDay() - 1;
+        if(day == -1){
+            return 6;
+        } else {
+            return day;
+        }
+    }
+    function totalDays2(monthIdx, yearStr) {
+        const year = parseInt(yearStr);
+        return new Date(year, monthIdx + 1, 0).getDate();
+    }
+
+    function resetBoxes(){
+        document.querySelectorAll(".cal-box").forEach(box => {
+            box.classList.remove("cal-box-event");
+            box.classList.remove("cal-day-disabled");
+            box.classList.remove("cal-box-today");
+            box.innerHTML = `
+                <div class="cal-box-day"></div>
+            `
+        });
+        document.querySelectorAll(".lac-box").forEach(box => {
+            box.classList.remove("lac-box-event");
+            box.classList.remove("lac-day-disabled");
+            box.classList.remove("lac-box-today");
+            box.innerHTML = `
+                <div class="lac-box-day"></div>
+            `
+        });
+    }
+    function makeBoxToday(box){
+        if(box.classList.contains("cal-box")){
+            box.classList.add("cal-box-today");
+            box.innerHTML += `
+            <div class="cal-today-txt">Today</div>
+            `;
+        } else {
+            box.classList.add("lac-box-today");
+            box.innerHTML += `
+            <div class="lac-today-txt">Today</div>
+            `;    
+        }
+    }
+    */
+
+
+    function setLac(dateNumber, monthIdx, yearStr){ // params of today
+        document.querySelector(".lac-nav-title").textContent = months[monthIdx] + " " + yearStr;
+
+        const maxDays = totalDays(monthIdx, yearStr);
+        let dateDay =  dateNumber;
+        if(dateDay.length == 1){
+            dateDay = "0" + dateNumber;
+        }
+
+        const todayIdx = getDateDay(dateNumber, monthIdx, yearStr); // 1
+        const todayStr = days[todayIdx]; // 'Tue'
+        for(let i = 0; i < 7; i++){
+            let topDateNumber = dateNumber + i;
+            if(topDateNumber > maxDays){
+                topDateNumber = topDateNumber - maxDays;
+                console.log(topDateNumber + " vs " + maxDays);
+            }
+            let topDayIdx = todayIdx + i;
+            if(topDayIdx > 6){
+                topDayIdx = topDayIdx - 7;
+            }
+            document.querySelectorAll("div.lac-top-mon")[i].innerHTML = `${days[topDayIdx]}<span class="lac-top-mon">${topDateNumber}</span>`;
+            if(topDateNumber == todayDate && monthIdx == startPosition && yearStr == startYear){
+                document.querySelectorAll("span.lac-top-mon")[i].classList.add("lac-mon-active");
+            }
+        }
+
+        async function getBookings() {
+            const dataToSend = { month: monthIdx + 1, year: yearStr };
+            try {
+                const response = await fetch(url + '/api/get-bookings', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json', 
+                    },
+                    body: JSON.stringify(dataToSend), 
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Error:', errorData.message);
+                    return;
+                }
+
+                const data = await response.json();
+                let bookings = data.bookings;
+                let adminAmounts = [0, 0, 0, 0, 0, 0, 0];
+                let boxDate;
+                document.querySelectorAll(".lac-flex").forEach(flex => {
+                    let rowTime = flex.id.slice(5);
+                    flex.querySelectorAll(".lac-box").forEach((box, idx) => {
+                        let monStr = String(currentMonth + 1);
+                        if(monStr.length == 1){
+                            monStr = "0" + monStr;
+                        }
+                        let dateStr = document.querySelectorAll("span.lac-top-mon")[idx].textContent;
+                        if(dateStr.length == 1){
+                            dateStr = "0" + dateStr;
+                        }
+                        boxDate = currentYear + "-" + monStr + "-" + dateStr;
+                        let emptyBox = true;
+                        bookings.forEach(booking => {
+                            if(booking.booking_date == boxDate && booking.booking_time == rowTime){
+                                emptyBox = false;
+                                if(booking.booking_type == "user"){
+                                    // <div class="lac-slot-txt">Services: ${booking.services.replace(/,,/g, ", ")}</div>
+                                    box.innerHTML = `
+                                        <div class="lac-slot">
+                                        <div class="lac-slot-scroll">
+                                            <div class="lac-slot-time">${booking.booking_time} - ${booking.finish_time}</div>
+                                            <div class="lac-slot-txt">Price: ${booking.price} - ${booking.payment_status}</div>
+                                            
+                                            <div class="btn-lac-remove" onclick="window.location.href = '${frontendUrl}/bookings.html?admin=true&cancel=${booking.cancel_code}'">Remove Booking</div>
+                                        </div>
+                                        </div>
+                                    `;
+                                    let height = 100 * booking.time_taken;
+                                    box.querySelector(".lac-slot").style.height = "calc(" + height + "% - 10px)";
+                                } else if(booking.booking_type == "admin"){
+                                    adminAmounts[idx]++;
+                                    box.innerHTML = `
+                                        <div class="lac-slot-time" style="text-decoration: line-through;">${booking.booking_time}</div>
+                                        <div class="lac-slot-txt">Slot Closed</div>
+                                        <div class="btn-lac-open">Open Slot</div>
+                                    `;
+                                    box.querySelector(".btn-lac-open").onclick = function(){
+                                        async function openCard() {
+                                            const dataToSend = { id: booking.id };
+                                            try {
+                                                const response = await fetch(url + '/api/open-slot', {
+                                                    method: 'POST',
+                                                    credentials: 'include',
+                                                    headers: {
+                                                        'Content-Type': 'application/json', 
+                                                    },
+                                                    body: JSON.stringify(dataToSend), 
+                                                });
+
+                                                if (!response.ok) {
+                                                    const errorData = await response.json();
+                                                    console.error('Error:', errorData.message);
+                                                    return;
+                                                }
+
+                                                const responseData = await response.json();
+                                                setLac(currentDate, currentMonth, currentYear);
+                                            } catch (error) {
+                                                console.error('Error posting data:', error);
+                                            }
+                                        }
+                                        openCard();
+                                    }
+                                }
+                            } 
+                        });
+                        if(emptyBox){
+                            box.innerHTML = `
+                                <div class="btn-lac-open lac-hover-el">Make a Booking</div>
+                                <div class="btn-lac-remove lac-hover-el">Close Slot</div>
+                            `
+                            let monStr = String(currentMonth + 1);
+                            if(monStr.length == 1){
+                                monStr = "0" + monStr;
+                            }
+                            let dateStr = document.querySelectorAll("span.lac-top-mon")[idx].textContent;
+                            if(dateStr.length == 1){
+                                dateStr = "0" + dateStr;
+                            }
+                            let rnDate = currentYear + "-" + monStr + "-" + dateStr;
+                            box.querySelector(".btn-lac-remove").onclick = function(e){
+                                async function removeSlot() {
+                                    const dataToSend = { date: rnDate, time: rowTime };
+                                    try {
+                                        const response = await fetch(url + '/api/remove-slot', {
+                                            method: 'POST',
+                                            credentials: 'include',
+                                            headers: {
+                                                'Content-Type': 'application/json', 
+                                            },
+                                            body: JSON.stringify(dataToSend), 
+                                        });
+
+                                        if (!response.ok) {
+                                            const errorData = await response.json();
+                                            console.error('Error:', errorData.message);
+                                            return;
+                                        }
+
+                                        const responseData = await response.json();
+                                        if(responseData.message == "success"){
+                                            setLac(currentDate, currentMonth, currentYear);
+                                        } else {
+                                            console.log(responseData.message);
+                                        }
+                                    } catch (error) {
+                                        console.error('Error posting data:', error);
+                                    }
+                                }
+                                removeSlot();
+                            }
+                            box.querySelector(".btn-lac-open").onclick = function(){
+                                preChosen = true;
+                                preDate = rnDate;
+                                preTime = rowTime;
+                                adminBooking = true;
+                                document.querySelector(".lac-container").style.display = "none";
+                                document.querySelector(".book-flex").style.display = "flex";
+                                document.querySelector(".book-treatments").style.display = "block";
+                                document.querySelector(".book-treatments").style.opacity = "1";
+                                document.querySelector(".book-time").style.display = "none";
+                                document.querySelector(".book-time").style.opacity = "0";
+                            }
+                        }
+                    });
+                });
+                adminAmounts.forEach((day, idx) => {
+                    let monStr = String(currentMonth + 1);
+                    if(monStr.length == 1){
+                        monStr = "0" + monStr;
+                    }
+                    let dateStr = document.querySelectorAll("span.lac-top-mon")[idx].textContent;
+                    if(dateStr.length == 1){
+                        dateStr = "0" + dateStr;
+                    }
+                    let fullDate = currentYear + "-" + monStr + "-" + dateStr;
+                    if(day == 35){
+                        document.querySelectorAll(".lac-box-space")[idx].textContent = "Open this day";
+                        document.querySelectorAll(".lac-box-space")[idx].onclick = function(){
+                            async function requestOpen() {
+                                const dataToSend = { date: fullDate };
+                                try {
+                                    const response = await fetch(url + '/api/open-day', {
+                                        method: 'POST',
+                                        credentials: 'include',
+                                        headers: {
+                                            'Content-Type': 'application/json', 
+                                        },
+                                        body: JSON.stringify(dataToSend), 
+                                    });
+
+                                    if (!response.ok) {
+                                        const errorData = await response.json();
+                                        console.error('Error:', errorData.message);
+                                        return;
+                                    }
+
+                                    const responseData = await response.json();
+                                    setLac(currentDate, currentMonth, currentYear);
+                                } catch (error) {
+                                    console.error('Error posting data:', error);
+                                }
+                            }
+                            requestOpen();
+                        }
+                    } else {
+                        document.querySelectorAll(".lac-box-space")[idx].textContent = "Close this day";
+                        document.querySelectorAll(".lac-box-space")[idx].onclick = function(){
+                            console.log(fullDate);
+                            async function requestClose(){
+                                const dataToSend = { date: fullDate };
+                                try {
+                                    const response = await fetch(url + '/api/close-all', {
+                                        method: 'POST',
+                                        credentials: 'include',
+                                        headers: {
+                                            'Content-Type': 'application/json', 
+                                        },
+                                        body: JSON.stringify(dataToSend), 
+                                    });
+
+                                    if (!response.ok) {
+                                        const errorData = await response.json();
+                                        console.error('Error:', errorData.message);
+                                        return;
+                                    }
+
+                                    const responseData = await response.json();
+                                    setLac(currentDate, currentMonth, currentYear);
+                                } catch (error) {
+                                    console.error('Error posting data:', error);
+                                }
+                            }
+                            requestClose();
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error posting data:', error);
+            }
+        }
+        getBookings();
+    }
+    setLac(todayDate, currentMonth, currentYear);
+
+    function getDateDay(dateNumber, monthIdx, yearStr){ // give 1 = Tue from yyyy-mm-dd
+        const date = new Date(parseInt(yearStr), monthIdx, dateNumber);
+        let day = date.getDay() - 1;
+        if(day == -1){
+            return 6;
+        } else {
+            return day;
+        }
+    }
+    function changeWeek(direction){
+        if(direction == "right"){
+            currentDate = currentDate + 7;
+            if(currentDate > totalDays(currentMonth, currentYear)){
+                currentDate = currentDate - totalDays(currentMonth, currentYear);
+                currentMonth++;
+                if(currentMonth == 12){
+                    currentMonth = 0;
+                    currentYear = String(Number(currentYear) + 1);
+                }
+            }
+        }
+        else if(currentDate != todayDate || currentMonth != startPosition || currentYear != startYear){
+            currentDate = currentDate - 7;
+            if(currentDate < 1){
+                currentMonth--;
+                currentDate = currentDate + totalDays(currentMonth, currentYear);
+                if(currentMonth == -1){
+                    currentMonth = 11;
+                    currentYear = String(Number(currentYear) - 1);
+                }
+            }
+        }
+
+        setLac(currentDate, currentMonth, currentYear);
     }
 }
