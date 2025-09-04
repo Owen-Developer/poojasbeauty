@@ -302,8 +302,8 @@ const services = [
     },
 ];
 
-let url = "https://api.poojasbeautysalon.com"; // https://api.poojasbeautysalon.com   backend routes
-let frontendUrl = "https://poojasbeautysalon.com"; // https://poojasbeautysalon.com   http://localhost:3000
+let url = ""; // https://api.poojasbeautysalon.com   backend routes
+let frontendUrl = "http://localhost:3000"; // https://poojasbeautysalon.com   http://localhost:3000
 
 let productIds = [];
 
@@ -869,6 +869,29 @@ function nextBookingStage(){
             }, 50);
         }, 200);
     } 
+}
+function userBack(){
+        bookStage = 0;
+        productIds = [];
+        document.querySelector('.book-container').scrollIntoView({
+            block: 'start'   
+        });
+        document.querySelectorAll(".book-time-wrapper").forEach(wrapper => {
+            wrapper.classList.remove("book-time-active");
+        });
+        document.querySelector(".btn-book-sum").classList.remove("book-btn-inactive");
+        document.querySelector(".btn-book-sum").textContent = "Continue";
+        document.querySelector(".book-time").style.opacity = "0";
+        document.querySelector(".book-mobile").style.opacity = "0";
+        document.querySelector(".book-mobile").style.pointerEvents = "none";
+        setTimeout(() => {
+            document.querySelector(".btn-book-mobile").textContent = "Continue";
+            document.querySelector(".book-time").style.display = "none";
+            document.querySelector(".book-treatments").style.display = "block";
+            setTimeout(() => {
+                document.querySelector(".book-treatments").style.opacity = "1";
+            }, 50);
+        }, 200);
 }
 
 if(document.getElementById("contactForm")){
@@ -2338,6 +2361,7 @@ if(document.querySelector(".book-container")){
                                 document.querySelector(".book-treatments").style.opacity = "1";
                                 document.querySelector(".book-time").style.display = "none";
                                 document.querySelector(".book-time").style.opacity = "0";
+                                document.getElementById("backCalBtn").style.display = "block";
                             }
                         }
                     });
