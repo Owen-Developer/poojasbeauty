@@ -2279,7 +2279,8 @@ if(document.querySelector(".book-container")){
                                         </div>
                                     `;
                                     let height = 100 * booking.time_taken;
-                                    box.querySelector(".lac-slot").style.height = "calc(" + height + "% - 10px)";
+                                    let borderOffset = 2 * (booking.time_taken - 1) + "px";
+                                    box.querySelector(".lac-slot").style.height = "calc(" + height + "% - 10px + " + borderOffset + ")";
                                 } else if(booking.booking_type == "admin"){
                                     adminAmounts[idx]++;
                                     box.innerHTML = `
