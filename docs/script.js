@@ -673,67 +673,71 @@ document.querySelectorAll(".book-option").forEach(opt => {
         });
     });
 });
+let liClickDelay = false;
 document.querySelectorAll(".book-li").forEach(li => {
+
     li.addEventListener("click", () => {
-        if(li.classList.contains("book-li-active")){
-            li.classList.remove("book-li-active");
+            if(li.classList.contains("book-li-active")){
+                li.classList.remove("book-li-active");
 
-            Array.from(li.classList).forEach(cls => {
-                if(cls.includes("st")){
-                    totalTime -= Number(cls.split("-")[1]);
+                Array.from(li.classList).forEach(cls => {
+                    if(cls.includes("st")){
+                        totalTime -= Number(cls.split("-")[1]);
+                    }
+                });
+
+                document.querySelectorAll(".book-sum-flex").forEach(cont => {
+                    if(cont.querySelector(".book-sum-label").textContent == li.textContent.slice(0, (li.textContent.indexOf("-") - 1))){
+                        document.querySelector(".book-sum-ul").removeChild(cont);
+                        if(!document.querySelector(".book-li-active")){
+                            document.querySelector(".book-sum-total").textContent = "free";
+                            document.querySelector(".btn-book-sum").classList.add("book-btn-inactive");
+                        }
+                    }
+                });
+                if(document.querySelectorAll(".book-sum-flex").length == 0){
+                    document.querySelector(".book-sum-default").style.display = "block";
+                    document.querySelector(".book-mobile").style.opacity = "0";
+                    document.querySelector(".book-mobile").style.pointerEvents = "none";
                 }
-            });
-
-            document.querySelectorAll(".book-sum-flex").forEach(cont => {
-                if(cont.querySelector(".book-sum-label").textContent == li.textContent.slice(0, (li.textContent.indexOf("-") - 1)) && !document.querySelector(".book-li-active")){
-                    document.querySelector(".book-sum-ul").removeChild(cont);
-                    document.querySelector(".book-sum-total").textContent = "free";
-                    document.querySelector(".btn-book-sum").classList.add("book-btn-inactive");
-                }
-            });
-            if(document.querySelectorAll(".book-sum-flex").length == 0){
-                document.querySelector(".book-sum-default").style.display = "block";
-                document.querySelector(".book-mobile").style.opacity = "0";
-                document.querySelector(".book-mobile").style.pointerEvents = "none";
-            }
-        } else {
-            li.classList.add("book-li-active");
-
-            Array.from(li.classList).forEach(cls => {
-                if(cls.includes("st")){
-                    totalTime += Number(cls.split("-")[1]);
-                }
-            });
-
-            let section = document.createElement("div");
-            section.classList.add("book-sum-flex");
-            section.innerHTML = `
-                <div class="book-sum-label">${li.textContent.slice(0, (li.textContent.indexOf("-") - 1))}</div>
-                <div class="book-sum-price">${li.textContent.slice(li.textContent.indexOf("£"))}</div>
-            `
-            document.querySelector(".book-sum-ul").appendChild(section);
-
-            document.querySelector(".book-sum-default").style.display = "none";
-            let totalPrice = 0;
-            document.querySelectorAll(".book-sum-price").forEach(price => {
-                totalPrice = totalPrice + Number(price.textContent.slice(1));
-            });
-            document.querySelector(".book-sum-total").textContent = "£" + totalPrice.toFixed(2);
-            document.querySelector(".btn-book-sum").classList.remove("book-btn-inactive");
-
-            document.querySelector(".book-code-total").innerHTML = "£" + totalPrice;
-            storePrice = "£" + totalPrice;
-            let newNum = (Number(document.querySelector(".book-code-total").textContent.slice(1)) * 0.90).toFixed(2);
-            price = "£" + newNum;
-            document.querySelector(".book-mobile-head").textContent = "Total £" + totalPrice;
-            if(document.querySelectorAll(".book-sum-flex").length == 1){
-                document.querySelector(".book-mobile-txt").textContent = "1 Service";
             } else {
-                document.querySelector(".book-mobile-txt").textContent = document.querySelectorAll(".book-sum-flex").length + " Services";
+                li.classList.add("book-li-active");
+
+                Array.from(li.classList).forEach(cls => {
+                    if(cls.includes("st")){
+                        totalTime += Number(cls.split("-")[1]);
+                    }
+                });
+
+                let section = document.createElement("div");
+                section.classList.add("book-sum-flex");
+                section.innerHTML = `
+                    <div class="book-sum-label">${li.textContent.slice(0, (li.textContent.indexOf("-") - 1))}</div>
+                    <div class="book-sum-price">${li.textContent.slice(li.textContent.indexOf("£"))}</div>
+                `
+                document.querySelector(".book-sum-ul").appendChild(section);
+
+                document.querySelector(".book-sum-default").style.display = "none";
+                let totalPrice = 0;
+                document.querySelectorAll(".book-sum-price").forEach(price => {
+                    totalPrice = totalPrice + Number(price.textContent.slice(1));
+                });
+                document.querySelector(".book-sum-total").textContent = "£" + totalPrice.toFixed(2);
+                document.querySelector(".btn-book-sum").classList.remove("book-btn-inactive");
+
+                document.querySelector(".book-code-total").innerHTML = "£" + totalPrice;
+                storePrice = "£" + totalPrice;
+                let newNum = (Number(document.querySelector(".book-code-total").textContent.slice(1)) * 0.90).toFixed(2);
+                price = "£" + newNum;
+                document.querySelector(".book-mobile-head").textContent = "Total £" + totalPrice;
+                if(document.querySelectorAll(".book-sum-flex").length == 1){
+                    document.querySelector(".book-mobile-txt").textContent = "1 Service";
+                } else {
+                    document.querySelector(".book-mobile-txt").textContent = document.querySelectorAll(".book-sum-flex").length + " Services";
+                }
+                document.querySelector(".book-mobile").style.opacity = "1";
+                document.querySelector(".book-mobile").style.pointerEvents = "auto";
             }
-            document.querySelector(".book-mobile").style.opacity = "1";
-            document.querySelector(".book-mobile").style.pointerEvents = "auto";
-        }
     });
 });
 function scrollBookNav(direction){
@@ -2255,12 +2259,12 @@ if(document.querySelector(".book-container")){
                             if(booking.booking_date == boxDate && booking.booking_time == rowTime){
                                 emptyBox = false;
                                 if(booking.booking_type == "user"){
-                                    // <div class="lac-slot-txt">Services: ${booking.services.replace(/,,/g, ", ")}</div>
                                     box.innerHTML = `
                                         <div class="lac-slot">
                                         <div class="lac-slot-scroll">
                                             <div class="lac-slot-time">${booking.booking_time} - ${booking.finish_time}</div>
                                             <div class="lac-slot-txt">Price: ${booking.price} - ${booking.payment_status}</div>
+                                            <div class="lac-slot-txt">Services: ${booking.services.replace(/,,/g, ", ")}</div>
                                             
                                             <div class="btn-lac-remove" onclick="window.location.href = '${frontendUrl}/bookings.html?admin=true&cancel=${booking.cancel_code}'">Remove Booking</div>
                                         </div>
