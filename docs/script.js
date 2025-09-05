@@ -1238,6 +1238,7 @@ if(document.querySelector(".book-container")){
         }
     }
     async function checkSlots() {
+        console.log(currentMonth + " vs " + startPosition);
         let monStr = String(currentMonth + 1);
         if(monStr.length == 1){
             monStr = "0" + monStr;
@@ -1287,7 +1288,7 @@ if(document.querySelector(".book-container")){
                         wrapper.innerHTML = wrapper.id.replace(/-/g, ":") + '<i class="fa-solid fa-plus time-create admin-element"></i> <i class="fa-solid fa-trash time-trash admin-element"></i>';
                     }
                     wrapper.style.display = "block";
-                    if(todayBox.classList.contains("book-cal-active") && (Number(ukTime.slice(0, 2)) > wrapper.id.replace(/-/g, ":").slice(0, 2) || (Number(ukTime.slice(0, 2)) == wrapper.id.replace(/-/g, ":").slice(0, 2) && Number(ukTime.slice(3, 5)) > wrapper.id.replace(/-/g, ":").slice(3, 5)))){
+                    if(currentMonth == startPosition && todayBox.classList.contains("book-cal-active") && (Number(ukTime.slice(0, 2)) > wrapper.id.replace(/-/g, ":").slice(0, 2) || (Number(ukTime.slice(0, 2)) == wrapper.id.replace(/-/g, ":").slice(0, 2) && Number(ukTime.slice(3, 5)) > wrapper.id.replace(/-/g, ":").slice(3, 5)))){
                         wrapper.style.display = "none";
                     }
                 });
