@@ -3266,9 +3266,6 @@ span.lac-mon-active {
     font-weight: 500;
 }
 .lac-slot-txt {
-  word-wrap: break-word;     /* legacy but still supported */
-  overflow-wrap: break-word; /* modern, recommended */
-  word-break: break-all;
     max-width: 100%;
     color: white;
     font-size: 13px;

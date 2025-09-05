@@ -302,8 +302,15 @@ const services = [
     },
 ];
 
-let url = "https://api.poojasbeautysalon.com"; // https://api.poojasbeautysalon.com   backend routes
-let frontendUrl = "https://poojasbeautysalon.com"; // https://poojasbeautysalon.com   http://localhost:3000
+let url = ""; // https://api.poojasbeautysalon.com   backend routes
+let frontendUrl = "";
+if(window.location.href.includes("localhost")) {
+    url = ""; // https://api.poojasbeautysalon.com   backend routes
+    frontendUrl = "http://localhost:3000"; // https://poojasbeautysalon.com   http://localhost:3000
+} else {
+    url = "https://api.poojasbeautysalon.com"; // https://api.poojasbeautysalon.com   backend routes
+    frontendUrl = "https://poojasbeautysalon.com"; // https://poojasbeautysalon.com   http://localhost:3000
+}
 
 let productIds = [];
 

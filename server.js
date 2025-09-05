@@ -14,7 +14,7 @@ const e = require('express');
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const accessKey = process.env.ACCESS_KEY;
-const url = "https://poojasbeautysalon.com";
+const url = process.env.FRONTEND_URL;
 // http://localhost:3000 https://poojasbeautysalon.com  redirect to url + /bookings.html?query=param....
 
 
