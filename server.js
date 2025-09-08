@@ -277,7 +277,6 @@ function requireAdmin(req, res, next){
     }
     next();
 }
-///////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -873,7 +872,6 @@ app.post("/api/submit-form", (req, res) => {
     sendClientForm("info@poojasbeautysalon.com", name, email, phone, message);
     return res.json({ message: 'success' });
 });
-/////////////////////////////////////////////////////////////////
 
 
 ////////////////////////// STRIPE PAYMENT ROUTES //////////////////////////
@@ -1027,7 +1025,6 @@ app.post("/api/verify-booking", async (req, res) => {
         return res.json({ message: 'success' });
     });
 });
-/////////////////////////////////////////////////////////////////////////////
 
 
 app.listen(PORT, () => {

@@ -1057,17 +1057,17 @@ if(document.querySelector(".book-container")){
                         box.classList.remove("book-cal-inactive");
                         box.textContent = String(idx - (startIdx - 1));
 
-                        if(monthIdx == startPosition && Number(box.textContent) < todayDate){
+                        if(yearStr == startYear && monthIdx == startPosition && Number(box.textContent) < todayDate){
                             box.classList.add("book-cal-disabled");
-                        } else if(monthIdx == startPosition && Number(box.textContent) == todayDate){
+                        } else if(yearStr == startYear && monthIdx == startPosition && Number(box.textContent) == todayDate){
                             box.classList.add("book-cal-active");
                             box.classList.remove("book-cal-inactive");
                             if(firstCall){
                                 todayBox = box;
                             }
-                        } else if(monthIdx == startPosition && Number(box.textContent) > todayDate){
+                        } else if(yearStr == startYear && monthIdx == startPosition && Number(box.textContent) > todayDate){
                             box.classList.remove("book-cal-inactive");
-                        } else if(monthIdx != startPosition && Number(box.textContent) == 1){
+                        } else if((monthIdx != startPosition || yearStr != startYear) && Number(box.textContent) == 1){
                             box.classList.add("book-cal-active");
                             box.classList.remove("book-cal-inactive");
                         }
