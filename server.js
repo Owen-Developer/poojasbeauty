@@ -419,6 +419,92 @@ app.post("/api/book-appointment", async (req, res) => {
     } else {
         async function payProduct(){
             let productPriceMap = {
+                "product_1": "price_1RyRP0IO0M0lx6yNE3OdZKoT", // chin
+                "product_2": "price_1RyROxIO0M0lx6yNJGxBDUwe", // chin
+                "product_3": "price_1RyROvIO0M0lx6yNAlBjdRRi", // chin
+                "product_4": "price_1RyROsIO0M0lx6yNrRPjtKhg", // chin
+                "product_5": "price_1RyROpIO0M0lx6yN9QJc41i1", // chin
+                "product_6": "price_1RyROmIO0M0lx6yN9hoXUPOS", // chin
+                "product_7": "price_1RyROjIO0M0lx6yNtFgyD9DT", // chin
+                "product_8": "price_1RyROhIO0M0lx6yNmkLp8sw4", // chin
+                "product_9": "price_1RyROeIO0M0lx6yNyNY3F3Ov", // chin
+                "product_10": "price_1RyROaIO0M0lx6yNGCh5dGux", // chin
+                "product_11": "price_1RyROXIO0M0lx6yN4MT75Wv0", // chin
+                "product_12": "price_1RyROUIO0M0lx6yNpf14ZlKX", // chin
+                "product_13": "price_1RyRORIO0M0lx6yNZJnwMKki", // chin
+                "product_14": "price_1RyROOIO0M0lx6yNRMic1pPU", // chin
+                "product_15": "price_1RyROMIO0M0lx6yNaBDKAYg4", // chin
+                "product_16": "price_1RyROJIO0M0lx6yNpkCULOsm", // chin
+                "product_17": "price_1RyROHIO0M0lx6yN49hhI8KS", // chin
+                "product_18": "price_1RyRODIO0M0lx6yNrgGabamU", // chin
+                "product_19": "price_1RyROAIO0M0lx6yNpDH0wWjQ", // chin
+                "product_20": "price_1RyRO8IO0M0lx6yNSurTWaJW", // chin
+                "product_21": "price_1RyRO0IO0M0lx6yNYeCpvX6n", // chin
+                "product_22": "price_1RyRNyIO0M0lx6yNUGKkjTVe", // chin
+                "product_23": "price_1RyRNwIO0M0lx6yNjNLHpHYh", // chin
+                "product_24": "price_1RyRNtIO0M0lx6yNfQqJXTAl", // chin
+                "product_25": "price_1RyRNqIO0M0lx6yN8bUU0jyi", // chin
+                "product_26": "price_1RyRNoIO0M0lx6yNMU7fHoy1", // chin
+                "product_27": "price_1RyRNlIO0M0lx6yNrgAg9Tr7", // chin
+                "product_28": "price_1RyRNjIO0M0lx6yNKx2IGr8f", // chin
+                "product_29": "price_1RyRNfIO0M0lx6yNrjqpFKPy", // chin
+                "product_30": "price_1RyRNcIO0M0lx6yNFGGDqQk6", // chin
+                "product_31": "price_1RyRNaIO0M0lx6yNXHgfnWFC", // chin
+                "product_32": "price_1RyRNXIO0M0lx6yNHbglizS5", // chin
+                "product_33": "price_1RyRNUIO0M0lx6yNuSkpLgTe", // chin
+                "product_34": "price_1RyRNRIO0M0lx6yNiF9mlm5j", // chin
+                "product_35": "price_1RyRNPIO0M0lx6yN8fm8s49u", // chin
+                "product_36": "price_1RyRNMIO0M0lx6yNJwEmrMUG", // chin
+                "product_37": "price_1RyRNJIO0M0lx6yNMSx7ZrDD", // chin
+                "product_38": "price_1RyRNGIO0M0lx6yNKIj7nMNQ", // chin
+                "product_39": "price_1RyRNEIO0M0lx6yNolAZz1QV", // chin
+                "product_40": "price_1RyRNCIO0M0lx6yNGVd0AZRf", // chin
+                "product_41": "price_1RyRN3IO0M0lx6yNOXvvzkFn", // chin
+                "product_42": "price_1RyRN0IO0M0lx6yNrssAcH4k", // chin
+                "product_43": "price_1RyRMxIO0M0lx6yN8xx4sDbj", // chin
+                "product_44": "price_1RyRMvIO0M0lx6yNgiUHgsiN", // chin
+                "product_45": "price_1RyRMtIO0M0lx6yN3bb6cLX8", // chin
+                "product_46": "price_1RyRMqIO0M0lx6yNNVAOdGBr", // chin
+                "product_47": "price_1RyRMoIO0M0lx6yNg8OsX9vc", // chin
+                "product_48": "price_1RyRLUIO0M0lx6yNFZFNnXE2", // chin
+                "product_49": "price_1RyRLSIO0M0lx6yNcowTD85N", // chin
+                "product_50": "price_1RyRLOIO0M0lx6yNDPxmDdzX", // chin
+                "product_51": "price_1RyRLHIO0M0lx6yNH16Y24U9", // chin
+                "product_52": "price_1RyRLEIO0M0lx6yNeHvL0YsT", // chin
+                "product_53": "price_1RyRLAIO0M0lx6yNoUmdHkoK", // chin
+                "product_54": "price_1RyRL7IO0M0lx6yNfgaeNqXO", // chin
+                "product_55": "price_1RyRL5IO0M0lx6yNPv4syCUA", // chin
+                "product_56": "price_1RyRL2IO0M0lx6yNi9WknLNb", // chin
+                "product_57": "price_1RyRKzIO0M0lx6yN6KFqnU3Z", // chin
+                "product_58": "price_1RyRKxIO0M0lx6yNGiiME31M", // chin
+                "product_59": "price_1RyRKvIO0M0lx6yNEFm6uClD", // chin
+                "product_60": "price_1RyRKsIO0M0lx6yN7Y9l10vG", // chin
+                "product_61": "price_1RyRKjIO0M0lx6yNrTklJNyN", // chin
+                "product_62": "price_1RyRKhIO0M0lx6yNJ7e9gUJ7", // chin
+                "product_63": "price_1RyRKeIO0M0lx6yNV3L9Q96W", // chin
+                "product_64": "price_1RyRKbIO0M0lx6yNjPHsUNFh", // chin
+                "product_65": "price_1RyRKOIO0M0lx6yN8jtMnPOj", // chin
+                "product_66": "price_1RyRKKIO0M0lx6yNbYzWbTxT", // chin
+                "product_67": "price_1RyRKIIO0M0lx6yNLyEm9Nfq", // chin
+                "product_68": "price_1RyRKEIO0M0lx6yN5kyU4egj", // chin
+                "product_69": "price_1RyRK7IO0M0lx6yNN1ct1QFE", // chin
+                "product_70": "price_1RyRK0IO0M0lx6yNqD78dOQk", // chin
+                "product_71": "price_1RyRJuIO0M0lx6yNSxPneFUZ", // chin
+                "product_72": "price_1RyRJpIO0M0lx6yNjW66246Q", // chin
+                "product_73": "price_1RyRJmIO0M0lx6yNkedPgIqs", // chin
+                "product_74": "price_1RyRJiIO0M0lx6yNopN1Y2Sa", // chin
+                "product_75": "price_1RyQL2IO0M0lx6yN15TOyJlA", // chin
+                "product_76": "price_1RyQKyIO0M0lx6yN7SbpXW7N", // chin
+                "product_77": "price_1RyQKwIO0M0lx6yNWB3aMQoG", // chin
+                "product_78": "price_1RyQKiIO0M0lx6yNvuSE0ULy", // chin
+                "product_79": "price_1RyQKgIO0M0lx6yNY5Ors0VW", // chin
+                "product_80": "price_1RyQK4IO0M0lx6yNtrILrJma", // chin
+                "product_81": "price_1RyQJsIO0M0lx6yN5Cc47If3", // chin
+                "product_82": "price_1RyQJmIO0M0lx6yN0kgtF6H4", // chin
+                "product_83": "price_1RyQHLIO0M0lx6yNxryjcybQ", // chin
+            };
+            /*
+            let productPriceMap = {
                 "product_1": "price_1RyGREIO0M0lx6yNWh1fONaP", // chin
                 "product_2": "price_1RyGUIIO0M0lx6yN1DREpeSw", // chin
                 "product_3": "price_1RyGUqIO0M0lx6yNTotKK3v3", // chin
@@ -503,6 +589,7 @@ app.post("/api/book-appointment", async (req, res) => {
                 "product_82": "price_1RyHHRIO0M0lx6yNhfs8y8bW", // chin
                 "product_83": "price_1RyHHfIO0M0lx6yNbSzaAH8w", // chin
             };
+            */
 
             try {
                 let productIds = req.body.productIds;
