@@ -611,7 +611,7 @@ app.post("/api/book-appointment", async (req, res) => {
                     payment_method_types: ["card"],
                     line_items: lineItems,
                     mode: "payment",
-                    discounts: [{coupon: "FuwYcfxr"}],
+                    discounts: [{coupon: "e4NuPRxe"}],
                     metadata: {
                         customer_date: date,
                         customer_time: time,
@@ -1115,5 +1115,5 @@ app.post("/api/verify-booking", async (req, res) => {
 
 
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`Server is running at http://localhost:${PORT}`);
 });
