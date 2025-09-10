@@ -844,7 +844,7 @@ document.querySelectorAll(".book-time-wrapper").forEach(box => {
 });
 function nextBookingStage(){
     bookStage++;
-    if(preChosen || bookStage == 2) {
+    if(preChosen || bookStage >= 2) {
         if(adminBooking){
             document.querySelectorAll(".btn-book-code").forEach(btn => {
                 btn.style.display = "none";
