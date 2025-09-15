@@ -1027,7 +1027,7 @@ if(document.querySelector(".book-container")){
 
         let bookings = [];
         async function getBookings(){
-            const dataToSend = { month: monthIdx + 1, year: yearStr };
+            const dataToSend = { month: monthIdx + 1, year: yearStr, month2: false, year2: false };
             try {
                 const response = await fetch(url + '/api/get-bookings', {
                     method: 'POST',
@@ -2229,7 +2229,13 @@ if(document.querySelector(".book-container")){
         }
 
         async function getBookings() {
-            const dataToSend = { month: monthIdx + 1, year: yearStr };
+            let nextYear = yearStr;
+            let nextMonth = monthIdx + 2;
+            if(monthIdx == 11){
+                nextMonth = 1;
+                nextYear = String(Number(yearStr) + 1);
+            }
+            const dataToSend = { month: monthIdx + 1, year: yearStr, month2: nextMonth, year2: nextYear };
             try {
                 const response = await fetch(url + '/api/get-bookings', {
                     method: 'POST',
@@ -2250,6 +2256,7 @@ if(document.querySelector(".book-container")){
                 let bookings = data.bookings;
                 let adminAmounts = [0, 0, 0, 0, 0, 0, 0];
                 let boxDate;
+                let firstDate;
                 document.querySelectorAll(".lac-flex").forEach(flex => {
                     let rowTime = flex.id.slice(5);
                     flex.querySelectorAll(".lac-box").forEach((box, idx) => {
@@ -2258,6 +2265,16 @@ if(document.querySelector(".book-container")){
                             monStr = "0" + monStr;
                         }
                         let dateStr = document.querySelectorAll("span.lac-top-mon")[idx].textContent;
+                        if(idx == 0){
+                            firstDate = Number(dateStr);
+                        } else if(Number(dateStr) < firstDate) {
+                            monStr = String(Number(monStr) + 1);
+                            if(monStr == "13"){
+                                monStr = "01";
+                            } else if(monStr.length == 1){
+                                monStr = "0" + monStr;
+                            }
+                        }
                         if(dateStr.length == 1){
                             dateStr = "0" + dateStr;
                         }

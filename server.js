@@ -706,15 +706,23 @@ app.get("/api/check-admin", (req, res) => {
 
 app.post("/api/get-bookings", (req, res) => {
     let likeStr;
-    if(req.body.month < 10){
-        likeStr = "%" + req.body.year + "-0" + String(req.body.month) + "%";
+    let likeStr2 = "09090909090";
+    if(!req.body.year2){
+        if(req.body.month < 10){
+            likeStr = "%" + req.body.year + "-0" + String(req.body.month) + "%";
+        } else {
+            likeStr = "%" + req.body.year + "-" + String(req.body.month) + "%";
+        }
     } else {
-        likeStr = "%" + req.body.year + "-" + String(req.body.month) + "%";
+        if(req.body.month2 < 10){
+            likeStr2 = "%" + req.body.year2 + "-0" + String(req.body.month2) + "%";
+        } else {
+            likeStr2 = "%" + req.body.year2 + "-" + String(req.body.month2) + "%";
+        }
     }
 
-
-    const getBookingsQuery = "select * from bookings where booking_date like ?";
-    db.query(getBookingsQuery, [likeStr], (err, result) => {
+    const getBookingsQuery = "select * from bookings where booking_date like ? or booking_date like ?";
+    db.query(getBookingsQuery, [likeStr, likeStr2], (err, result) => {
         if(err){
             console.error("Error getting bookings: " + err);
             return res.json({ bookings: [] });
