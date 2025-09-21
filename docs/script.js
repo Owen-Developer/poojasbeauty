@@ -2254,6 +2254,7 @@ if(document.querySelector(".book-container")){
 
                 const data = await response.json();
                 let bookings = data.bookings;
+                console.log(bookings);
                 let adminAmounts = [0, 0, 0, 0, 0, 0, 0];
                 let boxDate;
                 let firstDate;
