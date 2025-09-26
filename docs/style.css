@@ -667,16 +667,19 @@ span.about-title {
     position: relative;
     bottom: 40px;
     width: 100%;
+    max-width: 1400px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
     margin: 0 auto;
 }
 .about-pop {
     border-radius: 8px;
     max-width: calc(100% - 30px);
-    width: 750px;
-    height: auto;
+    height: 450px;
+    width: auto;
 }
 
 .about-plant1 {
@@ -3812,6 +3815,9 @@ span.lac-mon-active {
         filter: invert(1);
         transform: rotate(-45deg);
         width: 12px;
+        height: auto;
+    }
+    .about-pop {
         height: auto;
     }
 
