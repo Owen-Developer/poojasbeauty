@@ -75,194 +75,38 @@ const transporter = nodemailer.createTransport({
     }
 });
 function sendClientEmail(userEmail, date, time, email, message, services, price){ 
-    const mailOptions = {
-        from: process.env.EMAIL_USER,  // Sender address
-        to: userEmail,                 // Receiver's email
-        subject: 'New Booking', // Subject line
-        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nServices: ${services.replace(/,,/g, ", ")}\n\nPrice: ${price}`,
-    };
-  
-    // Send mail
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log('Error sending email:', error);
-        } else {
-            console.log('Verification email sent:', info.response);
-        }
-    });
+    sendEmail(userEmail, `<p>Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nServices: ${services.replace(/,,/g, ", ")}\n\nPrice: ${price}</p>`);
 }
 function sendClientFree(userEmail, date, time, email, message, code, services) { 
-    const mailOptions = {
-        from: process.env.EMAIL_USER,  // Sender address
-        to: userEmail,                 // Receiver's email
-        subject: 'New Booking', // Subject line
-        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nVoucher code: ${code}\n\nServices: ${services.replace(/,,/g, ", ")}\n\nThis booking was made using a voucher.`,
-    };
-  
-    // Send mail
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log('Error sending email:', error);
-        } else {
-            console.log('Verification email sent:', info.response);
-        }
-    });
+    sendEmail(userEmail, `<p>Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nVoucher code: ${code}\n\nServices: ${services.replace(/,,/g, ", ")}\n\nThis booking was made using a voucher.</p>`);
 }
 function sendClientStore(userEmail, date, time, email, message, services) { 
-    const mailOptions = {
-        from: process.env.EMAIL_USER,  // Sender address
-        to: userEmail,                 // Receiver's email
-        subject: 'New Booking', // Subject line
-        text: `Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nServices: ${services.replace(/,,/g, ", ")}\n\nThis booking it to be paid in store.`,
-    };
-  
-    // Send mail
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log('Error sending email:', error);
-        } else {
-            console.log('Verification email sent:', info.response);
-        }
-    });
+    sendEmail(userEmail, `<p>Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nServices: ${services.replace(/,,/g, ", ")}\n\nThis booking it to be paid in store.</p>`);
 }
 function sendClientGiftRequest(email, price){
-    const mailOptions = {
-        from: process.env.EMAIL_USER,  // Sender address
-        to: process.env.ADMIN_EMAIL,                 // Receiver's email
-        subject: 'Gift Card Purchase', // Subject line
-        text: `Hello, a gift card purchase was made for poojas beauty salon with the email: ${email}, for £${price}.`,
-    };
-  
-    // Send mail
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log('Error sending email:', error);
-        } else {
-            console.log('Verification email sent:', info.response);
-        }
-    });
+    sendEmail(process.env.ADMIN_EMAIL, `<p>Hello, a gift card purchase was made for poojas beauty salon with the email: ${email}, for £${price}.</p>`);
+
 }
 function sendUserVoucher(userEmail, Giftcode) {  
-    const mailOptions = {
-        from: process.env.EMAIL_USER,  // Sender address
-        to: userEmail,                 // Receiver's email
-        subject: 'Claim Your Voucher', // Subject line
-        text: `Hello, thank you for purchasing a voucher at Pooja's Beauty Salon. Use this code at checkout: ${Giftcode}`,
-    };
-  
-    // Send mail
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log('Error sending email:', error);
-        } else {
-            console.log('Verification email sent:', info.response);
-        }
-    });
+    sendEmail(userEmail, `<p>Hello, thank you for purchasing a voucher at Pooja's Beauty Salon. Use this code at checkout: ${Giftcode}</p>`);
 }
 function sendUserEmail(userEmail, date, time, link) {
-    const mailOptions = {
-        from: process.env.EMAIL_USER,  // Sender address
-        to: userEmail,                 // Receiver's email
-        subject: 'Booking Confirmed', // Subject line
-        text: `Hello, you made a booking for poojasbeautysalon: ${date}, ${time}\n\nCancel anytime with this link: ${link}`,
-    };
-  
-    // Send mail
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log('Error sending email:', error);
-        } else {
-            console.log('Verification email sent:', info.response);
-        }
-    });
+    sendEmail(userEmail, `<p>Hello, you made a booking for poojasbeautysalon: ${date}, ${time}\n\nCancel anytime with this link: ${link}</p>`);
 }
 function sendUserFree(userEmail, date, time, link){
-    const mailOptions = {
-        from: process.env.EMAIL_USER, 
-        to: userEmail,           
-        subject: 'Booking Confirmed',
-        text: `Hello, you made a booking for poojasbeautysalon: ${date}, ${time}\n\nCancel anytime with this link: ${link}`,
-    };
-  
-    // Send mail
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log('Error sending email:', error);
-        } else {
-            console.log('Verification email sent:', info.response);
-        }
-    });
+    sendEmail(userEmail, `<p>Hello, you made a booking for poojasbeautysalon: ${date}, ${time}\n\nCancel anytime with this link: ${link}</p>`);
 }
 function sendApologyEmail(userEmail, date){
-    const mailOptions = {
-        from: process.env.EMAIL_USER,  // Sender address
-        to: userEmail,                 // Receiver's email
-        subject: 'Booking Cancelled', // Subject line
-        html: `<p>Sorry, your booking for poojasbeautysalon on ${date} has been cancelled due to a schedule change. Please and rebook at your convenience.</p>`,
-        text: `Sorry, your booking for poojasbeautysalon on ${date} has been cancelled due to a schedule change. Please and rebook at your convenience.`,
-    };
-  
-    // Send mail
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log('Error sending email:', error);
-        } else {
-            console.log('Verification email sent:', info.response);
-        }
-    });
+    sendEmail(userEmail, `<p>Sorry, your booking for poojasbeautysalon on ${date} has been cancelled due to a schedule change. Please and rebook at your convenience.</p>`);
 }
 function sendClientForm(infoEmail, name, email, phone, message){
-    const mailOptions = {
-        from: process.env.EMAIL_USER,  // Sender address
-        to: infoEmail,                 // Receiver's email
-        subject: 'Message Recieved', // Subject line
-        text: `Hello, a contact form was submitted from Pooja's Beauty Salon's website:\n\nName: ${name}\n\nEmail: ${email}\n\nPhone Number: ${phone}\n\nMessage: ${message}`,
-    };
-  
-    // Send mail
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log('Error sending email:', error);
-        } else {
-            console.log('Verification email sent:', info.response);
-        }
-    });
+    sendEmail(userEmail, `<p>Hello, a contact form was submitted from Pooja's Beauty Salon's website:\n\nName: ${name}\n\nEmail: ${email}\n\nPhone Number: ${phone}\n\nMessage: ${message}</p>`);
 }
 function sendClientDelete(date, reason){  
-    const mailOptions = {
-        from: process.env.EMAIL_USER,  // Sender address
-        to: process.env.ADMIN_EMAIL,                 // Receiver's email
-        subject: 'Booking Cancelled', // Subject line
-        html: `<p>A booking for Pooja's Beauty Salon was cancelled for: ${date}<br><br>Reason: ${reason}</p>`,
-        text: `A booking for Pooja's Beauty Salon was cancelled for: ${date}\n\nReason: ${reason}`,
-    };
-  
-    // Send mail
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log('Error sending email:', error);
-        } else {
-            console.log('Verification email sent:', info.response);
-        }
-    });
+    sendEmail(userEmail, `<p>A booking for Pooja's Beauty Salon was cancelled for: ${date}\n\nReason: ${reason}</p>`);
 }
 function sendUserDelete(userEmail, date, reason){  
-    const mailOptions = {
-        from: process.env.EMAIL_USER,  // Sender address
-        to: userEmail,                 // Receiver's email
-        subject: 'Booking Cancelled', // Subject line
-        html: `<p>Your booking for Pooja's Beauty Salon was cancelled for: ${date}<br><br>Reason: ${reason}</p>`,
-        text: `Your booking for Pooja's Beauty Salon was cancelled for: ${date}\n\nReason: ${reason}`,
-    };
-  
-    // Send mail
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log('Error sending email:', error);
-        } else {
-            console.log('Verification email sent:', info.response);
-        }
-    });
+    sendEmail(userEmail, `<p>Your booking for Pooja's Beauty Salon was cancelled for: ${date}\n\nReason: ${reason}</p>`);
 }
 function isValidEmail(email){
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
