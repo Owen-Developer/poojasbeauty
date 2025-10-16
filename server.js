@@ -67,13 +67,6 @@ app.use(session({
 app.use(express.static('docs'));
 
 ////////////////////////// REUSABLE FUNCTIONS LOGIC ///////////////////////////
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER, 
-        pass: process.env.EMAIL_PASS
-    }
-});
 function sendClientEmail(userEmail, date, time, email, message, services, price){ 
     sendEmail(userEmail, `<p>Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nServices: ${services.replace(/,,/g, ", ")}\n\nPrice: ${price}</p>`);
 }
