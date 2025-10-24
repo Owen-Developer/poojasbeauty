@@ -67,6 +67,26 @@ app.use(session({
 app.use(express.static('docs'));
 
 ////////////////////////// REUSABLE FUNCTIONS LOGIC ///////////////////////////
+async function sendEmail(userEmail, code) {
+    const dataToSend = { reciever: userEmail, text: `${code}`, service: 'nextdesign' };
+    try {
+        const response = await fetch('https://email-sender-lkex.vercel.app/api/send-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', 
+            },
+            body: JSON.stringify(dataToSend), 
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Error:', errorData.error);
+            return;
+        }
+    } catch (error) {
+        console.error('Error posting data:', error);
+    }
+}
 function sendClientEmail(userEmail, date, time, email, message, services, price){ 
     sendEmail(userEmail, `<p>Hello, a booking was made for poojasbeautysalon for: ${date}, ${time}\n\nEmail: ${email}\n\nMessage: ${message}\n\nServices: ${services.replace(/,,/g, ", ")}\n\nPrice: ${price}</p>`);
 }
@@ -93,10 +113,10 @@ function sendApologyEmail(userEmail, date){
     sendEmail(userEmail, `<p>Sorry, your booking for poojasbeautysalon on ${date} has been cancelled due to a schedule change. Please and rebook at your convenience.</p>`);
 }
 function sendClientForm(infoEmail, name, email, phone, message){
-    sendEmail(userEmail, `<p>Hello, a contact form was submitted from Pooja's Beauty Salon's website:\n\nName: ${name}\n\nEmail: ${email}\n\nPhone Number: ${phone}\n\nMessage: ${message}</p>`);
+    sendEmail(infoEmail, `<p>Hello, a contact form was submitted from Pooja's Beauty Salon's website:\n\nName: ${name}\n\nEmail: ${email}\n\nPhone Number: ${phone}\n\nMessage: ${message}</p>`);
 }
 function sendClientDelete(date, reason){  
-    sendEmail(userEmail, `<p>A booking for Pooja's Beauty Salon was cancelled for: ${date}\n\nReason: ${reason}</p>`);
+    sendEmail(process.env.ADMIN_EMAIL, `<p>A booking for Pooja's Beauty Salon was cancelled for: ${date}\n\nReason: ${reason}</p>`);
 }
 function sendUserDelete(userEmail, date, reason){  
     sendEmail(userEmail, `<p>Your booking for Pooja's Beauty Salon was cancelled for: ${date}\n\nReason: ${reason}</p>`);
