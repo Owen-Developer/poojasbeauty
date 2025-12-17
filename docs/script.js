@@ -308,7 +308,7 @@ if(window.location.href.includes("localhost")) {
     url = ""; // https://api.poojasbeautysalon.com   backend routes
     frontendUrl = "http://localhost:3000"; // https://poojasbeautysalon.com   http://localhost:3000
 } else {
-    url = "https://api.poojasbeautysalon.com"; // https://api.poojasbeautysalon.com   backend routes
+    url = "https://servers.nextdesignwebsite.com/pooja"; // https://api.poojasbeautysalon.com   backend routes
     frontendUrl = "https://poojasbeautysalon.com"; // https://poojasbeautysalon.com   http://localhost:3000
 }
 
