@@ -1153,9 +1153,9 @@ if(document.querySelector(".book-container")){
                 });
                 const data = await response.json(); 
                 if(data.message == "Success"){
-                    window.location.href = url + "/bookings.html?admin=true";
+                    window.location.href = frontendUrl + "/bookings.html?admin=true";
                 } else {
-                    window.location.href = url + "/bookings.html";
+                    window.location.href = frontendUrl + "/bookings.html";
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -1202,6 +1202,7 @@ if(document.querySelector(".book-container")){
             fullTime = preTime;
         }
         
+        console.log(inStore);
         const dataToSend = { date: fullDate, time: fullTime, email: emailTxt, message: bookingMessage, code: couponCode, services: fullServices, price: endPrice, type: 'user', applied: codeApplied, inStore: inStore, productIds: productIds, totalTime: slotsTaken };
         try {
             const response = await fetch(url + '/api/book-appointment', {
@@ -1666,7 +1667,7 @@ if(document.querySelector(".book-container")){
                             <div class="btn-show-delete">Delete Booking</div>
                         `
                         newCard.querySelector(".btn-show-delete").addEventListener("click", () => {
-                        window.location.href = url + "/bookings.html?admin=true&cancel=" + obj.cancel_code;
+                        window.location.href = frontendUrl + "/bookings.html?admin=true&cancel=" + obj.cancel_code;
                             /*
                             
                             async function deleteCard() {
