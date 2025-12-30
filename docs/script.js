@@ -1573,6 +1573,7 @@ if(document.querySelector(".book-container")){
 
                     const responseData = await response.json();
                     if(responseData.message == "Success"){
+                        localStorage.setItem("token", responseData.token);
                         document.querySelector(".lac-container").style.display = "block";
                         document.querySelector(".book-flex").style.display = "none";
                         closeAccessModal();
