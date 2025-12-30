@@ -816,7 +816,7 @@ document.querySelectorAll(".book-time-wrapper").forEach(box => {
                 const response = await fetch(url + '/api/remove-slot', {
                     method: 'POST',
                     credentials: 'include',
-                    headers: {
+                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                         'Content-Type': 'application/json', 
                     },
                     body: JSON.stringify(dataToSend), 
@@ -914,7 +914,7 @@ if(document.getElementById("contactForm")){
 
         const res = await fetch(url + "/api/submit-form", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}`, "Content-Type": "application/json" },
             body: JSON.stringify(data)
         });
 
@@ -951,7 +951,7 @@ if(document.querySelector(".book-container")){
                     const response = await fetch(url + '/api/check-code', {
                         method: 'POST',
                         credentials: 'include',
-                        headers: {
+                        headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                             'Content-Type': 'application/json', 
                         },
                         body: JSON.stringify(dataToSend), 
@@ -1032,7 +1032,7 @@ if(document.querySelector(".book-container")){
                 const response = await fetch(url + '/api/get-bookings', {
                     method: 'POST',
                     credentials: 'include',
-                    headers: {
+                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                         'Content-Type': 'application/json', 
                     },
                     body: JSON.stringify(dataToSend), 
@@ -1149,6 +1149,9 @@ if(document.querySelector(".book-container")){
             try {
                 const response = await fetch(`${url}/api/check-admin`, {
                     method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
                     credentials: 'include'
                 });
                 const data = await response.json(); 
@@ -1208,7 +1211,7 @@ if(document.querySelector(".book-container")){
             const response = await fetch(url + '/api/book-appointment', {
                 method: 'POST',
                 credentials: 'include',
-                headers: {
+                headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                     'Content-Type': 'application/json', 
                 },
                 body: JSON.stringify(dataToSend), 
@@ -1255,7 +1258,7 @@ if(document.querySelector(".book-container")){
             const response = await fetch(url + '/api/check-slots', {
                 method: 'POST',
                 credentials: 'include',
-                headers: {
+                headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                     'Content-Type': 'application/json', 
                 },
                 body: JSON.stringify(dataToSend), 
@@ -1322,7 +1325,7 @@ if(document.querySelector(".book-container")){
                                             const response = await fetch(url + '/api/remove-slot', {
                                                 method: 'POST',
                                                 credentials: 'include',
-                                                headers: {
+                                                headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                                                     'Content-Type': 'application/json', 
                                                 },
                                                 body: JSON.stringify(dataToSend), 
@@ -1365,6 +1368,9 @@ if(document.querySelector(".book-container")){
                             try {
                                 const response = await fetch(`${url}/api/check-admin`, {
                                     method: 'GET',
+                                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
                                     credentials: 'include'
                                 });
                                 const data = await response.json(); 
@@ -1399,7 +1405,7 @@ if(document.querySelector(".book-container")){
                                                                 const response = await fetch(url + '/api/open-slot', {
                                                                     method: 'POST',
                                                                     credentials: 'include',
-                                                                    headers: {
+                                                                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                                                                         'Content-Type': 'application/json', 
                                                                     },
                                                                     body: JSON.stringify(dataToSend), 
@@ -1469,6 +1475,9 @@ if(document.querySelector(".book-container")){
             try {
                 const response = await fetch(`${url}/api/check-admin`, {
                     method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
                     credentials: 'include'
                 });
                 const data = await response.json(); 
@@ -1494,6 +1503,9 @@ if(document.querySelector(".book-container")){
             try {
                 const response = await fetch(`${url}/api/verify-booking?verify=${params.get("verify")}`, {
                     method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
                     credentials: 'include'
                 });
                 const data = await response.json(); 
@@ -1514,6 +1526,9 @@ if(document.querySelector(".book-container")){
             try {
                 const response = await fetch(`${url}/api/verify-gift?verifyvoucher=${params.get("verifyvoucher")}`, {
                     method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
                     credentials: 'include'
                 });
                 const data = await response.json(); 
@@ -1543,7 +1558,7 @@ if(document.querySelector(".book-container")){
                     const response = await fetch(url + '/api/admin-access', {
                         method: 'POST',
                         credentials: 'include',
-                        headers: {
+                        headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                             'Content-Type': 'application/json', 
                         },
                         credentials: 'include',
@@ -1596,7 +1611,7 @@ if(document.querySelector(".book-container")){
                     const response = await fetch(url + '/api/close-all', {
                         method: 'POST',
                         credentials: 'include',
-                        headers: {
+                        headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                             'Content-Type': 'application/json', 
                         },
                         body: JSON.stringify(dataToSend), 
@@ -1633,7 +1648,7 @@ if(document.querySelector(".book-container")){
                     const response = await fetch(url + '/api/show-bookings', {
                         method: 'POST',
                         credentials: 'include',
-                        headers: {
+                        headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                             'Content-Type': 'application/json', 
                         },
                         body: JSON.stringify(dataToSend), 
@@ -1676,7 +1691,7 @@ if(document.querySelector(".book-container")){
                                     const response = await fetch(url + '/api/delete-booking', {
                                         method: 'POST',
                                         credentials: 'include',
-                                        headers: {
+                                        headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                                             'Content-Type': 'application/json', 
                                         },
                                         body: JSON.stringify(dataToSend), 
@@ -1750,7 +1765,7 @@ if(document.querySelector(".book-container")){
                     const response = await fetch(url + '/api/open-day', {
                         method: 'POST',
                         credentials: 'include',
-                        headers: {
+                        headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                             'Content-Type': 'application/json', 
                         },
                         body: JSON.stringify(dataToSend), 
@@ -1788,7 +1803,7 @@ if(document.querySelector(".book-container")){
                     const response = await fetch(url + '/api/admin-slots', {
                         method: 'POST',
                         credentials: 'include',
-                        headers: {
+                        headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                             'Content-Type': 'application/json', 
                         },
                         body: JSON.stringify(dataToSend), 
@@ -1816,7 +1831,7 @@ if(document.querySelector(".book-container")){
                                         const response = await fetch(url + '/api/open-slot', {
                                             method: 'POST',
                                             credentials: 'include',
-                                            headers: {
+                                            headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                                                 'Content-Type': 'application/json', 
                                             },
                                             body: JSON.stringify(dataToSend), 
@@ -1877,6 +1892,9 @@ if(document.querySelector(".book-container")){
                 try {
                     const response = await fetch(`${url}/api/check-admin`, {
                         method: 'GET',
+                        headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
                         credentials: 'include'
                     });
                     const data = await response.json(); 
@@ -1903,7 +1921,7 @@ if(document.querySelector(".book-container")){
                 const response = await fetch(url + '/api/verify-cancel', {
                     method: 'POST',
                     credentials: 'include',
-                    headers: {
+                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                         'Content-Type': 'application/json', 
                     },
                     body: JSON.stringify(dataToSend), 
@@ -1939,7 +1957,7 @@ if(document.querySelector(".book-container")){
                     const response = await fetch(url + '/api/delete-booking', {
                         method: 'POST',
                         credentials: 'include',
-                        headers: {
+                        headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                             'Content-Type': 'application/json', 
                         },
                         body: JSON.stringify(dataToSend), 
@@ -1982,7 +2000,7 @@ if(document.querySelector(".book-container")){
             try {
                 const response = await fetch(url + '/api/get-events', {
                     method: 'POST',
-                    headers: {
+                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                         'Content-Type': 'application/json', 
                     },
                     body: JSON.stringify(dataToSend), 
@@ -2241,7 +2259,7 @@ if(document.querySelector(".book-container")){
                 const response = await fetch(url + '/api/get-bookings', {
                     method: 'POST',
                     credentials: 'include',
-                    headers: {
+                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                         'Content-Type': 'application/json', 
                     },
                     body: JSON.stringify(dataToSend), 
@@ -2314,7 +2332,7 @@ if(document.querySelector(".book-container")){
                                                 const response = await fetch(url + '/api/open-slot', {
                                                     method: 'POST',
                                                     credentials: 'include',
-                                                    headers: {
+                                                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                                                         'Content-Type': 'application/json', 
                                                     },
                                                     body: JSON.stringify(dataToSend), 
@@ -2358,7 +2376,7 @@ if(document.querySelector(".book-container")){
                                         const response = await fetch(url + '/api/remove-slot', {
                                             method: 'POST',
                                             credentials: 'include',
-                                            headers: {
+                                            headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                                                 'Content-Type': 'application/json', 
                                             },
                                             body: JSON.stringify(dataToSend), 
@@ -2417,7 +2435,7 @@ if(document.querySelector(".book-container")){
                                     const response = await fetch(url + '/api/open-day', {
                                         method: 'POST',
                                         credentials: 'include',
-                                        headers: {
+                                        headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                                             'Content-Type': 'application/json', 
                                         },
                                         body: JSON.stringify(dataToSend), 
@@ -2447,7 +2465,7 @@ if(document.querySelector(".book-container")){
                                     const response = await fetch(url + '/api/close-all', {
                                         method: 'POST',
                                         credentials: 'include',
-                                        headers: {
+                                        headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
                                             'Content-Type': 'application/json', 
                                         },
                                         body: JSON.stringify(dataToSend), 
