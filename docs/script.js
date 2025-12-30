@@ -1246,12 +1246,12 @@ if(document.querySelector(".book-container")){
         if(monStr.length == 1){
             monStr = "0" + monStr;
         }
-        let dateStr = document.querySelector(".book-cal-active").textContent;
+        let dateStr = document.querySelector(".lac-mon-active").textContent;
         if(dateStr.length == 1){
             dateStr = "0" + dateStr;
         }
         let year = Number(currentYear);
-        if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+        if(Number(document.querySelector("span.lac-top-mon").textContent) > Number(dateStr)){
             monStr = String(Number(monStr) + 1).padStart("0", 2);
             if(monStr == "13"){
                 monStr = "01";
@@ -1327,7 +1327,7 @@ if(document.querySelector(".book-container")){
                                             dateStr = "0" + dateStr;
                                         }
                                         let year = Number(currentYear);
-                                        if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                                        if(Number(document.querySelector("span.lac-top-mon").textContent) > Number(dateStr)){
                                             monStr = String(Number(monStr) + 1).padStart("0", 2);
                                             if(monStr == "13"){
                                                 monStr = "01";
@@ -1392,7 +1392,6 @@ if(document.querySelector(".book-container")){
                                 if(data.message == "Failure"){
                                     bookedWrappers.forEach(wrapper => {wrapper.style.display = "none";});
                                 } else if(data.message == "Success"){
-                                    console.log(bookings);
                                     bookedWrappers.forEach(wrapper => {
                                         bookings.forEach(booking => {
                                             if(booking.booking_time == wrapper.id.replace(/-/g, ":")){
@@ -1624,7 +1623,7 @@ if(document.querySelector(".book-container")){
                     dateStr = "0" + dateStr;
                 }
                                         let year = Number(currentYear);
-                                        if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                                        if(Number(document.querySelector("span.lac-top-mon").textContent) > Number(dateStr)){
                                             monStr = String(Number(monStr) + 1).padStart("0", 2);
                                             if(monStr == "13"){
                                                 monStr = "01";
@@ -1670,7 +1669,7 @@ if(document.querySelector(".book-container")){
                         dateStr = "0" + dateStr;
                     }
                                         let year = Number(currentYear);
-                                        if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                                        if(Number(document.querySelector("span.lac-top-mon").textContent) > Number(dateStr)){
                                             monStr = String(Number(monStr) + 1).padStart("0", 2);
                                             if(monStr == "13"){
                                                 monStr = "01";
@@ -1794,7 +1793,7 @@ if(document.querySelector(".book-container")){
                     dateStr = "0" + dateStr;
                 }
                                         let year = Number(currentYear);
-                                        if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                                        if(Number(document.querySelector("span.lac-top-mon").textContent) > Number(dateStr)){
                                             monStr = String(Number(monStr) + 1).padStart("0", 2);
                                             if(monStr == "13"){
                                                 monStr = "01";
@@ -1839,7 +1838,7 @@ if(document.querySelector(".book-container")){
                     dateStr = "0" + dateStr;
                 }
                                         let year = Number(currentYear);
-                                        if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                                        if(Number(document.querySelector("span.lac-top-mon").textContent) > Number(dateStr)){
                                             monStr = String(Number(monStr) + 1).padStart("0", 2);
                                             if(monStr == "13"){
                                                 monStr = "01";
@@ -2329,35 +2328,25 @@ if(document.querySelector(".book-container")){
                 let firstDate;
                 document.querySelectorAll(".lac-flex").forEach(flex => {
                     let rowTime = flex.id.slice(5);
-                    let nextYear = false;
                     flex.querySelectorAll(".lac-box").forEach((box, idx) => {
                         let monStr = String(currentMonth + 1);
                         if(monStr.length == 1){
                             monStr = "0" + monStr;
                         }
                         let dateStr = document.querySelectorAll("span.lac-top-mon")[idx].textContent;
-                        if(idx == 0){
-                            firstDate = Number(dateStr);
-                        } else if(Number(dateStr) < firstDate) {
-                            monStr = String(Number(monStr) + 1);
-                            if(monStr == "13"){
-                                monStr = "01";
-                            } else if(monStr.length == 1){
-                                monStr = "0" + monStr;
-                            }
-                        }
                         if(dateStr.length == 1){
                             dateStr = "0" + dateStr;
                         }
-                                        let year = Number(currentYear);
-                                        if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
-                                            monStr = String(Number(monStr) + 1).padStart("0", 2);
-                                            if(monStr == "13"){
-                                                monStr = "01";
-                                                year++;
-                                            }
-                                        }
+                        let year = Number(currentYear);
+                        if(Number(document.querySelector("span.lac-top-mon").textContent) > Number(dateStr)){
+                            monStr = String(Number(monStr) + 1).padStart("0", 2);
+                            if(monStr == "13"){
+                                monStr = "01";
+                                year++;
+                            }
+                        }
                         boxDate = year + "-" + monStr + "-" + dateStr;
+                        console.log(boxDate);
                         let emptyBox = true;
                         bookings.forEach(booking => {
                             if(booking.booking_date == boxDate && booking.booking_time == rowTime){
@@ -2428,7 +2417,7 @@ if(document.querySelector(".book-container")){
                                 dateStr = "0" + dateStr;
                             }
                                         let year = Number(currentYear);
-                                        if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                                        if(Number(document.querySelector("span.lac-top-mon").textContent) > Number(dateStr)){
                                             monStr = String(Number(monStr) + 1).padStart("0", 2);
                                             if(monStr == "13"){
                                                 monStr = "01";
@@ -2495,7 +2484,7 @@ if(document.querySelector(".book-container")){
                         dateStr = "0" + dateStr;
                     }
                     let year = Number(currentYear);
-                    if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                    if(Number(document.querySelector("span.lac-top-mon").textContent) > Number(dateStr)){
                         monStr = String(Number(monStr) + 1).padStart("0", 2);
                         if(monStr == "13"){
                             monStr = "01";
