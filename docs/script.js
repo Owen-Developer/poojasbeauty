@@ -1250,7 +1250,15 @@ if(document.querySelector(".book-container")){
         if(dateStr.length == 1){
             dateStr = "0" + dateStr;
         }
-        let fullDate = currentYear + "-" + monStr + "-" + dateStr;
+        let year = Number(currentYear);
+        if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+            monStr = String(Number(monStr) + 1).padStart("0", 2);
+            if(monStr == "13"){
+                monStr = "01";
+                year++;
+            }
+        }
+        let fullDate = year + "-" + monStr + "-" + dateStr;
         const dataToSend = { date: fullDate };
 
         try {
@@ -1318,7 +1326,15 @@ if(document.querySelector(".book-container")){
                                         if(dateStr.length == 1){
                                             dateStr = "0" + dateStr;
                                         }
-                                        let fullDate = currentYear + "-" + monStr + "-" + dateStr;
+                                        let year = Number(currentYear);
+                                        if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                                            monStr = String(Number(monStr) + 1).padStart("0", 2);
+                                            if(monStr == "13"){
+                                                monStr = "01";
+                                                year++;
+                                            }
+                                        }
+                                        let fullDate = year + "-" + monStr + "-" + dateStr;
                                         const dataToSend = { date: fullDate, time: wrapper.id.replace(/-/g, ":") };
                                         try {
                                             const response = await fetch(url + '/api/remove-slot', {
@@ -1607,11 +1623,14 @@ if(document.querySelector(".book-container")){
                 if(dateStr.length == 1){
                     dateStr = "0" + dateStr;
                 }
-                let year = Number(currentYear);
-                if(monStr == "12" && Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
-                    monStr = "01";
-                    year++;
-                }
+                                        let year = Number(currentYear);
+                                        if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                                            monStr = String(Number(monStr) + 1).padStart("0", 2);
+                                            if(monStr == "13"){
+                                                monStr = "01";
+                                                year++;
+                                            }
+                                        }
                 let fullDate = year + "-" + monStr + "-" + dateStr;
                 const dataToSend = { date: fullDate };
                 try {
@@ -1650,11 +1669,14 @@ if(document.querySelector(".book-container")){
                     if(dateStr.length == 1){
                         dateStr = "0" + dateStr;
                     }
-                let year = Number(currentYear);
-                if(monStr == "12" && Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
-                    monStr = "01";
-                    year++;
-                }
+                                        let year = Number(currentYear);
+                                        if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                                            monStr = String(Number(monStr) + 1).padStart("0", 2);
+                                            if(monStr == "13"){
+                                                monStr = "01";
+                                                year++;
+                                            }
+                                        }
                 let fullDate = year + "-" + monStr + "-" + dateStr;
                     const dataToSend = { date: fullDate };
                     const response = await fetch(url + '/api/show-bookings', {
@@ -1771,11 +1793,14 @@ if(document.querySelector(".book-container")){
                 if(dateStr.length == 1){
                     dateStr = "0" + dateStr;
                 }
-                let year = Number(currentYear);
-                if(monStr == "12" && Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
-                    monStr = "01";
-                    year++;
-                }
+                                        let year = Number(currentYear);
+                                        if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                                            monStr = String(Number(monStr) + 1).padStart("0", 2);
+                                            if(monStr == "13"){
+                                                monStr = "01";
+                                                year++;
+                                            }
+                                        }
                 let fullDate = year + "-" + monStr + "-" + dateStr;
                 const dataToSend = { date: fullDate };
                 try {
@@ -1813,11 +1838,14 @@ if(document.querySelector(".book-container")){
                 if(dateStr.length == 1){
                     dateStr = "0" + dateStr;
                 }
-                let year = Number(currentYear);
-                if(monStr == "12" && Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
-                    monStr = "01";
-                    year++;
-                }
+                                        let year = Number(currentYear);
+                                        if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                                            monStr = String(Number(monStr) + 1).padStart("0", 2);
+                                            if(monStr == "13"){
+                                                monStr = "01";
+                                                year++;
+                                            }
+                                        }
                 let fullDate = year + "-" + monStr + "-" + dateStr;
                 const dataToSend = { date: fullDate };
 
@@ -2321,11 +2349,14 @@ if(document.querySelector(".book-container")){
                         if(dateStr.length == 1){
                             dateStr = "0" + dateStr;
                         }
-                        let year = Number(currentYear);
-                        if(monStr == "12" && Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
-                            monStr = "01";
-                            year++;
-                        }
+                                        let year = Number(currentYear);
+                                        if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                                            monStr = String(Number(monStr) + 1).padStart("0", 2);
+                                            if(monStr == "13"){
+                                                monStr = "01";
+                                                year++;
+                                            }
+                                        }
                         boxDate = year + "-" + monStr + "-" + dateStr;
                         let emptyBox = true;
                         bookings.forEach(booking => {
@@ -2396,11 +2427,14 @@ if(document.querySelector(".book-container")){
                             if(dateStr.length == 1){
                                 dateStr = "0" + dateStr;
                             }
-                            let year = Number(currentYear);
-                            if(monStr == "12" && Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
-                                monStr = "01";
-                                year++;
-                            }
+                                        let year = Number(currentYear);
+                                        if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                                            monStr = String(Number(monStr) + 1).padStart("0", 2);
+                                            if(monStr == "13"){
+                                                monStr = "01";
+                                                year++;
+                                            }
+                                        }
                             let rnDate = year + "-" + monStr + "-" + dateStr;
 
                             box.querySelector(".btn-lac-remove").onclick = function(e){
@@ -2451,7 +2485,6 @@ if(document.querySelector(".book-container")){
                         }
                     });
                 });
-                let nextYear = false;
                 adminAmounts.forEach((day, idx) => {
                     let monStr = String(currentMonth + 1);
                     if(monStr.length == 1){
@@ -2462,9 +2495,12 @@ if(document.querySelector(".book-container")){
                         dateStr = "0" + dateStr;
                     }
                     let year = Number(currentYear);
-                    if(monStr == "12" && Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
-                        monStr = "01";
-                        year++;
+                    if(Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                        monStr = String(Number(monStr) + 1).padStart("0", 2);
+                        if(monStr == "13"){
+                            monStr = "01";
+                            year++;
+                        }
                     }
                     let fullDate = year + "-" + monStr + "-" + dateStr;
                     if(day == 35){
