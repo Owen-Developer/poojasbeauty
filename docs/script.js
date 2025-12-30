@@ -1375,8 +1375,10 @@ if(document.querySelector(".book-container")){
                                 });
                                 const data = await response.json(); 
                                 if(data.message == "Failure"){
+                                    console.log("f");
                                     bookedWrappers.forEach(wrapper => {wrapper.style.display = "none";});
                                 } else if(data.message == "Success"){
+                                    console.log(bookings);
                                     bookedWrappers.forEach(wrapper => {
                                         bookings.forEach(booking => {
                                             if(booking.booking_time == wrapper.id.replace(/-/g, ":")){
@@ -1390,6 +1392,7 @@ if(document.querySelector(".book-container")){
                                                         <i class="fa-solid fa-trash time-trash" onclick="window.location.href = '${frontendUrl}/bookings.html?admin=true&cancel=${booking.cancel_code}'"></i>
                                                     `
                                                 } else if(booking.booking_type == "admin"){
+                                                    console.log(booking);
                                                     wrapper.innerHTML = `
                                                         <div class="book-time-col">
                                                             <div class="book-time-time" style="text-decoration: line-through;">${booking.booking_time}</div>
