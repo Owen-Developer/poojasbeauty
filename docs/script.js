@@ -2371,6 +2371,7 @@ if(document.querySelector(".book-container")){
                             }
                             let rnDate = currentYear + "-" + monStr + "-" + dateStr;
                             box.querySelector(".btn-lac-remove").onclick = function(e){
+                                console.log("w");
                                 async function removeSlot() {
                                     const dataToSend = { date: rnDate, time: rowTime };
                                     try {
@@ -2390,6 +2391,7 @@ if(document.querySelector(".book-container")){
                                         }
 
                                         const responseData = await response.json();
+                                        console.log(responseData.message);
                                         if(responseData.message == "success"){
                                             setLac(currentDate, currentMonth, currentYear);
                                         } else {
