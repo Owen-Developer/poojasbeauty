@@ -1375,7 +1375,6 @@ if(document.querySelector(".book-container")){
                                 });
                                 const data = await response.json(); 
                                 if(data.message == "Failure"){
-                                    console.log("f");
                                     bookedWrappers.forEach(wrapper => {wrapper.style.display = "none";});
                                 } else if(data.message == "Success"){
                                     console.log(bookings);
@@ -2283,6 +2282,7 @@ if(document.querySelector(".book-container")){
                 let firstDate;
                 document.querySelectorAll(".lac-flex").forEach(flex => {
                     let rowTime = flex.id.slice(5);
+                    let nextYear = false;
                     flex.querySelectorAll(".lac-box").forEach((box, idx) => {
                         let monStr = String(currentMonth + 1);
                         if(monStr.length == 1){
@@ -2372,9 +2372,9 @@ if(document.querySelector(".book-container")){
                             if(dateStr.length == 1){
                                 dateStr = "0" + dateStr;
                             }
-                            let rnDate = currentYear + "-" + monStr + "-" + dateStr;
+                            let rnDate = year + "-" + monStr + "-" + dateStr;
+
                             box.querySelector(".btn-lac-remove").onclick = function(e){
-                                console.log("w");
                                 async function removeSlot() {
                                     const dataToSend = { date: rnDate, time: rowTime };
                                     try {
@@ -2422,6 +2422,7 @@ if(document.querySelector(".book-container")){
                         }
                     });
                 });
+                let nextYear = false;
                 adminAmounts.forEach((day, idx) => {
                     let monStr = String(currentMonth + 1);
                     if(monStr.length == 1){
