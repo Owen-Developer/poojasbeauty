@@ -1242,7 +1242,6 @@ if(document.querySelector(".book-container")){
         }
     }
     async function checkSlots() {
-        console.log(currentMonth + " vs " + startPosition);
         let monStr = String(currentMonth + 1);
         if(monStr.length == 1){
             monStr = "0" + monStr;
@@ -1608,7 +1607,12 @@ if(document.querySelector(".book-container")){
                 if(dateStr.length == 1){
                     dateStr = "0" + dateStr;
                 }
-                let fullDate = currentYear + "-" + monStr + "-" + dateStr;
+                let year = Number(currentYear);
+                if(monStr == "12" && Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                    monStr = "01";
+                    year++;
+                }
+                let fullDate = year + "-" + monStr + "-" + dateStr;
                 const dataToSend = { date: fullDate };
                 try {
                     const response = await fetch(url + '/api/close-all', {
@@ -1646,7 +1650,12 @@ if(document.querySelector(".book-container")){
                     if(dateStr.length == 1){
                         dateStr = "0" + dateStr;
                     }
-                    let fullDate = currentYear + "-" + monStr + "-" + dateStr;
+                let year = Number(currentYear);
+                if(monStr == "12" && Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                    monStr = "01";
+                    year++;
+                }
+                let fullDate = year + "-" + monStr + "-" + dateStr;
                     const dataToSend = { date: fullDate };
                     const response = await fetch(url + '/api/show-bookings', {
                         method: 'POST',
@@ -1762,7 +1771,12 @@ if(document.querySelector(".book-container")){
                 if(dateStr.length == 1){
                     dateStr = "0" + dateStr;
                 }
-                let fullDate = currentYear + "-" + monStr + "-" + dateStr;
+                let year = Number(currentYear);
+                if(monStr == "12" && Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                    monStr = "01";
+                    year++;
+                }
+                let fullDate = year + "-" + monStr + "-" + dateStr;
                 const dataToSend = { date: fullDate };
                 try {
                     const response = await fetch(url + '/api/open-day', {
@@ -1799,7 +1813,12 @@ if(document.querySelector(".book-container")){
                 if(dateStr.length == 1){
                     dateStr = "0" + dateStr;
                 }
-                let fullDate = currentYear + "-" + monStr + "-" + dateStr;
+                let year = Number(currentYear);
+                if(monStr == "12" && Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                    monStr = "01";
+                    year++;
+                }
+                let fullDate = year + "-" + monStr + "-" + dateStr;
                 const dataToSend = { date: fullDate };
 
                 try {
@@ -2302,7 +2321,12 @@ if(document.querySelector(".book-container")){
                         if(dateStr.length == 1){
                             dateStr = "0" + dateStr;
                         }
-                        boxDate = currentYear + "-" + monStr + "-" + dateStr;
+                        let year = Number(currentYear);
+                        if(monStr == "12" && Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                            monStr = "01";
+                            year++;
+                        }
+                        boxDate = year + "-" + monStr + "-" + dateStr;
                         let emptyBox = true;
                         bookings.forEach(booking => {
                             if(booking.booking_date == boxDate && booking.booking_time == rowTime){
@@ -2372,6 +2396,11 @@ if(document.querySelector(".book-container")){
                             if(dateStr.length == 1){
                                 dateStr = "0" + dateStr;
                             }
+                            let year = Number(currentYear);
+                            if(monStr == "12" && Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                                monStr = "01";
+                                year++;
+                            }
                             let rnDate = year + "-" + monStr + "-" + dateStr;
 
                             box.querySelector(".btn-lac-remove").onclick = function(e){
@@ -2432,7 +2461,12 @@ if(document.querySelector(".book-container")){
                     if(dateStr.length == 1){
                         dateStr = "0" + dateStr;
                     }
-                    let fullDate = currentYear + "-" + monStr + "-" + dateStr;
+                    let year = Number(currentYear);
+                    if(monStr == "12" && Number(document.querySelector(".lac-mon-active").textContent) > Number(dateStr)){
+                        monStr = "01";
+                        year++;
+                    }
+                    let fullDate = year + "-" + monStr + "-" + dateStr;
                     if(day == 35){
                         document.querySelectorAll(".lac-box-space")[idx].textContent = "Open this day";
                         document.querySelectorAll(".lac-box-space")[idx].onclick = function(){
