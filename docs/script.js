@@ -2501,7 +2501,8 @@ if(document.querySelector(".book-container")){
                                     const response = await fetch(url + '/api/open-day', {
                                         method: 'POST',
                                         credentials: 'include',
-                                        headers: { Authorization: `Bearer ${localStorage.getItem("token")}`,
+                                        headers: { 
+                                            Authorization: `Bearer ${localStorage.getItem("token")}`,
                                             'Content-Type': 'application/json', 
                                         },
                                         body: JSON.stringify(dataToSend), 
