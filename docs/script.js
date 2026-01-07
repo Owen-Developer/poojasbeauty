@@ -1020,6 +1020,7 @@ if(document.querySelector(".book-container")){
 
     // calendar
     function setCalendar(monthIdx, yearStr, firstCall){
+        console.log(monthIdx);
         document.querySelector(".book-cal-head").textContent = months[monthIdx] + " " + yearStr;
 
         let startIdx = firstDay(monthIdx, yearStr);
